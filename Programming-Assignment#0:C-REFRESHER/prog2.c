@@ -29,4 +29,7 @@ void closeit(){
 	printf("closeit\n");
 }
 
-void f(funcs* functions){}
+void f(funcs* functions){
+    functions->openit("Test String", 0);
+    functions->closeit();
+}

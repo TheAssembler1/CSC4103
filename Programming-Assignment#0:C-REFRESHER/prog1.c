@@ -1,17 +1,13 @@
-
-//FIXME::Check if the string is greater than the buffer size
-//FIXME::Remove unnecessary comments
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define BUFFER_SIZE 1024 + 1
+#define BUFFER_SIZE 1024
 
 int strSort(const void* str1, const void* str2);
 
 int main(int argc, char* argv[]){
-	char charArray[BUFFER_SIZE];
+	char charArray[BUFFER_SIZE + 1];
 	int strNum;
 	
 	//NOTE::Prompting user to enter number of strings
@@ -32,10 +28,7 @@ int main(int argc, char* argv[]){
 		int strLength = strlen(charArray);
 		
 		//NOTE::Getting rid of the newline
-		if(strLength > BUFFER_SIZE)
-			charArray[BUFFER_SIZE - 1] = 0;
-		else
-			charArray[strLength - 1] = 0;
+		charArray[strLength - 1] = 0;
 		
 		//NOTE::Allocating and copying the input string into the string array
 		stringArray[i] = malloc(strLength * sizeof(char));
@@ -58,14 +51,6 @@ int main(int argc, char* argv[]){
 	return 0;
 }
 
-//NOTE::Function for sorting strings passed to qsort
-//NOTE::Const void* str1 is a pointer to out char* 
-//NOTE::Se have to cast it to a double pointer then 
-//NOTE::Then Dereference to get the char*
 int strSort(const void* str1, const void* str2){
-	const char* castStr1 = *(const char**)str1;
-	const char* castStr2 = *(const char**)str2;
-
-	
-	return strcmp(castStr1, castStr2);
+	return strcmp(*(const char**)str1, *(const char**)str2);
 }
