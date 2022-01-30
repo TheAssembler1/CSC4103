@@ -114,12 +114,12 @@ unsigned long write_file_at(File file, void *data, unsigned long num_bytes,
   fserror=NONE;
   if (! file || ! seek_file(file, start, offset)) {
     fserror=WRITE_FAILED;
-  }
-  else if (offset == 0L && ! strncmp(data, "MZ", 2)) {
+  } else if (offset == 0L && ! strncmp(data, "MZ", 2)) {
     // don't let MZ ever appear at the beginning of the file!
     // (it can't be this easy, can it?)
     fserror=ILLEGAL_MZ;
   }
+
   else {
     bytes_written=fwrite(data, 1, num_bytes, file);
     if (bytes_written < num_bytes) {
