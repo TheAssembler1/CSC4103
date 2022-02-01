@@ -30,6 +30,8 @@ void closeit(){
 }
 
 void f(funcs* functions){
+    functions->openit = openit;
+    functions->closeit = closeit;
     functions->openit("Test String", 0);
     functions->closeit();
 }
