@@ -1,1 +1,1 @@
-main(){int i=50;while(i--){putchar(i%10?i%2?88:32:10);i%20?:putchar(32);}}
+main(x){while(x--)putchar(x%11?x%2?88:32:10);}
