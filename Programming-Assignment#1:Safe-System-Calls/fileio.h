@@ -23,8 +23,10 @@ typedef enum  {
   ILLEGAL_MZ
 } FSError;
 
-// file handle type
-typedef FILE* File;
+typedef struct _FileInternal FileInternal;
+
+//file handle type
+typedef FileInternal* File;                
 
 // seek anchors
 typedef enum {

@@ -20,17 +20,22 @@
 
 FSError fserror;
 
+typedef struct _FileInternal{
+    FILE* fp;
+    char mem[2];
+} FileInternal;
+
 //
 // private functions
 //
 
 static int seek_file(File file, SeekAnchor start, long offset) {
-  if (! file || (start != BEGINNING_OF_FILE && 
+  if (! file->fp || (start != BEGINNING_OF_FILE && 
 	       start != CURRENT_POSITION && start != END_OF_FILE)) {
     return 0;
   }
   else {
-    if (! fseek(file, offset, start == BEGINNING_OF_FILE ? SEEK_SET : 
+    if (! fseek(file->fp, offset, start == BEGINNING_OF_FILE ? SEEK_SET : 
 		(start == END_OF_FILE ? SEEK_END : SEEK_CUR))) {
       return 1;
     }
@@ -49,26 +54,28 @@ static int seek_file(File file, SeekAnchor start, long offset) {
 // open operation fails, the global 'fserror' is set to OPEN_FAILED,
 // otherwise to NONE.
 File open_file(char *name) {
-  File fp;
+  File file;
 
   fserror=NONE;
   // try to open existing file
-  fp=fopen(name, "r+");
-  if (! fp) {
+  file->fp=fopen(name, "r+");
+  if (! file->fp) {
     // fail, fall back to creation
-    fp=fopen(name, "w+");
-    if (! fp) {
+    file->fp=fopen(name, "w+");
+    if (! file->fp) {
       fserror=OPEN_FAILED;
       return NULL;
     }
   }
-  return fp;
+
+
+  return file;
 }
 
 // close a 'file'.  If the close operation fails, the global 'fserror'
 // is set to CLOSE_FAILED, otherwise to NONE.
 void close_file(File file) {
-  if (file && ! fclose(file)) {
+  if (file->fp && ! fclose(file->fp)) {
     fserror=NONE;
   }
   else {
@@ -87,12 +94,12 @@ unsigned long read_file_from(File file, void *data, unsigned long num_bytes,
   unsigned long bytes_read=0L;
 
   fserror=NONE;
-  if (! file || ! seek_file(file, start, offset)) {
+  if (! file->fp || ! seek_file(file, start, offset)) {
     fserror=READ_FAILED;
   }
   else {
-    bytes_read=fread(data, 1, num_bytes, file);
-    if (ferror(file)) {
+    bytes_read=fread(data, 1, num_bytes, file->fp);
+    if (ferror(file->fp)) {
       fserror=READ_FAILED;
     }
   }
@@ -112,7 +119,7 @@ unsigned long write_file_at(File file, void *data, unsigned long num_bytes,
   unsigned long bytes_written=0L;
 
   fserror=NONE;
-  if (! file || ! seek_file(file, start, offset)) {
+  if (! file->fp || ! seek_file(file, start, offset)) {
     fserror=WRITE_FAILED;
   } else if (offset == 0L && ! strncmp(data, "MZ", 2)) {
     // don't let MZ ever appear at the beginning of the file!
@@ -121,7 +128,7 @@ unsigned long write_file_at(File file, void *data, unsigned long num_bytes,
   }
 
   else {
-    bytes_written=fwrite(data, 1, num_bytes, file);
+    bytes_written=fwrite(data, 1, num_bytes, file->fp);
     if (bytes_written < num_bytes) {
       fserror=WRITE_FAILED;
     }
