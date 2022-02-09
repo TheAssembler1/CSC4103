@@ -68,6 +68,9 @@ File open_file(char *name) {
     }
   }
 
+  // setting mem[] to 0
+  file->mem[0] = 0;
+  file->mem[1] = 0;
 
   return file;
 }
@@ -117,22 +120,42 @@ unsigned long read_file_from(File file, void *data, unsigned long num_bytes,
 unsigned long write_file_at(File file, void *data, unsigned long num_bytes, 
 			     SeekAnchor start, long offset) {
   unsigned long bytes_written=0L;
+  unsigned long file_abs_pos=offset;
+
+  //setting the absolution position of the write
+  if(start == CURRENT_POSITION)
+      file_abs_pos += ftell(file->fp);
+  else if(start == END_OF_FILE){
+      int temp = ftell(file->fp);
+      fseek(file->fp, 0L, SEEK_END);
+      file_abs_pos += ftell(file->fp); 
+      fseek(file->fp, temp, SEEK_SET);
+  }
+
+  //setting the char buffer in the file internal structure
+  if(file_abs_pos < 2){
+    for(int i = file_abs_pos; i < 2 && i < num_bytes; i++)
+        file->mem[i] = *((char*)(data + i));
+  }
+  printf("___________________\n");
+  printf("File abs pos = %lu\n", file_abs_pos);
+  printf("Num bytes = %lu\n", num_bytes);
+  printf("mem[0] : %c\n", file->mem[0]);
+  printf("mem[1] : %c\n", file->mem[1]);
+  printf("-------------------\n");
 
   fserror=NONE;
   if (! file->fp || ! seek_file(file, start, offset)) {
     fserror=WRITE_FAILED;
-  } else if (offset == 0L && ! strncmp(data, "MZ", 2)) {
-    // don't let MZ ever appear at the beginning of the file!
-    // (it can't be this easy, can it?)
-    fserror=ILLEGAL_MZ;
-  }
-
-  else {
+  } else if(file->mem[0] == 'M' && file->mem[1] == 'Z'){
+    fserror = ILLEGAL_MZ;
+  }else {
     bytes_written=fwrite(data, 1, num_bytes, file->fp);
     if (bytes_written < num_bytes) {
       fserror=WRITE_FAILED;
     }
   }
+
   return bytes_written;
 }
 
