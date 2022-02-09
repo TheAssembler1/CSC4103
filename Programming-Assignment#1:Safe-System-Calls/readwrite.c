@@ -13,10 +13,6 @@ int main(int argc, char *argv[]) {
   printf("Writing MZ to beginning of file...\n");
   write_file_at(f, "MZ", 2, BEGINNING_OF_FILE, 0L);
   fs_print_error();
-  printf("Writing M to begging of file then Z...\n");
-  write_file_at(f, "M", 1, BEGINNING_OF_FILE, 0L);
-  write_file_at(f, "Z", 1, BEGINNING_OF_FILE, 1L);
-  fs_print_error();
   printf("Closing file...\n");
   close_file(f);
   fs_print_error();
