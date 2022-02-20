@@ -125,10 +125,8 @@ unsigned long write_file_at(File file, void *data, unsigned long num_bytes,
   long int file_abs_pos=offset;
 
   //setting the absolution position of the write
-  if(start == CURRENT_POSITION){
+  if(start == CURRENT_POSITION)
       file_abs_pos += ftell(file->fp);
-      printf("CURRENT_POSITION\n");
-    }
   else if(start == END_OF_FILE){
       int temp = ftell(file->fp);
       fseek(file->fp, 0L, SEEK_END);
@@ -140,13 +138,6 @@ unsigned long write_file_at(File file, void *data, unsigned long num_bytes,
   int i = file_abs_pos;
   for(int j = 0; i < 2 && j < num_bytes; j++, i++)
     file->mem[file_abs_pos + j] = *((char*)(data + j));
-
-  printf("___________________\n");
-  printf("File abs pos = %lu\n", file_abs_pos);
-  printf("Num bytes = %ld\n", num_bytes);
-  printf("mem[0] : %c\n", file->mem[0]);
-  printf("mem[1] : %c\n", file->mem[1]);
-  printf("-------------------\n");
 
   fserror=NONE;
   if (! file->fp || ! seek_file(file, start, offset)) {
