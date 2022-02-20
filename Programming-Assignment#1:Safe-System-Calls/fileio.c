@@ -54,7 +54,7 @@ static int seek_file(File file, SeekAnchor start, long offset) {
 // open operation fails, the global 'fserror' is set to OPEN_FAILED,
 // otherwise to NONE.
 File open_file(char *name) {
-  File file;
+  File file = malloc(sizeof(FileInternal));
 
   fserror=NONE;
   // try to open existing file
@@ -84,6 +84,8 @@ void close_file(File file) {
   else {
     fserror=CLOSE_FAILED;
   }
+
+  free(file);
 }
 
 // read at most 'num_bytes' bytes from 'file' into the buffer 'data',

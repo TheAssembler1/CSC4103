@@ -30,7 +30,6 @@ int main(int argc, char *argv[]) {
   //______________
   */
 
-  /*
   printf("||||||||||||\n");
   printf("M BEG, A CURR, Z CURR -1\n");
   write_file_at(f, "M", 1, BEGINNING_OF_FILE, 0L);
@@ -38,7 +37,6 @@ int main(int argc, char *argv[]) {
   write_file_at(f, "Z", 1, CURRENT_POSITION, -1L);
   fs_print_error();
   printf("||||||||||||\n");
-  */
 
   /*
   printf("||||||||||||\n");
