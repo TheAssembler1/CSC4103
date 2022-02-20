@@ -70,6 +70,7 @@ int main(int argc, char *argv[]) {
 
 void test_1(){
   File f = open_the_file();
+  printf("MZ, 2, BEGINNING_OF_FILE, 0L\n");
   write_file_at(f, "MZ", 2, BEGINNING_OF_FILE, 0L);
   fs_print_error();
   printf("INFO::Should get an error\n");
@@ -78,6 +79,8 @@ void test_1(){
 
 void test_2(){
   File f = open_the_file();
+  printf("M, 1, CURRENT_POSITION, 0L\n");
+  printf("Z, 1, CURRENT_POSITION, 0L\n");
   write_file_at(f, "M", 1, CURRENT_POSITION, 0L);
   write_file_at(f, "Z", 1, CURRENT_POSITION, 0L);
   fs_print_error();
@@ -87,6 +90,8 @@ void test_2(){
 
 void test_3(){
   File f = open_the_file();
+  printf("M, 1, BEGINNING_OF_FILE, 0L\n");
+  printf("Z, 1, CURRENT_POSITION, 0L\n");
   write_file_at(f, "M", 1, BEGINNING_OF_FILE, 0L);
   write_file_at(f, "Z", 1, CURRENT_POSITION, 0L);
   fs_print_error();
@@ -96,6 +101,8 @@ void test_3(){
 
 void test_4(){
   File f = open_the_file();
+  printf("M, 1, BEGINNING_OF_FILE, 0L\n");
+  printf("Z, 1, BEGINNING_OF_FILE, 1L\n");
   write_file_at(f, "M", 1, BEGINNING_OF_FILE, 0L);
   write_file_at(f, "Z", 1, BEGINNING_OF_FILE, 1L);
   fs_print_error();
@@ -105,6 +112,9 @@ void test_4(){
 
 void test_5(){
   File f = open_the_file();
+  printf("M, 1, CURRENT_POSITION, 0L\n");
+  printf("Z, 1, CURRENT_POSITION, 1L\n");
+  printf("Z, 1, BEGINNING_OF_FILE, 1L\n");
   write_file_at(f, "M", 1, CURRENT_POSITION, 0L);
   write_file_at(f, "Z", 1, CURRENT_POSITION, 1L);
   write_file_at(f, "Z", 1, BEGINNING_OF_FILE, 1L);
@@ -115,6 +125,8 @@ void test_5(){
 
 void test_6(){
   File f = open_the_file();
+  printf("   , 3, BEGINNING_OF_FILE, 0L\n");
+  printf("MZ, 2, CURRENT_POSITION, -3\n");
   write_file_at(f, "   ", 3, BEGINNING_OF_FILE, 0L);
   write_file_at(f, "MZ", 2, CURRENT_POSITION, -3);
   fs_print_error();
@@ -124,6 +136,8 @@ void test_6(){
 
 void test_7(){
   File f = open_the_file();
+  printf("   , 3, BEGINNING_OF_FILE, 0L\n");
+  printf("MZ, 2, END_OF_FILE, -3\n");
   write_file_at(f, "   ", 3, BEGINNING_OF_FILE, 0L);
   write_file_at(f, "MZ", 2, END_OF_FILE, -3);
   fs_print_error();
@@ -133,6 +147,9 @@ void test_7(){
 
 void test_8(){
   File f = open_the_file();
+  printf("M, 1, BEGINNING_OF_FILE, 0L\n");
+  printf(" , 1, CURRENT_POSITION, 0L\n");
+  printf("Z, 1, CURRENT_POSITION, 0L\n");
   write_file_at(f, "M", 1, BEGINNING_OF_FILE, 0L);
   write_file_at(f, " ", 1, CURRENT_POSITION, 0L);
   write_file_at(f, "Z", 1, CURRENT_POSITION, 0L);
@@ -143,9 +160,12 @@ void test_8(){
 
 void test_9(){
   File f = open_the_file();
+  printf("M, 1, BEGINNING_OF_FILE, 0L\n");
+  printf(" , 1, CURRENT_POSITION, 0L\n");
+  printf("Z, 1, CURRENT_POSITION, -2\n");
   write_file_at(f, "M", 1, BEGINNING_OF_FILE, 0L);
   write_file_at(f, " ", 1, CURRENT_POSITION, 0L);
-  write_file_at(f, "Z", 1, CURRENT_POSITION, -2L);
+  write_file_at(f, "Z", 1, CURRENT_POSITION, -2);
   fs_print_error();
   printf("INFO::Should NOT get an error\n");
   close_file(f);
@@ -153,6 +173,7 @@ void test_9(){
 
 void test_10(){
   File f = open_the_file();
+  printf("MZ, 3, BEGINNING_OF_FILE, 0L\n");
   write_file_at(f, " MZ", 3, BEGINNING_OF_FILE, 0L);
   fs_print_error();
   printf("INFO::Should NOT get an error\n");
@@ -161,6 +182,8 @@ void test_10(){
 
 void test_11(){
   File f = open_the_file();
+  printf("   , 3, BEGINNING_OF_FILE, 0L\n");
+  printf("MZ, 3, END_OF_FILE, -3\n");
   write_file_at(f, "   ", 3, BEGINNING_OF_FILE, 0L);
   write_file_at(f, " MZ", 3, END_OF_FILE, -3);
   fs_print_error();
