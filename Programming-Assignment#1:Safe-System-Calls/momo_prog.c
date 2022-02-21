@@ -20,26 +20,32 @@
 
 FSError fserror;
 
-typedef struct _FileInternal{
-    FILE* fp;
-    char mem[2];
+typedef struct _FileInternal
+{
+  FILE *fp;
+  char mem[2];
+
 } FileInternal;
 
 //
 // private functions
 //
 
-static int seek_file(File file, SeekAnchor start, long offset) {
-  if (! file->fp || (start != BEGINNING_OF_FILE && 
-         start != CURRENT_POSITION && start != END_OF_FILE)) {
+static int seek_file(File file, SeekAnchor start, long offset)
+{
+  if (!file->fp || (start != BEGINNING_OF_FILE &&
+                    start != CURRENT_POSITION && start != END_OF_FILE))
+  {
     return 0;
   }
-  else {
-    if (! fseek(file->fp, offset, start == BEGINNING_OF_FILE ? SEEK_SET : 
-    (start == END_OF_FILE ? SEEK_END : SEEK_CUR))) {
+  else
+  {
+    if (!fseek(file->fp, offset, start == BEGINNING_OF_FILE ? SEEK_SET : (start == END_OF_FILE ? SEEK_END : SEEK_CUR)))
+    {
       return 1;
     }
-    else {
+    else
+    {
       return 0;
     }
   }
@@ -53,39 +59,39 @@ static int seek_file(File file, SeekAnchor start, long offset) {
 // handle.  The file is always opened with read/write access. If the
 // open operation fails, the global 'fserror' is set to OPEN_FAILED,
 // otherwise to NONE.
-File open_file(char *name) {
-  File file = malloc(sizeof(FileInternal));
+File open_file(char *name)
+{
+  File file;
+  file = malloc(sizeof(FileInternal));
 
-  fserror=NONE;
+  fserror = NONE;
   // try to open existing file
-  file->fp=fopen(name, "r+");
-  if (! file->fp) {
+  file->fp = fopen(name, "r+");
+  if (!file->fp)
+  {
     // fail, fall back to creation
-    file->fp=fopen(name, "w+");
-    if (! file->fp) {
-      fserror=OPEN_FAILED;
+    file->fp = fopen(name, "w+");
+    if (!file->fp)
+    {
+      fserror = OPEN_FAILED;
       return NULL;
     }
   }
-
-  // setting mem[] to 0
-  file->mem[0] = 0;
-  file->mem[1] = 0;
-
   return file;
 }
 
 // close a 'file'.  If the close operation fails, the global 'fserror'
 // is set to CLOSE_FAILED, otherwise to NONE.
-void close_file(File file) {
-  if (file->fp && ! fclose(file->fp)) {
-    fserror=NONE;
+void close_file(File file)
+{
+  if (file->fp && !fclose(file->fp))
+  {
+    fserror = NONE;
   }
-  else {
-    fserror=CLOSE_FAILED;
+  else
+  {
+    fserror = CLOSE_FAILED;
   }
-
-  free(file);
 }
 
 // read at most 'num_bytes' bytes from 'file' into the buffer 'data',
@@ -93,24 +99,28 @@ void close_file(File file) {
 // position is BEGINNING_OF_FILE, CURRENT_POSITION, or END_OF_FILE. If
 // the read operation fails, the global 'fserror' is set to READ_FAILED,
 // otherwise to NONE.
-unsigned long read_file_from(File file, void *data, unsigned long num_bytes, 
-           SeekAnchor start, long offset) {
+unsigned long read_file_from(File file, void *data, unsigned long num_bytes,
+                             SeekAnchor start, long offset)
+{
 
-  unsigned long bytes_read=0L;
+  unsigned long bytes_read = 0L;
 
-  fserror=NONE;
-  if (! file->fp || ! seek_file(file, start, offset)) {
-    fserror=READ_FAILED;
+  fserror = NONE;
+  if (!file->fp || !seek_file(file, start, offset))
+  {
+    fserror = READ_FAILED;
   }
-  else {
-    bytes_read=fread(data, 1, num_bytes, file->fp);
-    if (ferror(file->fp)) {
-      fserror=READ_FAILED;
+  else
+  {
+    bytes_read = fread(data, 1, num_bytes, file->fp);
+    if (ferror(file->fp))
+    {
+      fserror = READ_FAILED;
     }
   }
   return bytes_read;
 }
-  
+
 // write 'num_bytes' to 'file' from the buffer 'data', starting
 // 'offset' bytes from the 'start' position.  The starting position is
 // BEGINNING_OF_FILE, CURRENT_POSITION, or END_OF_FILE.  If an attempt
@@ -119,43 +129,80 @@ unsigned long read_file_from(File file, void *data, unsigned long num_bytes,
 // stored in the global 'fserror'.  If the write fails for any other
 // reason, the global 'fserror' is set to WRITE_FAILED, otherwise to
 // NONE.
-unsigned long write_file_at(File file, void *data, unsigned long num_bytes, 
-           SeekAnchor start, long offset) {
+unsigned long write_file_at(File file, void *data, unsigned long num_bytes,
+                            SeekAnchor start, long offset)
+{
   unsigned long bytes_written = 0L;
-  long int file_abs_pos = offset;
 
-  fserror=NONE;
-  if (! file->fp || ! seek_file(file, start, offset))
-    fserror=WRITE_FAILED;
-  else{
-    //setting the absolution position of the write
-    if(start == CURRENT_POSITION || start == END_OF_FILE){
-        file_abs_pos = ftell(file->fp);
+  fserror = NONE;
+  char *dataBuf = (char *)data;
+  if (!file->fp || !seek_file(file, start, offset))
+  {
+    fserror = WRITE_FAILED;
+  }
+  else
+  {
+
+    long realPosition = 0;
+    if (start == BEGINNING_OF_FILE)
+    {
+      realPosition = offset;
+    }
+    else if (start == CURRENT_POSITION)
+    {
+      fseek(file->fp, offset, SEEK_CUR);
+      realPosition = ftell(file->fp);
+    }
+    else if (start == END_OF_FILE)
+    {
+      fseek(file->fp, offset, SEEK_END);
+      realPosition = ftell(file->fp);
     }
 
-    //setting the char buffer in the file internal structure
-    int i = file_abs_pos;
-    for(int j = 0; i < 2 && j < num_bytes; j++, i++)
-      file->mem[file_abs_pos + j] = *((char*)(data + j));
-
-    if(file->mem[0] == 'M' && file->mem[1] == 'Z'){
+    if (realPosition == 0L && !strncmp(data, "MZ", 2))
+    {
+      // don't let MZ ever appear at the beginning of the file!
+      // (it can't be this easy, can it?)
       fserror = ILLEGAL_MZ;
-    }else {
-      bytes_written=fwrite(data, 1, num_bytes, file->fp);
+    }
+    else if (realPosition == 1L && file->mem[0] == 'M' && dataBuf[0] == 'Z')
+    {
+      fserror = ILLEGAL_MZ;
+    }
+    else if (realPosition == 0L && file->mem[1] == 'Z' && dataBuf[0] == 'M')
+    {
+      fserror = ILLEGAL_MZ;
+    }
+    else
+    {
+      if (dataBuf[0] == 'M')
+      {
+        file->mem[0] = 'M';
+      }
+      else if (dataBuf[0] == 'Z' || dataBuf[1] == 'Z')
+      {
+        file->mem[1] = 'Z';
+      }
+
+      bytes_written = fwrite(data, 1, num_bytes, file->fp);
+
       if (bytes_written < num_bytes)
-        fserror=WRITE_FAILED;
+      {
+        fserror = WRITE_FAILED;
+      }
     }
   }
 
   return bytes_written;
 }
 
-
 // print a string representation of the error indicated by the global
 // 'fserror'.
-void fs_print_error(void) {
+void fs_print_error(void)
+{
   printf("FS ERROR: ");
-  switch (fserror) {
+  switch (fserror)
+  {
   case NONE:
     puts("NONE");
     break;
@@ -173,7 +220,7 @@ void fs_print_error(void) {
     break;
   case ILLEGAL_MZ:
     puts("ILLEGAL_MZ: SHAME ON YOU!");
-  break;
+    break;
   default:
     puts("** UNKNOWN ERROR **");
   }
