@@ -122,6 +122,14 @@ void read_process_descriptions(void){
 		add_to_queue(&p.behaviors, &b, 2);
 	}
 	add_to_queue(&ArrivalQ, &p, p.arrival_time);
+
+	//FIXME::remove this
+	rewind_queue(&ArrivalQ);
+	printf("Queue contains:\n");
+  	while (!end_of_queue(&ArrivalQ)) {
+    	printf("%d \n", current_priority(&ArrivalQ));
+    	next_element(&ArrivalQ);
+  	}
 }
 
 //FIXME::implement this
