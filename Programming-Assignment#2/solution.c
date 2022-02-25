@@ -82,6 +82,8 @@ void read_process_descriptions(void){
 		first = 1;
 
 		add_to_queue(&p.behaviors, &b, 2);
+
+		printf("TEST\n");
 	}
 	add_to_queue(&ArrivalQ, &p, p.arrival_time);
 
