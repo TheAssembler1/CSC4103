@@ -131,7 +131,7 @@ void read_process_descriptions(void){
     	next_element(&ArrivalQ);
   	}
 
-	printf("Length of Q: %d", queue_length(&ArrivalQ));
+	printf("Length of Q: %d\n", queue_length(&ArrivalQ));
 }
 
 //FIXME::implement this
@@ -147,7 +147,7 @@ void init_all_queues(void){
 	//arrival queue
 	printf("init_all_queues\n");
 
-	init_queue(&ArrivalQ, sizeof(Process), TRUE, NULL, FALSE);
+	init_queue(&ArrivalQ, sizeof(Process), FALSE, NULL, FALSE);
 	
 	//initializing the process queues
 	init_queue(&HighProcessQ.processes, sizeof(Process), TRUE, NULL, FALSE);
