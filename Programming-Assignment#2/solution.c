@@ -154,7 +154,7 @@ void read_process_descriptions(void){
 		Process* current_process = (Process*)ArrivalQ.current->info;
 		rewind_queue(&current_process->behaviors);
 		while(!end_of_queue(&current_process->behaviors)){\
-			printf("%d\n", current_process->behaviors.current->info->cpuburst);
+			printf("%d\n", current_process->behaviors.current->info.cpuburst);
 			next_element(&current_process->behaviors);
 		}
 
