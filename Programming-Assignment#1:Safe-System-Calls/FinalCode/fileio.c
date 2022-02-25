@@ -31,12 +31,12 @@ typedef struct _FileInternal{
 
 static int seek_file(File file, SeekAnchor start, long offset) {
   if (! file->fp || (start != BEGINNING_OF_FILE && 
-	       start != CURRENT_POSITION && start != END_OF_FILE)) {
+         start != CURRENT_POSITION && start != END_OF_FILE)) {
     return 0;
   }
   else {
     if (! fseek(file->fp, offset, start == BEGINNING_OF_FILE ? SEEK_SET : 
-		(start == END_OF_FILE ? SEEK_END : SEEK_CUR))) {
+    (start == END_OF_FILE ? SEEK_END : SEEK_CUR))) {
       return 1;
     }
     else {
@@ -94,7 +94,7 @@ void close_file(File file) {
 // the read operation fails, the global 'fserror' is set to READ_FAILED,
 // otherwise to NONE.
 unsigned long read_file_from(File file, void *data, unsigned long num_bytes, 
-			     SeekAnchor start, long offset) {
+           SeekAnchor start, long offset) {
 
   unsigned long bytes_read=0L;
 
@@ -120,34 +120,30 @@ unsigned long read_file_from(File file, void *data, unsigned long num_bytes,
 // reason, the global 'fserror' is set to WRITE_FAILED, otherwise to
 // NONE.
 unsigned long write_file_at(File file, void *data, unsigned long num_bytes, 
-			     SeekAnchor start, long offset) {
-  unsigned long bytes_written=0L;
-  long int file_abs_pos=offset;
-
-  //setting the absolution position of the write
-  if(start == CURRENT_POSITION)
-      file_abs_pos += ftell(file->fp);
-  else if(start == END_OF_FILE){
-      int temp = ftell(file->fp);
-      fseek(file->fp, 0L, SEEK_END);
-      file_abs_pos += ftell(file->fp); 
-      fseek(file->fp, temp, SEEK_SET);
-  }
-
-  //setting the char buffer in the file internal structure
-  int i = file_abs_pos;
-  for(int j = 0; i < 2 && j < num_bytes; j++, i++)
-    file->mem[file_abs_pos + j] = *((char*)(data + j));
+           SeekAnchor start, long offset) {
+  unsigned long bytes_written = 0L;
+  long int file_abs_pos = offset;
 
   fserror=NONE;
-  if (! file->fp || ! seek_file(file, start, offset)) {
+  if (! file->fp || ! seek_file(file, start, offset))
     fserror=WRITE_FAILED;
-  } else if(file->mem[0] == 'M' && file->mem[1] == 'Z'){
-    fserror = ILLEGAL_MZ;
-  }else {
-    bytes_written=fwrite(data, 1, num_bytes, file->fp);
-    if (bytes_written < num_bytes) {
-      fserror=WRITE_FAILED;
+  else{
+    //setting the absolution position of the write
+    if(start == CURRENT_POSITION || start == END_OF_FILE){
+        file_abs_pos = ftell(file->fp);
+    }
+
+    //setting the char buffer in the file internal structure
+    int i = file_abs_pos;
+    for(int j = 0; i < 2 && j < num_bytes; j++, i++)
+      file->mem[file_abs_pos + j] = *((char*)(data + j));
+
+    if(file->mem[0] == 'M' && file->mem[1] == 'Z'){
+      fserror = ILLEGAL_MZ;
+    }else {
+      bytes_written=fwrite(data, 1, num_bytes, file->fp);
+      if (bytes_written < num_bytes)
+        fserror=WRITE_FAILED;
     }
   }
 
