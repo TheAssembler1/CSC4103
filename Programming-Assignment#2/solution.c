@@ -91,6 +91,7 @@ void read_process_descriptions(void){
 		printf("%d\n", current_priority(&ArrivalQ));
 		next_element(&ArrivalQ);
 	}
+	printf("%d\n", current_priority(&ArrivalQ));
 }
 
 //FIXME::implement this
