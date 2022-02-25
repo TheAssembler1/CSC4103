@@ -120,15 +120,6 @@ void read_process_descriptions(void){
 		first = 1;
 
 		add_to_queue(&p.behaviors, &b, 2);
-
-		//FIXME::remove this
-		rewind_queue(&ArrivalQ);
-		printf("Queue contains:\n");
-		while (!end_of_queue(&ArrivalQ)) {
-			printf("%d \n", current_priority(&ArrivalQ));
-			next_element(&ArrivalQ);
-		}
-		printf("Length of Q: %d\n", queue_length(&ArrivalQ));
 	}
 	add_to_queue(&ArrivalQ, &p, p.arrival_time);
 
