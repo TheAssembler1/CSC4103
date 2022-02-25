@@ -117,11 +117,11 @@ int main(int argc, char* argv[]){
 void read_process_descriptions(void){
 	Process p;
 	ProcessBehavior b;
-	int pid = 1, first = 1;
+	int pid = 0, first = 1;
 	unsigned long arrival;
 
 	init_process(&p);
-	arrival = 1;
+	arrival = 0;
 	while(scanf("%lu", &arrival) != EOF){
 		scanf("%d %lu %lu %d",
 		       &pid,
@@ -136,9 +136,9 @@ void read_process_descriptions(void){
 
 		p.pid = pid;
 		p.arrival_time = arrival;
-		first = 1;
+		first = 0;
 
-		add_to_queue(&p.behaviors, &b, 2);
+		add_to_queue(&p.behaviors, &b, 1);
 	}
 	add_to_queue(&ArrivalQ, &p, p.arrival_time);
 
