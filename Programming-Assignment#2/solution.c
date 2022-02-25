@@ -91,6 +91,8 @@ void read_process_descriptions(void){
 //FIXME::implement this
 void init_process(Process* process){
 	printf("init_process\n");
+
+	init_queue(process->behaviors, sizeof(ProcessBehavior), TRUE, NULL, FALSE);
 }
 
 //FIXME::implement this
