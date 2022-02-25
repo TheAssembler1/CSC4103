@@ -130,6 +130,8 @@ void read_process_descriptions(void){
     	printf("%d \n", current_priority(&ArrivalQ));
     	next_element(&ArrivalQ);
   	}
+
+	printf("Length of Q: %d", queue_length(&ArrivalQ));
 }
 
 //FIXME::implement this
