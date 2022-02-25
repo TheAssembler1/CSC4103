@@ -138,7 +138,7 @@ void init_process(Process* process){
 	printf("init_process\n");
 
 	//this queue holds the new processes to be added to queues
-	init_queue(&(process->behaviors), sizeof(ProcessBehavior), FALSE, NULL, FALSE);
+	init_queue(&(process->behaviors), sizeof(ProcessBehavior), TRUE, NULL, FALSE);
 }
 
 //FIXME::implement this
@@ -146,12 +146,12 @@ void init_all_queues(void){
 	//arrival queue
 	printf("init_all_queues\n");
 
-	init_queue(&ArrivalQ, sizeof(Process), FALSE, NULL, FALSE);
+	init_queue(&ArrivalQ, sizeof(Process), TRUE, NULL, FALSE);
 	
 	//initializing the process queues
-	init_queue(&HighProcessQ.processes, sizeof(Process), FALSE, NULL, FALSE);
-	init_queue(&MidProcessQ.processes,  sizeof(Process), FALSE, NULL, FALSE);
-	init_queue(&LowProcessQ.processes, sizeof(Process), FALSE, NULL, FALSE);
+	init_queue(&HighProcessQ.processes, sizeof(Process), TRUE, NULL, FALSE);
+	init_queue(&MidProcessQ.processes,  sizeof(Process), TRUE, NULL, FALSE);
+	init_queue(&LowProcessQ.processes, sizeof(Process), TRUE, NULL, FALSE);
 }
 
 //FIXME::implement this
