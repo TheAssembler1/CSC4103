@@ -49,6 +49,25 @@ Queue ArrivalQ;
 //this holds the 3 queues of high, mid, and low processes
 Queue ProcessQs;
 
+// comparison function for queue of ProcessBehaviors
+int process_comparison(const void* e1, const void* e2) {
+	ProcessBehavior *processb1 = (ProcessBehavior*)e1;
+	ProcessBehavior *processb2 = (ProcessBehavior*)e2;
+
+	if(processb1->cpuburst > processb2->cpuburst)
+		return 1;
+	else 
+		return 0;
+}
+
+// comparison function for queue of ProcessBehaviors
+int process_comparison(const void* e1, const void* e2) {
+	Process *process1 = (Process*)e1;
+	Process *process2 = (Process*)e2;
+
+	return process_comparison(process1->behaviors.queue->info, process2->behaviors.queue->info);
+}
+
 //this queue is always present
 Process IdleProcess = {
 	.arrival = 0,
@@ -138,7 +157,7 @@ void init_process(Process* process){
 	printf("init_process\n");
 
 	//this queue holds the new processes to be added to queues
-	init_queue(&(process->behaviors), sizeof(ProcessBehavior), TRUE, NULL, FALSE);
+	init_queue(&(process->behaviors), sizeof(ProcessBehavior), TRUE, process_comparison, FALSE);
 }
 
 //FIXME::implement this
@@ -149,9 +168,9 @@ void init_all_queues(void){
 	init_queue(&ArrivalQ, sizeof(Process), TRUE, NULL, FALSE);
 	
 	//initializing the process queues
-	init_queue(&HighProcessQ.processes, sizeof(Process), TRUE, NULL, FALSE);
-	init_queue(&MidProcessQ.processes,  sizeof(Process), TRUE, NULL, FALSE);
-	init_queue(&LowProcessQ.processes, sizeof(Process), TRUE, NULL, FALSE);
+	init_queue(&HighProcessQ.processes, sizeof(Process), TRUE, process_comparison, FALSE);
+	init_queue(&MidProcessQ.processes,  sizeof(Process), TRUE, process_comparison, FALSE);
+	init_queue(&LowProcessQ.processes, sizeof(Process), TRUE, process_comparison, FALSE);
 }
 
 //FIXME::implement this
