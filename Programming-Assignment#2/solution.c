@@ -14,7 +14,7 @@ typedef struct _Process{
 	unsigned long arrival;
 	unsigned long arrival_time;	
 
-	//this shoudl be a queue
+	//this should be a queue
 	Queue behaviors;
 }Process;
 
@@ -22,7 +22,7 @@ typedef struct _Process{
 void init_all_queues(void);
 void init_process(Process* process);
 void read_process_descriptions(void);
-void execute_highest_priority_process();
+void execute_highest_priority_process(void);
 bool processes_exist(void);
 void queue_new_arrivals(void);
 void do_IO(void);
@@ -80,6 +80,12 @@ void read_process_descriptions(void){
 		add_to_queue(&p.behaviors, &b, 2);
 	}
 	add_to_queue(&ArrivalQ, &p, p.arrival_time);
+
+	//FIXME::printing the arrival queue
+	while (! end_of_queue(&q)) {
+		printf("%d\n", current_priority(&q));
+		next_element(&q);
+	}
 }
 
 //FIXME::implement this
