@@ -84,7 +84,7 @@ void read_process_descriptions(void){
 	//FIXME::printing the arrival queue
 	while (! end_of_queue(&ArrivalQ)) {
 		printf("%d\n", current_priority(&ArrivalQ));
-		next_element(&q);
+		next_element(&ArrivalQ);
 	}
 }
 
