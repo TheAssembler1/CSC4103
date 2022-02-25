@@ -98,7 +98,7 @@ void init_all_queues(void){
 	//arrival queue
 	printf("init_all_queues\n");
 
-	init_queue(&ArrivalQ, sizeof(Process), TRUE, NULL, TRUE);
+	init_queue(&ArrivalQ, sizeof(Process), TRUE, NULL, FALSE);
 }
 
 //FIXME::implement this
