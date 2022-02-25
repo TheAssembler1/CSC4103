@@ -84,21 +84,13 @@ void read_process_descriptions(void){
 		add_to_queue(&p.behaviors, &b, 2);
 	}
 	add_to_queue(&ArrivalQ, &p, p.arrival_time);
-
-	//FIXME::printing the arrival queue
-	while (!end_of_queue(&ArrivalQ)) {
-		printf("TEST\n");
-		printf("%d\n", current_priority(&ArrivalQ));
-		next_element(&ArrivalQ);
-	}
-	printf("%d\n", current_priority(&ArrivalQ));
 }
 
 //FIXME::implement this
 void init_process(Process* process){
 	printf("init_process\n");
 
-	init_queue(&(process->behaviors), sizeof(ProcessBehavior), TRUE, NULL, TRUE);
+	init_queue(&(process->behaviors), sizeof(ProcessBehavior), TRUE, NULL, FALSE);
 }
 
 //FIXME::implement this
