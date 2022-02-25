@@ -60,8 +60,8 @@ int process_comparison(const void* e1, const void* e2) {
 		return 0;
 }
 
-// comparison function for queue of ProcessBehaviors
-int process_comparison(const void* e1, const void* e2) {
+// comparison function for queue of processes
+int process_queue_comparison(const void* e1, const void* e2) {
 	Process *process1 = (Process*)e1;
 	Process *process2 = (Process*)e2;
 
@@ -168,9 +168,9 @@ void init_all_queues(void){
 	init_queue(&ArrivalQ, sizeof(Process), TRUE, NULL, FALSE);
 	
 	//initializing the process queues
-	init_queue(&HighProcessQ.processes, sizeof(Process), TRUE, process_comparison, FALSE);
-	init_queue(&MidProcessQ.processes,  sizeof(Process), TRUE, process_comparison, FALSE);
-	init_queue(&LowProcessQ.processes, sizeof(Process), TRUE, process_comparison, FALSE);
+	init_queue(&HighProcessQ.processes, sizeof(Process), TRUE, process_queue_comparison, FALSE);
+	init_queue(&MidProcessQ.processes,  sizeof(Process), TRUE, process_queue_comparison, FALSE);
+	init_queue(&LowProcessQ.processes, sizeof(Process), TRUE, process_queue_comparison, FALSE);
 }
 
 //FIXME::implement this
