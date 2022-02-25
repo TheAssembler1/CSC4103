@@ -2,6 +2,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+//used to represent infinity in g and b values
+#define INFINITY 255
+
 //structure of a process and process behavior
 typedef struct _ProcessBehavior{
 	unsigned long cpuburst;
@@ -18,6 +21,17 @@ typedef struct _Process{
 	Queue behaviors;
 }Process;
 
+//structure for holding processes
+//there will be 3 of these high, mid, and low
+typdef struct _ProcessQueue{
+	unsigned char q;
+	unsigned char b;
+	unsigned char g;
+
+	//this is the processses in the queue
+	Queue processes;
+}ProcessQueue;
+
 //function declarations
 void init_all_queues(void);
 void init_process(Process* process);
@@ -31,10 +45,34 @@ void final_report(void);
 //global variables
 unsigned long Clock;
 Queue ArrivalQ;
+
+//this holds the 3 queues of high, mid, and low processes
+Queue ProcessQs;
+
+//this queue is always present
 Process IdleProcess = {
 	.arrival = 0,
 	.arrival_time = 0,
 	.pid = 0
+};
+
+//defining the three queues to hold running processes
+ProcessQueue HighProcessQ = {
+	.q = 10,
+	.b = 1,
+	.g = INFINITY
+};
+
+ProcessQueue MidProcessQ = {
+	.q = 30,
+	.b = 2,
+	.g = 2
+};
+
+ProcessQueue Queue LowProcessQ = {
+	.q = 100,
+	.b = INFINITY,
+	.g = 1
 };
 
 int main(int argc, char* argv[]){
@@ -90,6 +128,7 @@ void read_process_descriptions(void){
 void init_process(Process* process){
 	printf("init_process\n");
 
+	//this queue holds the new processes to be added to queues
 	init_queue(&(process->behaviors), sizeof(ProcessBehavior), TRUE, NULL, FALSE);
 }
 
@@ -99,6 +138,11 @@ void init_all_queues(void){
 	printf("init_all_queues\n");
 
 	init_queue(&ArrivalQ, sizeof(Process), TRUE, NULL, FALSE);
+	
+	//initializing the process queues
+	init_queue(&HighProcessQ.processes, sizeof(Process), TRUE, NULL, FALSE);
+	init_queue(&MidProcessQ.processes,  sizeof(Process), TRUE, NULL, FALSE);
+	init_queue(&LowProcessQ.processes, sizeof(Process), TRUE, NULL, FALSE);
 }
 
 //FIXME::implement this
