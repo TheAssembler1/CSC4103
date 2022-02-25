@@ -82,8 +82,8 @@ void read_process_descriptions(void){
 	add_to_queue(&ArrivalQ, &p, p.arrival_time);
 
 	//FIXME::printing the arrival queue
-	while (! end_of_queue(&q)) {
-		printf("%d\n", current_priority(&q));
+	while (! end_of_queue(&ArrivalQ)) {
+		printf("%d\n", current_priority(&ArrivalQ));
 		next_element(&q);
 	}
 }
