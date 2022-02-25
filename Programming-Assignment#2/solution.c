@@ -23,7 +23,7 @@ typedef struct _Process{
 
 //structure for holding processes
 //there will be 3 of these high, mid, and low
-typdef struct _ProcessQueue{
+typedef struct _ProcessQueue{
 	unsigned char q;
 	unsigned char b;
 	unsigned char g;
