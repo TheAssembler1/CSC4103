@@ -146,7 +146,14 @@ void read_process_descriptions(void){
 	rewind_queue(&ArrivalQ);
 	printf("Queue contains:\n");
   	while (!end_of_queue(&ArrivalQ)) {
-    	printf("%d \n", current_priority(&ArrivalQ));
+    	printf("%d\n", current_priority(&ArrivalQ));
+
+		printf("Process behaviros burst time\n");
+		while(!end_of_queue(&ArrivalQ.queue->info)){
+			printf("%d\n", &ArrivalQ.queue->info.cpu_burst);
+			next_element(&ArrivalQ.queue->info);
+		}
+
     	next_element(&ArrivalQ);
   	}
 	printf("Length of Q: %d\n", queue_length(&ArrivalQ));
