@@ -150,7 +150,6 @@ void read_process_descriptions(void){
 
 		printf("Process behaviros burst time\n");
 		while(!end_of_queue(&ArrivalQ.queue->info.behaviors)){
-			printf("%d\n", &ArrivalQ.queue->info.behaviors->queue.cpuburst);
 			next_element(&ArrivalQ.queue->info.behaviors);
 		}
 
