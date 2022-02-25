@@ -150,7 +150,7 @@ void read_process_descriptions(void){
 
 		printf("Process behaviros burst time\n");
 
-		ProcessBehavior process_behavior = (ProcessBehavior)ArrivalQ.current->info;
+		ProcessBehavior* process_behavior = (ProcessBehavior*)ArrivalQ.current->info;
 
     	next_element(&ArrivalQ);
   	}
