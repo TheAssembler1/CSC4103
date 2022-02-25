@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 //structure of a process and process behavior
-typedef struct _Process_Behavior{
+typedef struct _ProcessBehavior{
 	unsigned long cpuburst;
 	unsigned long ioburst;
 	unsigned long repeat;
@@ -30,7 +30,11 @@ void final_report(void);
 
 //global variables
 unsigned long Clock;
-Process IdleProcess;
+Process IdleProcess = {
+	.arrival = 0,
+	.arrival_time = 0,
+	.pid = 0
+};
 Queue ArrivalQ;
 
 int main(int argc, char* argv[]){
@@ -82,7 +86,7 @@ void read_process_descriptions(void){
 	add_to_queue(&ArrivalQ, &p, p.arrival_time);
 
 	//FIXME::printing the arrival queue
-	while (! end_of_queue(&ArrivalQ)) {
+	while (!end_of_queue(&ArrivalQ)) {
 		printf("%d\n", current_priority(&ArrivalQ));
 		next_element(&ArrivalQ);
 	}
