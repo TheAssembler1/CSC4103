@@ -69,7 +69,7 @@ ProcessQueue MidProcessQ = {
 	.g = 2
 };
 
-ProcessQueue Queue LowProcessQ = {
+ProcessQueue LowProcessQ = {
 	.q = 100,
 	.b = INFINITY,
 	.g = 1
