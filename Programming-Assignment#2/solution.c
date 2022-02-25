@@ -30,12 +30,12 @@ void final_report(void);
 
 //global variables
 unsigned long Clock;
+Queue ArrivalQ;
 Process IdleProcess = {
 	.arrival = 0,
 	.arrival_time = 0,
 	.pid = 0
 };
-Queue ArrivalQ;
 
 int main(int argc, char* argv[]){
 	init_all_queues();
@@ -96,7 +96,7 @@ void read_process_descriptions(void){
 void init_process(Process* process){
 	printf("init_process\n");
 
-	init_queue(&(process->behaviors), sizeof(ProcessBehavior), TRUE, NULL, FALSE);
+	init_queue(&(process->behaviors), sizeof(ProcessBehavior), TRUE, NULL, TRUE);
 }
 
 //FIXME::implement this
@@ -104,7 +104,7 @@ void init_all_queues(void){
 	//arrival queue
 	printf("init_all_queues\n");
 
-	init_queue(&ArrivalQ, sizeof(Process), TRUE, NULL, FALSE);
+	init_queue(&ArrivalQ, sizeof(Process), TRUE, NULL, TRUE);
 }
 
 //FIXME::implement this
