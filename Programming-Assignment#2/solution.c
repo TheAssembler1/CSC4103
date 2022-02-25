@@ -149,9 +149,8 @@ void read_process_descriptions(void){
     	printf("%d\n", current_priority(&ArrivalQ));
 
 		printf("Process behaviros burst time\n");
-		while(!end_of_queue(&ArrivalQ.queue->info->behaviors)){
-			next_element(&ArrivalQ.queue->info->behaviors);
-		}
+
+		ProcessBehavior process_behavior = (ProcessBehavior)ArrivalQ.current->info;
 
     	next_element(&ArrivalQ);
   	}
