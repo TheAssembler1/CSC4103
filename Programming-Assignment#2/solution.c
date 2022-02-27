@@ -211,6 +211,7 @@ void queue_new_arrivals(void){
 			printf("Adding process with id of %d to high queue\n", current_priority(&ArrivalQ));
 			
 			Process* process = (Process*)&ArrivalQ.current; 
+			//FIXME::getting a null pointer with this
 			add_to_queue(&HighProcessQ.processes, &ArrivalQ.current, current_priority(&process->behaviors));
 		}
 		next_element(&ArrivalQ);
