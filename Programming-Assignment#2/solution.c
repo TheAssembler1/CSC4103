@@ -210,7 +210,7 @@ void queue_new_arrivals(void){
 		if(Clock == current_priority(&ArrivalQ)){
 			printf("Adding process with id of %d to high queue %d\n", current_priority(&ArrivalQ));
 			
-			Process* process = Process*(&ArrivalQ.current); 
+			Process* process = (Process*)&ArrivalQ.current; 
 			add_to_queue(HighProcessQ, &ArrivalQ.current, process->behaviors.queue);
 		}
 		next_element(&ArrivalQ);
