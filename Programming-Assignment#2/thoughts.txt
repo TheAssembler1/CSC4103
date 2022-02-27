@@ -4,5 +4,7 @@ So structures we need for the proj:
     Process holds:
         //this is the process id
         - pid
-        //
-        - arrival
+        //what time the process arrived
+        - arrival_time
+        //processes should only schedule once
+        behaivors

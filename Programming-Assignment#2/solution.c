@@ -45,9 +45,6 @@ void final_report(void);
 unsigned long Clock;
 Queue ArrivalQ;
 
-//this holds the 3 queues of high, mid, and low processes
-Queue ProcessQs;
-
 // comparison function for queue of ProcessBehaviors
 int process_behavior_comparison(const void* e1, const void* e2) {
 	ProcessBehavior *processb1 = (ProcessBehavior*)e1;
@@ -146,9 +143,7 @@ void read_process_descriptions(void){
   	while (!end_of_queue(&ArrivalQ)) {
 		printf("___________________________________\n");
     	printf("%d\n", current_priority(&ArrivalQ));
-
-		printf("Process behaviors burst time\n");
-
+		
 		Process* current_process = (Process*)ArrivalQ.current->info;
 		rewind_queue(&current_process->behaviors);
 		while(!end_of_queue(&current_process->behaviors)){\
