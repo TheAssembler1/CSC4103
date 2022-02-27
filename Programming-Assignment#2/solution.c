@@ -169,7 +169,7 @@ void init_process(Process* process){
 	printf("init_process\n");
 
 	//this queue holds the new processes to be added to queues
-	init_queue(&process->behaviors, sizeof(ProcessBehavior), TRUE, process_comparison, FALSE);
+	init_queue(&process->behaviors, sizeof(ProcessBehavior), TRUE, NULL, FALSE);
 }
 
 //FIXME::implement this
