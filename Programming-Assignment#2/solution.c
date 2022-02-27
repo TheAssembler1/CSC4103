@@ -198,6 +198,8 @@ void execute_highest_priority_process(void){
 //FIXME::implement this
 bool processes_exist(void){
 	printf("processes_exist\n");
+	if(Clock > 4000)
+		return false;
 	return true;
 }
 
@@ -208,6 +210,7 @@ void queue_new_arrivals(void){
 	rewind_queue(&ArrivalQ);
 	while(!end_of_queue(&ArrivalQ)){
 		if(Clock == current_priority(&ArrivalQ)){
+			printf("Current clock is %d\n", Clock);
 			printf("Adding process with id of %d to high queue %d\n", current_priority(&ArrivalQ));
 			
 			Process* process = (Process*)&ArrivalQ.current; 
