@@ -207,8 +207,8 @@ void queue_new_arrivals(void){
 	rewind_queue(&ArrivalQ);
 	while(!end_of_queue(&ArrivalQ)){
 		if(Clock == current_priority(&ArrivalQ)){
-			printf("Current clock is %d\n", Clock);
-			printf("Adding process with id of %d to high queue %d\n", current_priority(&ArrivalQ));
+			printf("Current clock is %lu\n", Clock);
+			printf("Adding process with id of %d to high queue\n", current_priority(&ArrivalQ));
 			
 			Process* process = (Process*)&ArrivalQ.current; 
 			add_to_queue(&HighProcessQ.processes, &ArrivalQ.current, process->behaviors.queue);
