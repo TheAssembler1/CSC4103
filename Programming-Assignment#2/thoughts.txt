@@ -1,0 +1,8 @@
+So I need to actually think what needs to get done in each function in order for the scheduler to work.
+
+So structures we need for the proj:
+    Process holds:
+        //this is the process id
+        - pid
+        //
+        - arrival
