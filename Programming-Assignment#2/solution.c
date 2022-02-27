@@ -65,7 +65,7 @@ int process_queue_comparison(const void* e1, const void* e2) {
 	Process *process1 = (Process*)e1;
 	Process *process2 = (Process*)e2;
 
-	return process_comparison(process1->behaviors.queue->info, process2->behaviors.queue->info);
+	return process_behavior_comparison(process1->behaviors.queue->info, process2->behaviors.queue->info);
 }
 
 //this queue is always present
