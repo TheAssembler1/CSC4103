@@ -2,6 +2,27 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+/*
+	//FIXME::remove this
+	rewind_queue(&ArrivalQ);
+	printf("Queue contains:\n");
+  	while (!end_of_queue(&ArrivalQ)) {
+		printf("___________________________________\n");
+    	printf("%d\n", current_priority(&ArrivalQ));
+		
+		Process* current_process = (Process*)ArrivalQ.current->info;
+		rewind_queue(&current_process->behaviors);
+		while(!end_of_queue(&current_process->behaviors)){\
+			printf("Another request\n");
+			next_element(&current_process->behaviors);
+		}
+
+    	next_element(&ArrivalQ);
+		printf("___________________________________\n");
+  	}
+	printf("Length of Q: %d\n", queue_length(&ArrivalQ));
+*/
+
 //used to represent infinity in g and b values
 #define INFINITY 255
 
@@ -136,25 +157,6 @@ void read_process_descriptions(void){
 		add_to_queue(&p.behaviors, &b, 1);
 	}
 	add_to_queue(&ArrivalQ, &p, p.arrival_time);
-
-	//FIXME::remove this
-	rewind_queue(&ArrivalQ);
-	printf("Queue contains:\n");
-  	while (!end_of_queue(&ArrivalQ)) {
-		printf("___________________________________\n");
-    	printf("%d\n", current_priority(&ArrivalQ));
-		
-		Process* current_process = (Process*)ArrivalQ.current->info;
-		rewind_queue(&current_process->behaviors);
-		while(!end_of_queue(&current_process->behaviors)){\
-			printf("Another request\n");
-			next_element(&current_process->behaviors);
-		}
-
-    	next_element(&ArrivalQ);
-		printf("___________________________________\n");
-  	}
-	printf("Length of Q: %d\n", queue_length(&ArrivalQ));
 }
 
 //FIXME::implement this
@@ -196,10 +198,21 @@ void execute_highest_priority_process(void){
 //FIXME::implement this
 bool processes_exist(void){
 	printf("processes_exist\n");
-	return false;
+	return true;
 }
 
 //FIXME::implement this
 void queue_new_arrivals(void){
 	printf("queue_new_arrivals\n");
+
+	rewind_queue(&ArrivalQ);
+	while(!end_of_queue(&ArrivalQ)){
+		if(Clock == current_priority(&ArrivalQ)){
+			printf("Adding process with id of %d to high queue %d\n", current_priority(&ArrivalQ));
+			
+			Process* process = Process*(&ArrivalQ.current); 
+			add_to_queue(HighProcessQ, &ArrivalQ.current, process->behaviors.queue);
+		}
+		next_element(&ArrivalQ);
+	}
 }
