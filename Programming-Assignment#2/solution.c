@@ -50,7 +50,7 @@ Queue ArrivalQ;
 Queue ProcessQs;
 
 // comparison function for queue of ProcessBehaviors
-int process_comparison(const void* e1, const void* e2) {
+int process_behavior_comparison(const void* e1, const void* e2) {
 	ProcessBehavior *processb1 = (ProcessBehavior*)e1;
 	ProcessBehavior *processb2 = (ProcessBehavior*)e2;
 
@@ -169,7 +169,7 @@ void init_process(Process* process){
 	printf("init_process\n");
 
 	//this queue holds the new processes to be added to queues
-	init_queue(&process->behaviors, sizeof(ProcessBehavior), TRUE, NULL, FALSE);
+	init_queue(&process->behaviors, sizeof(ProcessBehavior), TRUE, process_behavior_comparison, FALSE);
 }
 
 //FIXME::implement this
