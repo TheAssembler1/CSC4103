@@ -182,7 +182,7 @@ void init_all_queues(void){
 
 //FIXME::implement this
 void do_IO(void){
-	printf("do_IO\n");
+
 }
 
 //FIXME::implement this
@@ -192,12 +192,11 @@ void final_report(void){
 
 //FIXME::implement this
 void execute_highest_priority_process(void){
-	printf("execute_highest_priority_process\n");
+
 }
 
 //FIXME::implement this
 bool processes_exist(void){
-	printf("processes_exist\n");
 	if(Clock > 4000)
 		return false;
 	return true;
@@ -205,8 +204,6 @@ bool processes_exist(void){
 
 //FIXME::implement this
 void queue_new_arrivals(void){
-	printf("queue_new_arrivals\n");
-
 	rewind_queue(&ArrivalQ);
 	while(!end_of_queue(&ArrivalQ)){
 		if(Clock == current_priority(&ArrivalQ)){
