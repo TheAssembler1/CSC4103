@@ -14,7 +14,6 @@ typedef struct _ProcessBehavior{
 
 typedef struct _Process{
 	unsigned long pid;
-	unsigned long arrival;
 	unsigned long arrival_time;	
 
 	//this should be a queue
@@ -70,7 +69,6 @@ int process_queue_comparison(const void* e1, const void* e2) {
 
 //this queue is always present
 Process IdleProcess = {
-	.arrival = 0,
 	.arrival_time = 0,
 	.pid = 0
 };
