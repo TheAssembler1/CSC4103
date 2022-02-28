@@ -211,6 +211,7 @@ void queue_new_arrivals(void){
 			printf("Adding process with id of %d to high queue\n", current_priority(&ArrivalQ));
 			
 			Process* process = (Process*)ArrivalQ.current->info; 
+			rewind_queue(&process->behaviors);
 			add_to_queue(&HighProcessQ.processes, &ArrivalQ.current, current_priority(&process->behaviors));
 		}
 		next_element(&ArrivalQ);
