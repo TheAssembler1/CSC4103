@@ -164,7 +164,7 @@ void init_process(Process* process){
 	printf("init_process\n");
 
 	//this queue holds the new processes to be added to queues
-	init_queue(&process->behaviors, sizeof(ProcessBehavior), FALSE, process_behavior_comparison, FALSE);
+	init_queue(&process->behaviors, sizeof(ProcessBehavior), TRUE, process_behavior_comparison, FALSE);
 }
 
 //FIXME::implement this
@@ -212,7 +212,7 @@ void queue_new_arrivals(void){
 			
 			Process* process = (Process*)ArrivalQ.current->info; 
 			rewind_queue(&process->behaviors);
-			printf("I think the process has a cpu burst time of %lu\n",  current_priority(&process->behaviors));
+			printf("I think the process has a cpu burst time of %lu\n",  process->behaviors.queue->info.cpuburst);
 			add_to_queue(&HighProcessQ.processes, &ArrivalQ.current, current_priority(&process->behaviors));
 		}
 		next_element(&ArrivalQ);
