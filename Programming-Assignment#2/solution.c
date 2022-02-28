@@ -212,6 +212,7 @@ void queue_new_arrivals(void){
 	rewind_queue(&ArrivalQ);
 	while(!end_of_queue(&ArrivalQ)){
 		if(Clock == current_priority(&ArrivalQ)){
+			printf("________________________________________________\n");
 			printf("Curent clock time: %lu\n", Clock);
 			printf("Current process has arrival time of: %d\n", current_priority(&ArrivalQ));
 			
@@ -221,6 +222,7 @@ void queue_new_arrivals(void){
 			ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.queue->info;
 			printf("Current wanted cpu burst time: %lu\n",  process_behavior->cpuburst);
 			add_to_queue(&HighProcessQ.processes, &ArrivalQ.current, current_priority(&process->behaviors));
+			printf("________________________________________________\n");
 		}
 		next_element(&ArrivalQ);
 	}
