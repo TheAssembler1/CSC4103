@@ -232,7 +232,7 @@ void queue_new_arrivals(void){
 			ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.queue->info;
 			printf("Current wanted cpu burst time: %lu\n",  process_behavior->cpuburst);
 			add_to_queue(&HighProcessQ.processes, &ArrivalQ.current, current_priority(&process->behaviors));
-			printf("________________________________________________\n");
+			printf("------------------------------------------------\n");
 		}
 		next_element(&ArrivalQ);
 	}
