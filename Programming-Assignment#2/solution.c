@@ -23,6 +23,11 @@
 	printf("Length of Q: %d\n", queue_length(&ArrivalQ));
 */
 
+/*
+	//order of input elements
+	TIME | PID | RUN | IO | REPEAT
+*/
+
 //used to represent infinity in g and b values
 #define INFINITY 255
 
@@ -207,13 +212,14 @@ void queue_new_arrivals(void){
 	rewind_queue(&ArrivalQ);
 	while(!end_of_queue(&ArrivalQ)){
 		if(Clock == current_priority(&ArrivalQ)){
-			printf("Current clock is %lu\n", Clock);
-			printf("Adding process with arrival time of %d to high queue\n", current_priority(&ArrivalQ));
+			printf("Curent clock time: %lu\n", Clock);
+			printf("Current process has arrival time of: %d", current_priority(&ArrivalQ));
 			
 			Process* process = (Process*)ArrivalQ.current->info; 
+			printf("Current process has id of: %lu\n", process->pid);
 			rewind_queue(&process->behaviors);
 			ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.queue->info;
-			printf("I think the process has a cpu burst time of %lu\n",  process_behavior->cpuburst);
+			printf("Current wanted cpu burst time: %lu\n",  process_behavior->cpuburst);
 			add_to_queue(&HighProcessQ.processes, &ArrivalQ.current, current_priority(&process->behaviors));
 		}
 		next_element(&ArrivalQ);
