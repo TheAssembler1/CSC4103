@@ -213,7 +213,7 @@ void queue_new_arrivals(void){
 	while(!end_of_queue(&ArrivalQ)){
 		if(Clock == current_priority(&ArrivalQ)){
 			printf("Curent clock time: %lu\n", Clock);
-			printf("Current process has arrival time of: %d", current_priority(&ArrivalQ));
+			printf("Current process has arrival time of: %d\n", current_priority(&ArrivalQ));
 			
 			Process* process = (Process*)ArrivalQ.current->info; 
 			printf("Current process has id of: %lu\n", process->pid);
