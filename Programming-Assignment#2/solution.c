@@ -208,10 +208,11 @@ void queue_new_arrivals(void){
 	while(!end_of_queue(&ArrivalQ)){
 		if(Clock == current_priority(&ArrivalQ)){
 			printf("Current clock is %lu\n", Clock);
-			printf("Adding process with id of %d to high queue\n", current_priority(&ArrivalQ));
+			printf("Adding process with arrival time of %d to high queue\n", current_priority(&ArrivalQ));
 			
 			Process* process = (Process*)ArrivalQ.current->info; 
 			rewind_queue(&process->behaviors);
+			printf("I think the process has a cpu burst time of %lu\n",  current_priority(&process->behaviors));
 			add_to_queue(&HighProcessQ.processes, &ArrivalQ.current, current_priority(&process->behaviors));
 		}
 		next_element(&ArrivalQ);
