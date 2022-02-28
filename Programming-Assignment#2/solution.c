@@ -212,7 +212,7 @@ void queue_new_arrivals(void){
 			
 			Process* process = (Process*)ArrivalQ.current->info; 
 			rewind_queue(&process->behaviors);
-			printf("I think the process has a cpu burst time of %lu\n",  process->behaviors.queue->info.cpuburst);
+			printf("I think the process has a cpu burst time of %lu\n",  process->behaviors.queue->info->cpuburst);
 			add_to_queue(&HighProcessQ.processes, &ArrivalQ.current, current_priority(&process->behaviors));
 		}
 		next_element(&ArrivalQ);
