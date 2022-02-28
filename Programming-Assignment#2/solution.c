@@ -207,7 +207,17 @@ bool processes_exist(void){
 	return true;
 }
 
-//FIXME::implement this
+//FIXME::change this to while loop and remove if hit an arrival
+//like
+/*
+while(Clock = current_priority(&ArrivalQ)){
+	add process to back of high queue
+
+	print info about it
+
+	remove from top of queue
+}
+*/
 void queue_new_arrivals(void){
 	rewind_queue(&ArrivalQ);
 	while(!end_of_queue(&ArrivalQ)){
