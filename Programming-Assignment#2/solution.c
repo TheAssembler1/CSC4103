@@ -208,7 +208,7 @@ void execute_highest_priority_process(void){
 
 //FIXME::implement this
 bool processes_exist(void){
-	if(empty_queue(&HighProcessQ) && empty_queue(&MidProcessQ) && empty_queue(&LowProcessQ) && empty_queue(&ArrivalQ))
+	if(empty_queue(&HighProcessQ.processes) && empty_queue(&HighProcessQ.processes) && empty_queue(&HighProcessQ.processes) && empty_queue(&ArrivalQ))
 		return true;
 
 	return false;
