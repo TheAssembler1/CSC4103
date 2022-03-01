@@ -209,9 +209,9 @@ void execute_highest_priority_process(void){
 //FIXME::implement this
 bool processes_exist(void){
 	if(empty_queue(&HighProcessQ.processes) && empty_queue(&HighProcessQ.processes) && empty_queue(&HighProcessQ.processes) && empty_queue(&ArrivalQ))
-		return true;
+		return false;
 
-	return false;
+	return true;
 }
 
 //FIXME::change this to while loop and remove if hit an arrival
