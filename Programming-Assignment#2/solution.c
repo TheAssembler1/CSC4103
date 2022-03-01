@@ -208,9 +208,10 @@ void execute_highest_priority_process(void){
 
 //FIXME::implement this
 bool processes_exist(void){
-	if(Clock > 4000)
-		return false;
-	return true;
+	if(empty_queue(&HighProcessQ) && empty_queue(&MidProcessQ) && empty_queue(&LowProcessQ) && empty_queue(ArrivalQ))
+		return true;
+		
+	return false;
 }
 
 //FIXME::change this to while loop and remove if hit an arrival
