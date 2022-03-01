@@ -32,10 +32,16 @@
 #define INFINITY 255
 
 //structure of a process and process behavior
+//FIXME::need to compile this
 typedef struct _ProcessBehavior{
 	unsigned long cpuburst;
+	unsigned long current_cpuburst;
+
 	unsigned long ioburst;
+	unsigned long current_ioburst;
+
 	unsigned long repeat;
+	unsigned long current_repeat;
 }ProcessBehavior;
 
 typedef struct _Process{
