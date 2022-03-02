@@ -170,7 +170,7 @@ void do_IO(void){
 		printf("I/O: Process %d blocked for I/O at time %lu.\n", CurrentBlockedProcess->pid, Clock);
 
 		//unblocking if we have done enough io
-		if(++(process_behavior->current_ioburst) >= process_behavior->ioburst){
+		if(++(process_behavior->current_ioburst) == process_behavior->ioburst){
 			blocked = false;
 
 			//updating current repeat because we did a full cycle of io and cpu
@@ -216,7 +216,7 @@ void execute_highest_priority_process(void){
 		*/
 
 		//checking if we have ran enought cpu cycles
-		if(++(process_behavior->current_cpuburst) >= process_behavior->cpuburst){
+		if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
 			printf("Dequeued at time %lu\n", Clock);
 
 			//check if this is the last cpu time we need so we repeated one more time than we need to end on cpu time
