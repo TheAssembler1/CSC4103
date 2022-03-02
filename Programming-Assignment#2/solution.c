@@ -190,6 +190,7 @@ void final_report(void){
 void execute_highest_priority_process(void){
 	//check if we are not blocked for io
 	if(!blocked){
+		printf(":LSKDFJ:LKSDF\n");
 		ProcessQueue* CurrentProcessQ = NULL;
 
 		//checking if queues are empty or not
