@@ -179,7 +179,7 @@ void final_report(void){
 void execute_highest_priority_process(void){
 	//check if we are not blocked for io
 	if(!blocked){
-		ProcessQueue* CurrentProcessQ;
+		ProcessQueue* CurrentProcessQ = NULL;
 
 		//checking if queues are empty or not
 		if(!empty_queue(&HighProcessQ.processes))
@@ -195,7 +195,7 @@ void execute_highest_priority_process(void){
 		}
 
 		Process* process = (Process*)CurrentProcessQ->processes.current->info; 
-		ProcessBehavior* process_behavior = process->behaviors.current;
+		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current;
 	}
 }
 
