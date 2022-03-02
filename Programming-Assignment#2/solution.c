@@ -124,11 +124,6 @@ void read_process_descriptions(void){
 	int pid = 0, first = 1;
 	unsigned long arrival;
 
-	//FIXME::Need to get rid of these values somehow
-	b.current_cpuburst = 0;
-	b.current_ioburst = 0;
-	b.current_repeat = 0;
-
 	init_process(&p);
 	arrival = 0;
 	while(scanf("%lu", &arrival) != EOF){
@@ -219,6 +214,7 @@ void execute_highest_priority_process(void){
 		printf("Process wanted repeat %lu\n", process_behavior->repeat);
 
 		//checking if we have ran enought cpu cycles
+		/*
 		if(++(process_behavior->current_cpuburst) >= process_behavior->cpuburst){
 			printf("Dequeued at time %lu\n", Clock);
 
@@ -237,6 +233,7 @@ void execute_highest_priority_process(void){
 				blocked = true;
 			}
 		}
+		*/
 	}
 }
 
