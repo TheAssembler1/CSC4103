@@ -15,12 +15,12 @@ typedef struct _ProcessBehavior{
 	unsigned long ioburst;
 	unsigned long current_ioburst;
 
-	unsigned long repeat;
-	unsigned long current_repeat;
+	int repeat;
+	int current_repeat;
 }ProcessBehavior;
 
 typedef struct _Process{
-	unsigned long pid;
+	int pid;
 	unsigned long arrival_time;	
 
 	Queue behaviors;
@@ -167,7 +167,7 @@ void do_IO(void){
 		ProcessBehavior* process_behavior = (ProcessBehavior*)CurrentBlockedProcess->behaviors.current;
 
 		//logging what process is blocking
-		printf("I/O: Process %lu blocked for I/O at time %lu.\n", CurrentBlockedProcess->pid, Clock);
+		printf("I/O: Process %d blocked for I/O at time %lu.\n", CurrentBlockedProcess->pid, Clock);
 
 		//unblocking if we have done enough io
 		if(++(process_behavior->current_ioburst) >= process_behavior->ioburst){
@@ -205,13 +205,13 @@ void execute_highest_priority_process(void){
 		Process* process = (Process*)CurrentProcessQ->processes.current->info; 
 		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current->info;
 
-		printf("Process has an id of %lu\n", process->pid);
+		printf("Process has an id of %d\n", process->pid);
 		printf("Process current cpu burst %lu\n", process_behavior->current_cpuburst);
 		printf("Process wanted cpu burst %lu\n", process_behavior->cpuburst);
 		printf("Process current io burst %lu\n", process_behavior->current_ioburst);
 		printf("Process wanted io burst %lu\n", process_behavior->ioburst);
-		printf("Process current repeat %lu\n", process_behavior->current_repeat);
-		printf("Process wanted repeat %lu\n", process_behavior->repeat);
+		printf("Process current repeat %d\n", process_behavior->current_repeat);
+		printf("Process wanted repeat %d\n", process_behavior->repeat);
 
 		//checking if we have ran enought cpu cycles
 		/*
@@ -253,7 +253,7 @@ void queue_new_arrivals(void){
 	while(!empty_queue(&ArrivalQ) && Clock == current_priority(&ArrivalQ)){
 		//getting process for logging
 		Process* process = (Process*)ArrivalQ.current->info; 
-		printf("CREATE: Process %lu entered the ready queue at time %lu.\n", process->pid, Clock);
+		printf("CREATE: Process %d entered the ready queue at time %lu.\n", process->pid, Clock);
 
 		//adding process to high priority queue
 		add_to_queue(&HighProcessQ.processes, process, 0);
