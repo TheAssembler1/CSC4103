@@ -173,6 +173,7 @@ void do_IO(void){
 
 		//logging what process is blocking
 		printf("I/O: Process %d blocked for I/O at time %lu.\n", CurrentBlockedProcess->pid, Clock);
+		printf("IO BURST OF %lu\n", process_behavior->ioburst);
 
 		//unblocking if we have done enough io
 		if(++(process_behavior->current_ioburst) == process_behavior->ioburst){
