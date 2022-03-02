@@ -230,10 +230,10 @@ void queue_new_arrivals(void){
 	while(Clock == current_priority(&ArrivalQ)){
 		//getting process for logging
 		Process* process = (Process*)ArrivalQ.current->info; 
+		printf("CREATE: Process %lu entered the ready queue at time %lu.\n", process->pid, Clock);
+
 		//deleting process from ArrivalQ
 		delete_current(&ArrivalQ);
-
-		printf("CREATE: Process %lu entered the ready queue at time %lu.\n", process->pid, Clock);
 	}
 
 	/*
