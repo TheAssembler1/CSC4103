@@ -231,7 +231,7 @@ void queue_new_arrivals(void){
 		void* element;
 		remove_from_front(&ArrivalQ, element);
 
-		Process* process = (Process*)element->info;
+		Process* process = (Process*)element;
 		printf("Current process has id of: %lu\n", process->pid);
 	}
 
