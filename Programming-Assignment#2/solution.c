@@ -208,20 +208,25 @@ void execute_highest_priority_process(void){
 
 //FIXME::implement this
 bool processes_exist(void){
+	//checking if all queue's are empty
 	if(empty_queue(&HighProcessQ.processes) && empty_queue(&HighProcessQ.processes) && empty_queue(&HighProcessQ.processes) && empty_queue(&ArrivalQ))
 		return false;
 
+	//one of the queues is not empty so processes are either waiting or process queues have processes
 	return true;
 }
 
 void queue_new_arrivals(void){
-	rewind_queue(&ArrivalQ);
-	while(Clock == current_priority(&ArrivalQ)){
-		//getting process for logging
-		Process* process = (Process*)ArrivalQ.current->info; 
-		printf("CREATE: Process %lu entered the ready queue at time %lu.\n", process->pid, Clock);
+	//first checking if the arrival queue has any processes
+	if(!empty_queue(&ArrivalQ)){
+		rewind_queue(&ArrivalQ);
+		while(Clock == current_priority(&ArrivalQ)){
+			//getting process for logging
+			Process* process = (Process*)ArrivalQ.current->info; 
+			printf("CREATE: Process %lu entered the ready queue at time %lu.\n", process->pid, Clock);
 
-		//deleting process from ArrivalQ
-		delete_current(&ArrivalQ);
+			//deleting process from ArrivalQ
+			delete_current(&ArrivalQ);
+		}
 	}
 }
