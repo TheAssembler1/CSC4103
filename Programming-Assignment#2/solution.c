@@ -49,6 +49,14 @@ void final_report(void);
 unsigned long Clock;
 Queue ArrivalQ;
 
+
+//this queue is always present
+Process IdleProcess;
+unsigned long IdleProcessCycles;
+
+//says wether we are blocking for io
+bool blocked = false;
+
 // comparison function for queue of ProcessBehaviors
 int process_behavior_comparison(const void* e1, const void* e2) {
 	ProcessBehavior *processb1 = (ProcessBehavior*)e1;
@@ -67,9 +75,6 @@ int process_queue_comparison(const void* e1, const void* e2) {
 
 	return process_behavior_comparison(process1->behaviors.queue->info, process2->behaviors.queue->info);
 }
-
-//this queue is always present
-Process IdleProcess;
 
 //defining the three queues to hold running processes
 ProcessQueue HighProcessQ = {
@@ -172,15 +177,25 @@ void final_report(void){
 
 //FIXME::implement this
 void execute_highest_priority_process(void){
-	//checking if queues are empty or not
-	if(!empty_queue(&HighProcessQ.processes)){
+	//check if we are not blocked for io
+	if(!blocked){
+		ProcessQueue* CurrentProcessQ;
 
-	}else if(!empty_queue(&MidProcessQ.processes)){
+		//checking if queues are empty or not
+		if(!empty_queue(&HighProcessQ.processes))
+			CurrentProcessQ = &HighProcessQ;
+		else if(!empty_queue(&MidProcessQ.processes))
+			CurrentProcessQ = &MidProcessQ;
+		else if(!empty_queue(&LowProcessQ.processes))
+			CurrentProcessQ = &LowProcessQ;
+		else{
+			//need to run the null process
+			IdleProcessCycles++;
+			return;
+		}
 
-	}else if(!empty_queue(&LowProcessQ.processes)){
-
-	}else{
-		//need to run the null process
+		Process* process = (Process*)CurrentProcessQ->processes.current->info; 
+		ProcessBehavior* process_behavior = process->behaviors.current;
 	}
 }
 
@@ -194,6 +209,7 @@ bool processes_exist(void){
 	return true;
 }
 
+//FIXME::might need to check if blocked before queueuing
 void queue_new_arrivals(void){
 	rewind_queue(&ArrivalQ);
 
