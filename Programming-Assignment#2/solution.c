@@ -179,6 +179,10 @@ void do_IO(void){
 		if(++(process_behavior->current_ioburst) >= process_behavior->ioburst){
 			blocked = false;
 
+			//reseting ioburst and cpuburst
+			process_behavior->current_cpuburst = 0;
+			process_behavior->current_ioburst = 0;
+
 			//updating current repeat because we did a full cycle of io and cpu
 			process_behavior->repeat++;
 		}
