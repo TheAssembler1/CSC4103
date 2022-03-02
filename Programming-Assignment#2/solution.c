@@ -210,7 +210,7 @@ void execute_highest_priority_process(void){
 		}
 
 		Process* process = (Process*)CurrentProcessQ->processes.current->info; 
-		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current;
+		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current.info;
 
 		printf("CURRENT process id %lu\n", process->pid);
 		printf("CURRENT cpu burst time %lu\n", process_behavior->current_cpuburst);
