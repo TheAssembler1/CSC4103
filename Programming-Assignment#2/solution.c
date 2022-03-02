@@ -228,7 +228,7 @@ while(Clock = current_priority(&ArrivalQ)){
 void queue_new_arrivals(void){
 	rewind_queue(&ArrivalQ);
 	while(Clock == current_priority(&ArrivalQ)){
-		void* element = malloc(sizeof(_Queue_element));
+		void* element = malloc(sizeof(50));
 		remove_from_front(&ArrivalQ, element);
 		printf("%d\n", Clock);
 	}
