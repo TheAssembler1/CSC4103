@@ -228,8 +228,12 @@ while(Clock = current_priority(&ArrivalQ)){
 void queue_new_arrivals(void){
 	rewind_queue(&ArrivalQ);
 	while(Clock == current_priority(&ArrivalQ)){
+		//getting process for logging
+		Process* process = (Process*)ArrivalQ.current->info; 
+		//deleting process from ArrivalQ
 		delete_current(&ArrivalQ);
-		printf("%d\n", Clock);
+
+		printf("CREATE: Process %lu entered the ready queue at time %lu.\n", process->pid, Clock);
 	}
 
 	/*
