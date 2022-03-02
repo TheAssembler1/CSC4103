@@ -196,6 +196,21 @@ void execute_highest_priority_process(void){
 
 		Process* process = (Process*)CurrentProcessQ->processes.current->info; 
 		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current;
+
+		//checking if we have ran enought cpu cycles
+		if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
+			//check if this is the last cpu time we need so we repeated one more time than we need to end on cpu time
+			if(++(process_behavior->current_repeat) > process_behavior->repeat){
+				rewind_queue(&process->behaviors);
+				delete_current(&process->behaviors);
+
+				//if we have no process behaviors then we delete process from process queue
+				if(empty_queue(&process->behaviors)){
+					rewind_queue(CurrentProcessQ);
+					delete_current(CurrentProcessQ)
+				}
+			}
+		}
 	}
 }
 
