@@ -145,19 +145,12 @@ void read_process_descriptions(void){
 	add_to_queue(&ArrivalQ, &p, p.arrival_time);
 }
 
-//FIXME::implement this
 void init_process(Process* process){
-	printf("init_process\n");
-
 	//this queue holds the new processes to be added to queues
 	init_queue(&process->behaviors, sizeof(ProcessBehavior), TRUE, process_behavior_comparison, FALSE);
 }
 
-//FIXME::implement this
 void init_all_queues(void){
-	//arrival queue
-	printf("init_all_queues\n");
-
 	init_queue(&ArrivalQ, sizeof(Process), TRUE, NULL, FALSE);
 	
 	//initializing the process queues
@@ -166,7 +159,6 @@ void init_all_queues(void){
 	init_queue(&LowProcessQ.processes, sizeof(Process), TRUE, process_queue_comparison, FALSE);
 }
 
-//FIXME::implement this
 void do_IO(void){
 	if(blocked){
 		//increasing io spent in current process behavior
@@ -190,7 +182,6 @@ void final_report(void){
 	printf("final_report\n");
 }
 
-//FIXME::implement this
 void execute_highest_priority_process(void){
 	//check if we are not blocked for io
 	if(!blocked){
@@ -238,7 +229,6 @@ void execute_highest_priority_process(void){
 	}
 }
 
-//FIXME::implement this
 bool processes_exist(void){
 	//checking if all queue's are empty
 	if(empty_queue(&HighProcessQ.processes) && empty_queue(&HighProcessQ.processes) && empty_queue(&HighProcessQ.processes) && empty_queue(&ArrivalQ))
@@ -248,7 +238,6 @@ bool processes_exist(void){
 	return true;
 }
 
-//FIXME::might need to check if blocked before queueuing
 void queue_new_arrivals(void){
 	rewind_queue(&ArrivalQ);
 
