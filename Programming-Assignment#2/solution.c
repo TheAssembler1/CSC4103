@@ -213,6 +213,7 @@ void execute_highest_priority_process(void){
 		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current;
 
 		printf("CURRENT process id %lu\n", process->pid);
+		printf("CURRENT cpu burst time %lu\n", process_behavior->current_cpuburst);
 
 		//checking if we have ran enought cpu cycles
 		if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
