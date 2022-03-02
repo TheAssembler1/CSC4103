@@ -214,6 +214,7 @@ void execute_highest_priority_process(void){
 
 		printf("CURRENT process id %lu\n", process->pid);
 		printf("CURRENT cpu burst time %lu\n", process_behavior->current_cpuburst);
+		printf("CURRENT wanted cpu burst time %lu\n", process_behavior->cpuburst);
 
 		//checking if we have ran enought cpu cycles
 		if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
