@@ -170,7 +170,7 @@ void init_all_queues(void){
 void do_IO(void){
 	if(blocked){
 		//increasing io spent in current process behavior
-		ProcessBehavior* process_behavior = (ProcessBehavior*)CurrentBlockedProcess->behaviors.current;
+		ProcessBehavior* process_behavior = (ProcessBehavior*)CurrentBlockedProcess->behaviors.current->info;
 
 		//logging what process is blocking
 		printf("I/O: Process %d blocked for I/O at time %lu.\n", CurrentBlockedProcess->pid, Clock);
