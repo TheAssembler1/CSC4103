@@ -212,6 +212,7 @@ void execute_highest_priority_process(void){
 		Process* process = (Process*)CurrentProcessQ->processes.current->info; 
 		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current->info;
 
+		printf("Process has an id of %lu\n", process->pid);
 		printf("Process current cpu burst %lu\n", process_behavior->current_cpuburst);
 		printf("Process wanted cpu burst %lu\n", process_behavior->cpuburst);
 
