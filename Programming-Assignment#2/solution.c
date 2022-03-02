@@ -2,6 +2,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+//not ever initializing current values of processes
+
 //used to represent infinity in g and b values
 #define INFINITY 255
 
@@ -121,6 +123,11 @@ void read_process_descriptions(void){
 	ProcessBehavior b;
 	int pid = 0, first = 1;
 	unsigned long arrival;
+
+	//FIXME::Need to get rid of these values somehow
+	b.current_cpuburst = 0;
+	b.current_ioburst = 0;
+	b.current_repeat = 0;
 
 	init_process(&p);
 	arrival = 0;
