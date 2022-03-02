@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-//not ever initializing current values of processes
+//maybe run a debugger to see where process is SEG faulting
 
 //used to represent infinity in g and b values
 #define INFINITY 255
@@ -174,7 +174,6 @@ void do_IO(void){
 
 		//logging what process is blocking
 		printf("I/O: Process %d blocked for I/O at time %lu.\n", CurrentBlockedProcess->pid, Clock);
-
 		//unblocking if we have done enough io
 		if(++(process_behavior->current_ioburst) >= process_behavior->ioburst){
 			blocked = false;
