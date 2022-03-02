@@ -214,17 +214,6 @@ bool processes_exist(void){
 	return true;
 }
 
-//FIXME::change this to while loop and remove if hit an arrival
-//like
-/*
-while(Clock = current_priority(&ArrivalQ)){
-	add process to back of high queue
-
-	print info about it
-
-	remove from top of queue
-}
-*/
 void queue_new_arrivals(void){
 	rewind_queue(&ArrivalQ);
 	while(Clock == current_priority(&ArrivalQ)){
@@ -235,23 +224,4 @@ void queue_new_arrivals(void){
 		//deleting process from ArrivalQ
 		delete_current(&ArrivalQ);
 	}
-
-	/*
-	rewind_queue(&ArrivalQ);
-	while(!end_of_queue(&ArrivalQ)){
-		if(Clock == current_priority(&ArrivalQ)){
-			printf("________________________________________________\n");
-			printf("Curent clock time: %lu\n", Clock);
-			printf("Current process has arrival time of: %d\n", current_priority(&ArrivalQ));
-			
-			Process* process = (Process*)ArrivalQ.current->info; 
-			printf("Current process has id of: %lu\n", process->pid);
-			rewind_queue(&process->behaviors);
-			ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.queue->info;
-			printf("Current wanted cpu burst time: %lu\n",  process_behavior->cpuburst);
-			add_to_queue(&HighProcessQ.processes, &ArrivalQ.current, current_priority(&process->behaviors));
-			printf("------------------------------------------------\n");
-		}
-		next_element(&ArrivalQ);
-	}*/
 }
