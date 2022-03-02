@@ -217,16 +217,15 @@ bool processes_exist(void){
 }
 
 void queue_new_arrivals(void){
+	rewind_queue(&ArrivalQ);
+	
 	//first checking if the arrival queue has any processes
-	if(!empty_queue(&ArrivalQ)){
-		rewind_queue(&ArrivalQ);
-		while(Clock == current_priority(&ArrivalQ)){
-			//getting process for logging
-			Process* process = (Process*)ArrivalQ.current->info; 
-			printf("CREATE: Process %lu entered the ready queue at time %lu.\n", process->pid, Clock);
+	while(!empty_queue(&ArrivalQ) && Clock == current_priority(&ArrivalQ)){
+		//getting process for logging
+		Process* process = (Process*)ArrivalQ.current->info; 
+		printf("CREATE: Process %lu entered the ready queue at time %lu.\n", process->pid, Clock);
 
-			//deleting process from ArrivalQ
-			delete_current(&ArrivalQ);
-		}
+		//deleting process from ArrivalQ
+		delete_current(&ArrivalQ);
 	}
 }
