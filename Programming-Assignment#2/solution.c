@@ -253,5 +253,7 @@ void queue_new_arrivals(void){
 
 		//deleting process from ArrivalQ
 		delete_current(&ArrivalQ);
+
+		printf(":LSKDFJ:LKSDFJ\n");
 	}
 }
