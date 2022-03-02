@@ -206,8 +206,8 @@ void execute_highest_priority_process(void){
 
 				//if we have no process behaviors then we delete process from process queue
 				if(empty_queue(&process->behaviors)){
-					rewind_queue(CurrentProcessQ);
-					delete_current(CurrentProcessQ);
+					rewind_queue(CurrentProcessQ->processes);
+					delete_current(CurrentProcessQ->processes);
 				}
 			}
 		}
