@@ -172,6 +172,9 @@ void do_IO(void){
 		//increasing io spent in current process behavior
 		ProcessBehavior* process_behavior = (ProcessBehavior*)CurrentBlockedProcess->behaviors.current;
 
+		//logging what process is blocking
+		printf("I/O: Process %lu blocked for I/O at time %lu.\n", CurrentBlockedProcess.pid, Clock);
+
 		//unblocking if we have done enough io
 		if(++(process_behavior->current_ioburst) == process_behavior->ioburst)
 			blocked = false;
