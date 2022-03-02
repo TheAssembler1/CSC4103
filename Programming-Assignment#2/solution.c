@@ -132,6 +132,11 @@ void read_process_descriptions(void){
 		       &b.cpuburst,
 		       &b.ioburst,
 		       &b.repeat);
+
+		//FIXME::remove this somehow
+		b.current_cpuburst = 0;
+		b.current_ioburst = 0;
+		b.current_repeat = 0;
 		
 		if(!first && p.pid != pid){
 			add_to_queue(&ArrivalQ, &p, p.arrival_time);
