@@ -245,6 +245,9 @@ void queue_new_arrivals(void){
 		Process* process = (Process*)ArrivalQ.current->info; 
 		printf("CREATE: Process %lu entered the ready queue at time %lu.\n", process->pid, Clock);
 
+		//adding process to high priority queue
+		add_to_queue(&HighProcessQ, process, NULL);
+
 		//deleting process from ArrivalQ
 		delete_current(&ArrivalQ);
 	}
