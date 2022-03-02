@@ -168,7 +168,7 @@ void do_IO(void){
 		printf("I/O: Process %lu blocked for I/O at time %lu.\n", CurrentBlockedProcess->pid, Clock);
 
 		//unblocking if we have done enough io
-		if(++(process_behavior->current_ioburst) == process_behavior->ioburst){
+		if(++(process_behavior->current_ioburst) >= process_behavior->ioburst){
 			blocked = false;
 
 			//updating current repeat because we did a full cycle of io and cpu
