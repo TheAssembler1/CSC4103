@@ -212,14 +212,11 @@ void execute_highest_priority_process(void){
 		Process* process = (Process*)CurrentProcessQ->processes.current->info; 
 		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current->info;
 
-		printf("CURRENT process id %lu\n", process->pid);
-		printf("CURRENT cpu burst time %lu\n", process_behavior->current_cpuburst);
-		printf("CURRENT wanted cpu burst time %lu\n", process_behavior->cpuburst);
-
 		//checking if we have ran enought cpu cycles
-		if((process_behavior->current_cpuburst)++ == process_behavior->cpuburst){
+		if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
 			//check if this is the last cpu time we need so we repeated one more time than we need to end on cpu time
-			if(++(process_behavior->current_repeat) > process_behavior->repeat){
+			if(++(process_behavior->current_repeat) >= process_behavior->repeat){
+				printf("Dequeued at time %lu\n", Clock);
 				rewind_queue(&process->behaviors);
 				delete_current(&process->behaviors);
 
@@ -229,8 +226,8 @@ void execute_highest_priority_process(void){
 					delete_current(&CurrentProcessQ->processes);
 				}
 			}else{
-				blocked = true;
 				CurrentBlockedProcess = process;
+				blocked = true;
 			}
 		}
 	}
