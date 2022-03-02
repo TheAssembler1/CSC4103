@@ -173,7 +173,7 @@ void do_IO(void){
 		ProcessBehavior* process_behavior = (ProcessBehavior*)CurrentBlockedProcess->behaviors.current;
 
 		//logging what process is blocking
-		printf("I/O: Process %lu blocked for I/O at time %lu.\n", CurrentBlockedProcess.pid, Clock);
+		printf("I/O: Process %lu blocked for I/O at time %lu.\n", CurrentBlockedProcess->pid, Clock);
 
 		//unblocking if we have done enough io
 		if(++(process_behavior->current_ioburst) == process_behavior->ioburst)
@@ -253,7 +253,5 @@ void queue_new_arrivals(void){
 
 		//deleting process from ArrivalQ
 		delete_current(&ArrivalQ);
-
-		printf(":LSKDFJ:LKSDFJ\n");
 	}
 }
