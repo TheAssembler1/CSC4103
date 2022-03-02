@@ -2,37 +2,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-/*
-	//FIXME::remove this
-	rewind_queue(&ArrivalQ);
-	printf("Queue contains:\n");
-  	while (!end_of_queue(&ArrivalQ)) {
-		printf("___________________________________\n");
-    	printf("%d\n", current_priority(&ArrivalQ));
-		
-		Process* current_process = (Process*)ArrivalQ.current->info;
-		rewind_queue(&current_process->behaviors);
-		while(!end_of_queue(&current_process->behaviors)){\
-			printf("Another request\n");
-			next_element(&current_process->behaviors);
-		}
-
-    	next_element(&ArrivalQ);
-		printf("___________________________________\n");
-  	}
-	printf("Length of Q: %d\n", queue_length(&ArrivalQ));
-*/
-
-/*
-	//order of input elements
-	TIME | PID | RUN | IO | REPEAT
-*/
-
 //used to represent infinity in g and b values
 #define INFINITY 255
 
 //structure of a process and process behavior
-//FIXME::need to compile this
 typedef struct _ProcessBehavior{
 	unsigned long cpuburst;
 	unsigned long current_cpuburst;
@@ -48,7 +21,6 @@ typedef struct _Process{
 	unsigned long pid;
 	unsigned long arrival_time;	
 
-	//this should be a queue
 	Queue behaviors;
 }Process;
 
@@ -97,10 +69,7 @@ int process_queue_comparison(const void* e1, const void* e2) {
 }
 
 //this queue is always present
-Process IdleProcess = {
-	.arrival_time = 0,
-	.pid = 0
-};
+Process IdleProcess;
 
 //defining the three queues to hold running processes
 ProcessQueue HighProcessQ = {
@@ -203,7 +172,16 @@ void final_report(void){
 
 //FIXME::implement this
 void execute_highest_priority_process(void){
+	//checking if queues are empty or not
+	if(!empty_queue(&HighProcessQ)){
 
+	}else if(!empty_queue(&MidProcessQ)){
+
+	}else if(!empty_queue(&LowProcessQ)){
+
+	}else{
+		//need to run the null process
+	}
 }
 
 //FIXME::implement this
@@ -218,7 +196,7 @@ bool processes_exist(void){
 
 void queue_new_arrivals(void){
 	rewind_queue(&ArrivalQ);
-	
+
 	//first checking if the arrival queue has any processes
 	while(!empty_queue(&ArrivalQ) && Clock == current_priority(&ArrivalQ)){
 		//getting process for logging
