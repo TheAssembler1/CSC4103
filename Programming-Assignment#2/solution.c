@@ -52,6 +52,7 @@ Queue ArrivalQ;
 
 //this queue is always present
 Process IdleProcess;
+Process* CurrentBlockedProcess;
 unsigned long IdleProcessCycles;
 
 //says wether we are blocking for io
@@ -167,7 +168,14 @@ void init_all_queues(void){
 
 //FIXME::implement this
 void do_IO(void){
+	if(blocked){
+		//increasing io spent in current process behavior
+		ProcessBehavior* process_behavior = (ProcessBehavior*)CurrentBlockedProcess->behaviors.current;
 
+		//unblocking if we have done enough io
+		if(++(process_behavior->current_ioburst) == process_behavior->ioburst)
+			blocked = false;
+	}
 }
 
 //FIXME::implement this
@@ -209,6 +217,9 @@ void execute_highest_priority_process(void){
 					rewind_queue(&CurrentProcessQ->processes);
 					delete_current(&CurrentProcessQ->processes);
 				}
+			}else{
+				blocked = true;
+				CurrentBlockedProcess = process;
 			}
 		}
 	}
