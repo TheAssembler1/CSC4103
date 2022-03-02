@@ -212,6 +212,9 @@ void execute_highest_priority_process(void){
 		Process* process = (Process*)CurrentProcessQ->processes.current->info; 
 		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current->info;
 
+		printf("Process current cpu burst %lu\n", process_behavior->current_cpuburst);
+		printf("Process wanted cpu burst %lu\n", process_behavior->cpuburst);
+
 		//checking if we have ran enought cpu cycles
 		if(++(process_behavior->current_cpuburst) >= process_behavior->cpuburst){
 			printf("Dequeued at time %lu\n", Clock);
