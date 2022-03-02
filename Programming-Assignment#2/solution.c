@@ -227,6 +227,16 @@ while(Clock = current_priority(&ArrivalQ)){
 */
 void queue_new_arrivals(void){
 	rewind_queue(&ArrivalQ);
+	while(Clock == current_priority(&ArrivalQ)){
+		void* element;
+		remove_from_front(&ArrivalQ, element);
+
+		Process* process = (Process*)element->info;
+		printf("Current process has id of: %lu\n", process->pid);
+	}
+
+	/*
+	rewind_queue(&ArrivalQ);
 	while(!end_of_queue(&ArrivalQ)){
 		if(Clock == current_priority(&ArrivalQ)){
 			printf("________________________________________________\n");
@@ -242,5 +252,5 @@ void queue_new_arrivals(void){
 			printf("------------------------------------------------\n");
 		}
 		next_element(&ArrivalQ);
-	}
+	}*/
 }
