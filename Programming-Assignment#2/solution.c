@@ -206,6 +206,10 @@ void execute_highest_priority_process(void){
 		printf("Process has an id of %lu\n", process->pid);
 		printf("Process current cpu burst %lu\n", process_behavior->current_cpuburst);
 		printf("Process wanted cpu burst %lu\n", process_behavior->cpuburst);
+		printf("Process current io burst %lu\n", process_behavior->current_ioburst);
+		printf("Process wanted io burst %lu\n", process_behavior->ioburst);
+		printf("Process current repeat %lu\n", process_behavior->current_repeat);
+		printf("Process wanted repeat %lu\n", process_behavior->repeat);
 
 		//checking if we have ran enought cpu cycles
 		if(++(process_behavior->current_cpuburst) >= process_behavior->cpuburst){
