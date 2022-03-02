@@ -216,6 +216,8 @@ void execute_highest_priority_process(void){
 		printf("CURRENT cpu burst time %lu\n", process_behavior->current_cpuburst);
 		printf("CURRENT wanted cpu burst time %lu\n", process_behavior->cpuburst);
 
+		return -1;
+
 		//checking if we have ran enought cpu cycles
 		if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
 			//check if this is the last cpu time we need so we repeated one more time than we need to end on cpu time
