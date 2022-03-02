@@ -177,7 +177,7 @@ void do_IO(void){
 		printf("IO BURST OF %lu\n", process_behavior->ioburst);
 
 		//unblocking if we have done enough io
-		if(++(process_behavior->current_ioburst) == process_behavior->ioburst){
+		if(++(process_behavior->current_ioburst) >= process_behavior->ioburst){
 			blocked = false;
 
 			//updating current repeat because we did a full cycle of io and cpu
