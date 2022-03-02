@@ -173,11 +173,11 @@ void final_report(void){
 //FIXME::implement this
 void execute_highest_priority_process(void){
 	//checking if queues are empty or not
-	if(!empty_queue(&HighProcessQ)){
+	if(!empty_queue(&HighProcessQ.processes)){
 
-	}else if(!empty_queue(&MidProcessQ)){
+	}else if(!empty_queue(&MidProcessQ.processes)){
 
-	}else if(!empty_queue(&LowProcessQ)){
+	}else if(!empty_queue(&LowProcessQ.processes)){
 
 	}else{
 		//need to run the null process
