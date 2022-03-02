@@ -217,10 +217,10 @@ void execute_highest_priority_process(void){
 
 		//checking if we have ran enought cpu cycles
 		if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
-			printf("Dequeued at time %lu\n", Clock);
 
 			//check if this is the last cpu time we need so we repeated one more time than we need to end on cpu time
 			if(++(process_behavior->current_repeat) > process_behavior->repeat){
+				printf("Dequeued at time %lu\n", Clock);
 				rewind_queue(&process->behaviors);
 				delete_current(&process->behaviors);
 
