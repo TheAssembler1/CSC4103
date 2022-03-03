@@ -170,20 +170,20 @@ void init_all_queues(void){
 void do_IO(void){
 	if(blocked){
 		//increasing io spent in current process behavior
-		ProcessBehavior* process_behavior = (ProcessBehavior*)CurrentBlockedProcess->behaviors.current;
+		ProcessBehavior* process_behavior = (ProcessBehavior*)CurrentBlockedProcess->behaviors.current->info;
 
 		//logging what process is blocking
 		printf("I/O: Process %d blocked for I/O at time %lu.\n", CurrentBlockedProcess->pid, Clock);
 		//unblocking if we have done enough io
-		if(++(process_behavior->current_ioburst) >= process_behavior->ioburst){
-			blocked = false;
-
+		if(++(process_behavior->current_ioburst) == process_behavior->ioburst){
 			//reseting ioburst and cpuburst
 			process_behavior->current_cpuburst = 0;
 			process_behavior->current_ioburst = 0;
 
 			//updating current repeat because we did a full cycle of io and cpu
-			process_behavior->repeat++;
+			process_behavior->current_repeat++;
+
+			blocked = false;
 		}
 	}
 }
@@ -213,6 +213,9 @@ void execute_highest_priority_process(void){
 			Process* process = (Process*)CurrentProcessQ->processes.current->info; 
 			ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current->info;
 
+			printf("RUN AT TIME %lu.\n", Clock);
+
+			/*
 			printf("_______________________________________________\n");
 			printf("Process has an id of %d\n", process->pid);
 			printf("------\n");
@@ -225,13 +228,15 @@ void execute_highest_priority_process(void){
 			printf("Process current repeat %d\n", process_behavior->current_repeat);
 			printf("Process wanted repeat %d\n", process_behavior->repeat);
 			printf("_______________________________________________\n");
+			*/
 
 			//checking if we have ran enought cpu cycles
 			if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
 
 				//check if this is the last cpu time we need so we repeated one more time than we need to end on cpu time
-				if(++(process_behavior->current_repeat) > process_behavior->repeat){
+				if(process_behavior->current_repeat == process_behavior->repeat){
 					printf("Dequeued at time %lu\n", Clock);
+					printf("QUEUE length %lu\n", queue_length(&process->behaviors));
 					rewind_queue(&process->behaviors);
 					delete_current(&process->behaviors);
 
