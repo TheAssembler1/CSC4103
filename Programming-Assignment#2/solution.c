@@ -58,24 +58,23 @@ Process* CurrentBlockedProcess;
 unsigned long IdleProcessCycles;
 
 //says wether we are blocking for io
-bool blocked = false;
+bool blocked;
 
 // comparison function for queue of ProcessBehaviors
 int process_behavior_comparison(const void* e1, const void* e2) {
-	ProcessBehavior *processb1 = (ProcessBehavior*)e1;
-	ProcessBehavior *processb2 = (ProcessBehavior*)e2;
+	ProcessBehavior* processb1 = (ProcessBehavior*)e1;
+	ProcessBehavior* processb2 = (ProcessBehavior*)e2;
 
 	if(processb1->cpuburst > processb2->cpuburst)
 		return 1;
-	else 
-		return 0;
+	return 0;
 }
 
 // comparison function for queue of processes
 int process_queue_comparison(const void* e1, const void* e2) {
 	Process *process1 = (Process*)e1;
 	Process *process2 = (Process*)e2;
-
+	
 	return process_behavior_comparison(process1->behaviors.queue->info, process2->behaviors.queue->info);
 }
 
@@ -215,7 +214,6 @@ void execute_highest_priority_process(void){
 
 			printf("RUN AT TIME %lu.\n", Clock);
 
-			/*
 			printf("_______________________________________________\n");
 			printf("Process has an id of %d\n", process->pid);
 			printf("------\n");
@@ -228,7 +226,6 @@ void execute_highest_priority_process(void){
 			printf("Process current repeat %d\n", process_behavior->current_repeat);
 			printf("Process wanted repeat %d\n", process_behavior->repeat);
 			printf("_______________________________________________\n");
-			*/
 
 			//checking if we have ran enought cpu cycles
 			if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
@@ -236,7 +233,6 @@ void execute_highest_priority_process(void){
 				//check if this is the last cpu time we need so we repeated one more time than we need to end on cpu time
 				if(process_behavior->current_repeat == process_behavior->repeat){
 					printf("Dequeued at time %lu\n", Clock);
-					printf("QUEUE length %lu\n", queue_length(&process->behaviors));
 					rewind_queue(&process->behaviors);
 					delete_current(&process->behaviors);
 
@@ -246,6 +242,8 @@ void execute_highest_priority_process(void){
 						delete_current(&CurrentProcessQ->processes);
 					}
 				}else{
+					//need to increase clock by one cycle for next io
+					Clock++;
 					CurrentBlockedProcess = process;
 					blocked = true;
 				}
@@ -270,10 +268,11 @@ void queue_new_arrivals(void){
 	while(!empty_queue(&ArrivalQ) && Clock == current_priority(&ArrivalQ)){
 		//getting process for logging
 		Process* process = (Process*)ArrivalQ.current->info; 
+		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current->info;
 		printf("CREATE: Process %d entered the ready queue at time %lu.\n", process->pid, Clock);
 
 		//adding process to high priority queue
-		add_to_queue(&HighProcessQ.processes, process, 0);
+		add_to_queue(&HighProcessQ.processes, process, process_behavior->cpuburst);
 
 		//deleting process from ArrivalQ
 		delete_current(&ArrivalQ);
