@@ -205,45 +205,45 @@ void execute_highest_priority_process(void){
 			CurrentProcessQ = &MidProcessQ;
 		else if(!empty_queue(&LowProcessQ.processes))
 			CurrentProcessQ = &LowProcessQ;
-		else{
-			//need to run the null process
+		else
 			IdleProcessCycles++;
-			return;
-		}
 
-		Process* process = (Process*)CurrentProcessQ->processes.current->info; 
-		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current->info;
+		//making sure there is a process to run
+		if(CurrentProcessQ){
+			Process* process = (Process*)CurrentProcessQ->processes.current->info; 
+			ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current->info;
 
-		printf("_______________________________________________\n");
-		printf("Process has an id of %d\n", process->pid);
-		printf("------\n");
-		printf("Process current cpu burst %lu\n", process_behavior->current_cpuburst);
-		printf("Process wanted cpu burst %lu\n", process_behavior->cpuburst);
-		printf("------\n");
-		printf("Process current io burst %lu\n", process_behavior->current_ioburst);
-		printf("Process wanted io burst %lu\n", process_behavior->ioburst);
-		printf("------\n");
-		printf("Process current repeat %d\n", process_behavior->current_repeat);
-		printf("Process wanted repeat %d\n", process_behavior->repeat);
-		printf("_______________________________________________\n");
+			printf("_______________________________________________\n");
+			printf("Process has an id of %d\n", process->pid);
+			printf("------\n");
+			printf("Process current cpu burst %lu\n", process_behavior->current_cpuburst);
+			printf("Process wanted cpu burst %lu\n", process_behavior->cpuburst);
+			printf("------\n");
+			printf("Process current io burst %lu\n", process_behavior->current_ioburst);
+			printf("Process wanted io burst %lu\n", process_behavior->ioburst);
+			printf("------\n");
+			printf("Process current repeat %d\n", process_behavior->current_repeat);
+			printf("Process wanted repeat %d\n", process_behavior->repeat);
+			printf("_______________________________________________\n");
 
-		//checking if we have ran enought cpu cycles
-		if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
+			//checking if we have ran enought cpu cycles
+			if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
 
-			//check if this is the last cpu time we need so we repeated one more time than we need to end on cpu time
-			if(++(process_behavior->current_repeat) > process_behavior->repeat){
-				printf("Dequeued at time %lu\n", Clock);
-				rewind_queue(&process->behaviors);
-				delete_current(&process->behaviors);
+				//check if this is the last cpu time we need so we repeated one more time than we need to end on cpu time
+				if(++(process_behavior->current_repeat) > process_behavior->repeat){
+					printf("Dequeued at time %lu\n", Clock);
+					rewind_queue(&process->behaviors);
+					delete_current(&process->behaviors);
 
-				//if we have no process behaviors then we delete process from process queue
-				if(empty_queue(&process->behaviors)){
-					rewind_queue(&CurrentProcessQ->processes);
-					delete_current(&CurrentProcessQ->processes);
+					//if we have no process behaviors then we delete process from process queue
+					if(empty_queue(&process->behaviors)){
+						rewind_queue(&CurrentProcessQ->processes);
+						delete_current(&CurrentProcessQ->processes);
+					}
+				}else{
+					CurrentBlockedProcess = process;
+					blocked = true;
 				}
-			}else{
-				CurrentBlockedProcess = process;
-				blocked = true;
 			}
 		}
 	}
