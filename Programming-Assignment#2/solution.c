@@ -182,6 +182,7 @@ void do_IO(void){
 			//updating current repeat because we did a full cycle of io and cpu
 			process_behavior->current_repeat++;
 
+			//unblocking the process it is done with current cycle of io
 			blocked = false;
 		}
 	}
@@ -244,6 +245,7 @@ void execute_highest_priority_process(void){
 				}else{
 					//need to increase clock by one cycle for next io
 					Clock++;
+					queue_new_arrivals();
 					CurrentBlockedProcess = process;
 					blocked = true;
 				}
