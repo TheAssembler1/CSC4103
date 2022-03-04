@@ -24,6 +24,7 @@ typedef struct _ProcessBehavior{
 typedef struct _Process{
 	int pid;
 	unsigned long arrival_time;	
+	unsigned long total_clock_time;
 
 	Queue behaviors;
 }Process;
@@ -34,6 +35,7 @@ typedef struct _ProcessQueue{
 	unsigned char q;
 	unsigned char b;
 	unsigned char g;
+	unsigned char level;
 
 	//this is the processses in the queue
 	Queue processes;
@@ -57,7 +59,6 @@ Queue ArrivalQ;
 //this queue is always present
 Process IdleProcess;
 Process* CurrentBlockedProcess;
-unsigned long IdleProcessCycles;
 
 //says wether we are blocking for io
 bool blocked;
@@ -84,19 +85,22 @@ int process_queue_comparison(const void* e1, const void* e2) {
 ProcessQueue HighProcessQ = {
 	.q = 10,
 	.b = 1,
-	.g = INFINITY
+	.g = INFINITY,
+	.level = 1
 };
 
 ProcessQueue MidProcessQ = {
 	.q = 30,
 	.b = 2,
-	.g = 2
+	.g = 2,
+	.level = 2
 };
 
 ProcessQueue LowProcessQ = {
 	.q = 100,
 	.b = INFINITY,
-	.g = 1
+	.g = 1,
+	.level = 2
 };
 
 int main(int argc, char* argv[]){
@@ -155,6 +159,8 @@ void read_process_descriptions(void){
 }
 
 void init_process(Process* process){
+	//setting total clock time to 0
+	process->total_clock_time = 0;
 	//this queue holds the new processes to be added to queues
 	init_queue(&process->behaviors, sizeof(ProcessBehavior), TRUE, process_behavior_comparison, FALSE);
 }
@@ -180,10 +186,12 @@ void do_IO(void){
 			//reseting ioburst and cpuburst
 			process_behavior->current_cpuburst = 0;
 			process_behavior->current_ioburst = 0;
-			process_behavior->has_logged_running = false;
 
 			//updating current repeat because we did a full cycle of io and cpu
 			process_behavior->current_repeat++;
+
+			//setting so process logs when going back to cpu
+			process_behavior->has_logged_running = false;
 
 			//unblocking the process it is done with current cycle of io
 			blocked = false;
@@ -209,7 +217,7 @@ void execute_highest_priority_process(void){
 		else if(!empty_queue(&LowProcessQ.processes))
 			CurrentProcessQ = &LowProcessQ;
 		else
-			IdleProcessCycles++;
+			IdleProcess.total_clock_time++;
 
 		//making sure there is a process to run
 		if(CurrentProcessQ){
@@ -219,8 +227,8 @@ void execute_highest_priority_process(void){
 			//check wether process should log it is running
 			//need to check what level it is running on before logging
 			if(!process_behavior->has_logged_running){
-				printf("RUN: Process %d started execution from level %d at time %lu; wants to execute for %lu ticks.\n"
-						,process->pid, 1, Clock, process_behavior->cpuburst - process_behavior->current_cpuburst);
+				printf("RUN: Process %d started execution from level %u at time %lu; wants to execute for %lu ticks.\n"
+						,process->pid, CurrentProcessQ->level, Clock, process_behavior->cpuburst - process_behavior->current_cpuburst);
 				process_behavior->has_logged_running = true;
 			}
 
@@ -243,9 +251,11 @@ void execute_highest_priority_process(void){
 			printf("_______________________________________________\n");
 			*/
 
+			//increasing the total runtime of the process
+			process->total_clock_time++;
+
 			//checking if we have ran enought cpu cycles
 			if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
-
 				//check if this is the last cpu time we need so we repeated one more time than we need to end on cpu time
 				if(process_behavior->current_repeat == process_behavior->repeat){
 					printf("Dequeued at time %lu\n", Clock);
@@ -254,6 +264,9 @@ void execute_highest_priority_process(void){
 
 					//if we have no process behaviors then we delete process from process queue
 					if(empty_queue(&process->behaviors)){
+						//logging that the process is finished and removing from the queue
+						printf("FINISHED:  Process %d finished at time %lu.\n", process->pid, Clock);
+
 						rewind_queue(&CurrentProcessQ->processes);
 						delete_current(&CurrentProcessQ->processes);
 					}
