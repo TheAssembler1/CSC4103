@@ -17,6 +17,8 @@ typedef struct _ProcessBehavior{
 
 	int repeat;
 	int current_repeat;
+
+	bool has_logged_running;
 }ProcessBehavior;
 
 typedef struct _Process{
@@ -178,6 +180,7 @@ void do_IO(void){
 			//reseting ioburst and cpuburst
 			process_behavior->current_cpuburst = 0;
 			process_behavior->current_ioburst = 0;
+			process_behavior->has_logged_running = false;
 
 			//updating current repeat because we did a full cycle of io and cpu
 			process_behavior->current_repeat++;
@@ -213,6 +216,17 @@ void execute_highest_priority_process(void){
 			Process* process = (Process*)CurrentProcessQ->processes.current->info; 
 			ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current->info;
 
+			//check wether process should log it is running
+			//need to check what level it is running on before logging
+			if(!process_behavior->has_logged_running){
+				printf("RUN: Process %d started execution from level %d at time %lu; wants to execute for %lu ticks.\n"
+						,process->pid, 1, Clock, process_behavior->cpuburst - process_behavior->current_cpuburst);
+				process_behavior->has_logged_running = true;
+			}
+
+			//FIXME::Need to check what level it wants to run at
+
+			/*
 			printf("RUN AT TIME %lu.\n", Clock);
 
 			printf("_______________________________________________\n");
@@ -227,6 +241,7 @@ void execute_highest_priority_process(void){
 			printf("Process current repeat %d\n", process_behavior->current_repeat);
 			printf("Process wanted repeat %d\n", process_behavior->repeat);
 			printf("_______________________________________________\n");
+			*/
 
 			//checking if we have ran enought cpu cycles
 			if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
