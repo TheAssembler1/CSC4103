@@ -5,6 +5,8 @@
 //used to represent infinity in g and b values
 #define INFINITY 255
 
+//FIXME::only need to end on cpu if its the last behavior
+
 //structure of a process and process behavior
 typedef struct _ProcessBehavior{
 	unsigned long cpuburst;
@@ -239,7 +241,8 @@ void execute_highest_priority_process(void){
 			//process has run through all its need cpu cycles
 			if(process_behavior->current_cpuburst == process_behavior->cpuburst){
 				//process has done all the io and cpu it wants to
-				if(process_behavior->current_repeat == process_behavior->repeat){
+				if((process_behavior->current_repeat == process_behavior->repeat && queue_length(&process->behaviors) == 1) 
+					|| ((process_behavior->current_repeat + 1 == process_behavior->repeat && queue_length(&process->behaviors) > 1))){
 					rewind_queue(&process->behaviors);
 					delete_current(&process->behaviors);
 
@@ -251,18 +254,17 @@ void execute_highest_priority_process(void){
 						return;
 					}
 				}else{ //process needs to block for io
-					Clock++;
+					//Clock++;
 					queue_new_arrivals();
-					CurrentBlockingProcess = process;
-					remove_from_front(&CurrentQ->processes, &CurrentBlockingProcess);
 					add_to_queue(&CurrentQ->processes, process, 0);
 					rewind_queue(&CurrentQ->processes);
 					delete_current(&CurrentQ->processes);
+					CurrentBlockingProcess = CurrentQ->processes.tail->info;
 				}
 
 				//if process has run note over quantum time and g is high enough to promote
 				if(CurrentQ->g != INFINITY && process->current_q != CurrentQ->q && ++(process->current_g) == CurrentQ->g){
-					printf("QUEUED: Process %d queued at level %u at time %lu.\n", process->pid, CurrentQ->level - 1, Clock);
+					//printf("QUEUED: Process %d queued at level %u at time %lu.\n", process->pid, CurrentQ->level - 1, Clock);
 					process->current_g = 0;
 					process->current_b = 0;
 					add_to_queue(CurrentQ->HigherQ, process, 0);
