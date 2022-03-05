@@ -195,6 +195,9 @@ void execute_highest_priority_process(void){
 			rewind_queue(&process->behaviors);
 			ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current->info;
 
+			process_behavior->current_cpuburst++;
+
+			printf("Process has an id of %d\n", process->pid);
 			printf("CPU\n");
 
 			/*
@@ -210,11 +213,10 @@ void execute_highest_priority_process(void){
 			printf("------\n");
 			printf("Process current repeat %d\n", process_behavior->current_repeat);
 			printf("Process wanted repeat %d\n", process_behavior->repeat);
-			printf("_______________________________________________\n");
 			*/
 
 			//process has run through all its need cpu cycles
-			if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
+			if(process_behavior->current_cpuburst == process_behavior->cpuburst){
 				//process has done all the io and cpu it wants to
 				if(process_behavior->current_repeat == process_behavior->repeat){
 					rewind_queue(&process->behaviors);
