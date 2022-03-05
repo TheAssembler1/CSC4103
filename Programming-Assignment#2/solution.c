@@ -55,12 +55,8 @@ void final_report(void);
 unsigned long Clock;
 Queue ArrivalQ;
 Queue RemovalQ;
-
-//this queue is always present
 Process IdleProcess;
 Process* CurrentBlockedProcess;
-
-//says wether we are blocking for io
 bool blocked;
 
 // comparison function for queue of ProcessBehaviors
@@ -127,11 +123,6 @@ void read_process_descriptions(void){
 	Process p;
 	ProcessBehavior b;
 
-	//FIXME::remove this somehow
-	b.current_cpuburst = 0;
-	b.current_ioburst = 0;
-	b.current_repeat = 0;
-
 	int pid = 0, first = 1;
 	unsigned long arrival;
 
@@ -159,9 +150,7 @@ void read_process_descriptions(void){
 }
 
 void init_process(Process* process){
-	//setting total clock time to 0
 	process->total_clock_time = 0;
-	//this queue holds the new processes to be added to queues
 	init_queue(&process->behaviors, sizeof(ProcessBehavior), TRUE, process_behavior_comparison, FALSE);
 }
 
@@ -185,43 +174,24 @@ void do_IO(void){
 
 		//unblocking if we have done enough io
 		if(++(process_behavior->current_ioburst) == process_behavior->ioburst){
-			//reseting ioburst and cpuburst
 			process_behavior->current_cpuburst = 0;
 			process_behavior->current_ioburst = 0;
-
-			//updating current repeat because we did a full cycle of io and cpu
 			process_behavior->current_repeat++;
-
-			//setting so process logs when going back to cpu
 			process_behavior->has_logged_running = false;
-
-			//unblocking the process it is done with current cycle of io
 			blocked = false;
 		}
 	}
 }
 
-/*
-Scheduler shutdown at time 85453. 
- 
-Total CPU usage for all processes scheduled: 
-   
-Process <<null>>:   13934 time units. 
-Process 100:    18843 time units. 
-Process 200:      1000 time units.
-*/
-
 void final_report(void){
 	printf("Scheduler shutdown at time %lu.\n", Clock);
 	printf("Total CPU usage for all processes scheduled:\n\n");
-
-	printf("Process <<null>>:	%lu time units.\n", IdleProcess.total_clock_time);
+	printf("Process <<null>>: %lu time units.\n", IdleProcess.total_clock_time);
 
 	rewind_queue(&RemovalQ);
 	while(!end_of_queue(&RemovalQ)){
 		Process* process = (Process*)RemovalQ.current->info;
-		printf("Process %d:	%lu time units.\n", process->pid, process->total_clock_time);
-
+		printf("Process %d: %lu time units.\n", process->pid, process->total_clock_time);
 		next_element(&RemovalQ);
 	}
 }
@@ -253,25 +223,6 @@ void execute_highest_priority_process(void){
 						,process->pid, CurrentProcessQ->level, Clock, process_behavior->cpuburst - process_behavior->current_cpuburst);
 				process_behavior->has_logged_running = true;
 			}
-
-			//FIXME::Need to check what level it wants to run at
-
-			/*
-			printf("RUN AT TIME %lu.\n", Clock);
-
-			printf("_______________________________________________\n");
-			printf("Process has an id of %d\n", process->pid);
-			printf("------\n");
-			printf("Process current cpu burst %lu\n", process_behavior->current_cpuburst);
-			printf("Process wanted cpu burst %lu\n", process_behavior->cpuburst);
-			printf("------\n");
-			printf("Process current io burst %lu\n", process_behavior->current_ioburst);
-			printf("Process wanted io burst %lu\n", process_behavior->ioburst);
-			printf("------\n");
-			printf("Process current repeat %d\n", process_behavior->current_repeat);
-			printf("Process wanted repeat %d\n", process_behavior->repeat);
-			printf("_______________________________________________\n");
-			*/
 
 			//increasing the total runtime of the process
 			process->total_clock_time++;
@@ -307,11 +258,8 @@ void execute_highest_priority_process(void){
 }
 
 bool processes_exist(void){
-	//checking if all queue's are empty
 	if(empty_queue(&HighProcessQ.processes) && empty_queue(&HighProcessQ.processes) && empty_queue(&HighProcessQ.processes) && empty_queue(&ArrivalQ))
 		return false;
-
-	//one of the queues is not empty so processes are either waiting or process queues have processes
 	return true;
 }
 
@@ -323,6 +271,11 @@ void queue_new_arrivals(void){
 		//getting process for logging
 		Process* process = (Process*)ArrivalQ.current->info; 
 		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current->info;
+		
+		process_behavior->current_cpuburst = 0;
+		process_behavior->current_ioburst = 0;
+		process_behavior->current_repeat = 0;
+
 		printf("CREATE: Process %d entered the ready queue at time %lu.\n", process->pid, Clock);
 
 		//adding process to high priority queue
