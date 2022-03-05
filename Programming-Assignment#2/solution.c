@@ -54,7 +54,7 @@ void final_report(void);
 //global variables
 unsigned long Clock;
 Queue ArrivalQ;
-
+Queue RemovalQ;
 
 //this queue is always present
 Process IdleProcess;
@@ -167,6 +167,7 @@ void init_process(Process* process){
 
 void init_all_queues(void){
 	init_queue(&ArrivalQ, sizeof(Process), TRUE, NULL, FALSE);
+	init_queue(&RemovalQ, sizeof(Process), TRUE, NULL, FALSE);
 	
 	//initializing the process queues
 	init_queue(&HighProcessQ.processes, sizeof(Process), TRUE, process_queue_comparison, FALSE);
@@ -181,6 +182,7 @@ void do_IO(void){
 
 		//logging what process is blocking
 		printf("I/O: Process %d blocked for I/O at time %lu.\n", CurrentBlockedProcess->pid, Clock);
+
 		//unblocking if we have done enough io
 		if(++(process_behavior->current_ioburst) == process_behavior->ioburst){
 			//reseting ioburst and cpuburst
@@ -199,9 +201,29 @@ void do_IO(void){
 	}
 }
 
-//FIXME::implement this
+/*
+Scheduler shutdown at time 85453. 
+ 
+Total CPU usage for all processes scheduled: 
+   
+Process <<null>>:   13934 time units. 
+Process 100:    18843 time units. 
+Process 200:      1000 time units.
+*/
+
 void final_report(void){
-	printf("final_report\n");
+	printf("Scheduler shutdown at time %lu.\n", Clock);
+	printf("Total CPU usage for all processes scheduled:\n\n");
+
+	printf("Process <<null>>:	%lu time units.\n", IdleProcess.total_clock_time);
+
+	rewind_queue(&RemovalQ);
+	while(!end_of_queue(&RemovalQ)){
+		Process* process = (Process*)RemovalQ.current->info;
+		printf("Process %d:	%lu time units.\n", process->pid, process->total_clock_time);
+
+		next_element(&RemovalQ);
+	}
 }
 
 void execute_highest_priority_process(void){
@@ -266,6 +288,8 @@ void execute_highest_priority_process(void){
 					if(empty_queue(&process->behaviors)){
 						//logging that the process is finished and removing from the queue
 						printf("FINISHED:  Process %d finished at time %lu.\n", process->pid, Clock);
+
+						add_to_queue(&RemovalQ, process, process->pid);
 
 						rewind_queue(&CurrentProcessQ->processes);
 						delete_current(&CurrentProcessQ->processes);
