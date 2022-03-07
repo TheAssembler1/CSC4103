@@ -19,6 +19,8 @@ typedef struct _ProcessBehavior{
 	int current_repeat;
 }ProcessBehavior;
 
+typedef struct _ProcessQueue ProcessQueue;
+
 typedef struct _Process{
 	int pid;
 	unsigned long arrival_time;	
@@ -28,10 +30,10 @@ typedef struct _Process{
 	unsigned char current_g;
 	unsigned char current_q;
 
+	ProcessQueue* ProcessQ;
+
 	Queue behaviors;
 }Process;
-
-typedef struct _ProcessQueue ProcessQueue;
 
 struct _ProcessQueue{
 	unsigned char q;
@@ -59,8 +61,7 @@ bool processes_exist(void);
 void queue_new_arrivals(void);
 void do_IO(void);
 void final_report(void);
-void check_c(ProcessQueue* CurrentQ, Process* process, ProcessBehavior* process_behaior);
-void check_b(ProcessQueue* CurrentQ, Process* process, ProcessBehavior* process_behaior);
+void check_b_and_c(ProcessQueue* CurrentQ, Process* process, ProcessBehavior* process_behavior);
 
 //global variables
 unsigned long Clock;
@@ -167,7 +168,7 @@ void do_IO(void){
 			process_behavior->current_ioburst = 0;
 
 			process_behavior->current_repeat++;
-			add_to_queue(&HighQ.processes, process, 0);
+			add_to_queue(&process->ProcessQ->processes, process, 0);
 
 			delete_current(&IOQ);
 		}
@@ -225,45 +226,51 @@ void execute_highest_priority_process(void){
 				add_to_queue(&RemovalQ, process, 0);
 				delete_current(&CurrentQ->processes);
 				return;
-			}else if(queue_length(&process->behaviors) > 1 && process_behavior->current_repeat == process_behavior->repeat - 1)
+			}else if(queue_length(&process->behaviors) > 1 && process_behavior->current_repeat == process_behavior->repeat - 1){
 				delete_current(&process->behaviors);
-			else{
+			}else{
+				if(process->current_q < CurrentQ->q && CurrentQ->g != INFINITY && ++(process->current_g) == CurrentQ->g){
+					process->current_b = 0;
+					process->current_g = 0;
+					process->current_q = 0;
+
+					process->ProcessQ = CurrentQ->HigherQ;
+				}
+				add_to_queue(&IOQ, process, 0);
+				delete_current(&CurrentQ->processes);
+
 				Clock++;
 				IdleProcess.total_clock_time++;
 				queue_new_arrivals();
-				
-				add_to_queue(&IOQ, process, 0);
-				delete_current(&CurrentQ->processes);
 			}
 
 			LastProcess = NULL;
-		}
+		}else
+			check_b_and_c(CurrentQ, process, process_behavior);
 	}
 }
 
-void check_b(ProcessQueue* CurrentQ, Process* process, ProcessBehavior* process_behaior){
+void check_b_and_c(ProcessQueue* CurrentQ, Process* process, ProcessBehavior* process_behavior){
 	if(CurrentQ->b != INFINITY && process->current_q >= CurrentQ->q && ++(process->current_b) == CurrentQ->b){
 		process->current_b = 0;
 		process->current_g = 0;
 		process->current_q = 0;
+
+		printf("QUEUED: Process %d queued at level %u at time %lu.\n", process->pid, CurrentQ->level + 1, Clock);
+
+		process->ProcessQ = CurrentQ->LowerQ;
 		add_to_queue(&CurrentQ->LowerQ->processes, process, 0);
 		rewind_queue(&CurrentQ->processes);
 		delete_current(&CurrentQ->processes);
-
-		CurrentQ = CurrentQ->LowerQ;
-	}
-}
-
-void check_c(ProcessQueue* CurrentQ, Process* process, ProcessBehavior* process_behaior){
-	if(process->current_q == CurrentQ->q && ->q != INFINITY && process->current_q < CurrentQ->q && ++(process->current_g) == CurrentQ->g){
+	}else if(process_behavior->current_cpuburst == process_behavior->cpuburst && process->current_q <= CurrentQ->q && CurrentQ->g != INFINITY && ++(process->current_g) == CurrentQ->g){
 		process->current_b = 0;
 		process->current_g = 0;
 		process->current_q = 0;
+
+		process->ProcessQ = CurrentQ->HigherQ;
 		add_to_queue(&CurrentQ->HigherQ->processes, process, 0);
 		rewind_queue(&CurrentQ->processes);
 		delete_current(&CurrentQ->processes);
-
-		CurrentQ = CurrentQ->HigherQ;
 	}
 }
 
@@ -295,6 +302,8 @@ void queue_new_arrivals(void){
 
 		//logging process info
 		printf("CREATE: Process %d entered the ready queue at time %lu.\n", process->pid, Clock);
+
+		process->ProcessQ = &HighQ;
 
 		//adding process to high priority queue
 		add_to_queue(&HighQ.processes, process, 0);
