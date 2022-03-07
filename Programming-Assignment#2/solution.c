@@ -31,7 +31,9 @@ typedef struct _Process{
 	Queue behaviors;
 }Process;
 
-typedef struct _ProcessQueue{
+typedef struct _ProcessQueue ProcessQueue;
+
+struct _ProcessQueue{
 	unsigned char q;
 
 	unsigned char b;
@@ -39,14 +41,14 @@ typedef struct _ProcessQueue{
 	unsigned char level;
 
 	//ProcessQ above it in prio
-	Queue* HigherQ;
+	ProcessQueue* HigherQ;
 
 	//ProcessQ below it in prio
-	Queue* LowerQ;
+	ProcessQueue* LowerQ;
 
 	//this is the processses in the queue
 	Queue processes;
-}ProcessQueue;
+};
 
 //function declarations
 void init_all_queues(void);
@@ -57,21 +59,22 @@ bool processes_exist(void);
 void queue_new_arrivals(void);
 void do_IO(void);
 void final_report(void);
+void check_c(ProcessQueue* CurrentQ, Process* process, ProcessBehavior* process_behaior);
+void check_b(ProcessQueue* CurrentQ, Process* process, ProcessBehavior* process_behaior);
 
 //global variables
 unsigned long Clock;
 
 Process IdleProcess;
+Process* LastProcess;
 
 Queue ArrivalQ;
 Queue RemovalQ;
+Queue IOQ;
 
 ProcessQueue HighQ = {.q = 10,  .b =1, 		   .g = INFINITY, .level = 1};
 ProcessQueue MedQ = { .q = 30,  .b = 2, 	   .g = 2, 		  .level = 2};
 ProcessQueue LowQ = { .q = 100, .b = INFINITY, .g = 1, 		  .level = 3};
-
-Process* CurrentBlockingProcess;
-Process* LastProcess;
 
 int main(int argc, char* argv[]){
 	init_all_queues();
@@ -134,37 +137,39 @@ void init_all_queues(void){
 	init_queue(&HighQ.processes, sizeof(Process), TRUE, NULL, TRUE);
 	init_queue(&MedQ.processes, sizeof(Process), TRUE, NULL, TRUE);
 	init_queue(&LowQ.processes, sizeof(Process), TRUE, NULL, TRUE);
+
+	init_queue(&IOQ, sizeof(Process), TRUE, NULL, FALSE);
 	init_queue(&ArrivalQ, sizeof(Process), TRUE, NULL, FALSE);
 	init_queue(&RemovalQ, sizeof(Process), TRUE, NULL, FALSE);
 
 	//setting pointers to high and lower process qeueus
-	HighQ.HigherQ = (Queue*)NULL;    HighQ.LowerQ = &MedQ.processes;
-	MedQ.HigherQ = &HighQ.processes; MedQ.LowerQ = &LowQ.processes;
-	LowQ.HigherQ = &MedQ.processes;  LowQ.LowerQ = (Queue*)NULL;
+	HighQ.HigherQ = (ProcessQueue*)NULL;    HighQ.LowerQ = &MedQ;
+	MedQ.HigherQ = &HighQ; 					MedQ.LowerQ = &LowQ;
+	LowQ.HigherQ = &MedQ;  					LowQ.LowerQ = (ProcessQueue*)NULL;
 }
 
 void do_IO(void){
-	if(CurrentBlockingProcess){
-		//printf("IO\n");
-		CurrentBlockingProcess->current_q = 0;
-		CurrentBlockingProcess->current_b = 0;
-		IdleProcess.total_clock_time++;
+	if(!empty_queue(&IOQ)){
+		rewind_queue(&IOQ);
+		Process* process = (Process*)IOQ.queue->info;
 
-		rewind_queue(&CurrentBlockingProcess->behaviors);
-		ProcessBehavior* process_behavior = (ProcessBehavior*)CurrentBlockingProcess->behaviors.current->info;
+		rewind_queue(&process->behaviors);
+		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.queue->info;
 
-		if(!process_behavior->current_ioburst)
-			printf("I/O: Process %d blocked for I/O at time %lu.\n", CurrentBlockingProcess->pid, Clock);
+		if(!(process_behavior->current_ioburst))
+			printf("I/O: Process %d blocked for I/O at time %lu.\n", process->pid, Clock);
 
-		//process is done running io
+		//process is done with io add to high q
 		if(++(process_behavior->current_ioburst) == process_behavior->ioburst){
-			CurrentBlockingProcess = NULL;
-			LastProcess = NULL;
-
-			//reseting process behavior
+			process->current_b = 0;
+			
 			process_behavior->current_cpuburst = 0;
 			process_behavior->current_ioburst = 0;
+
 			process_behavior->current_repeat++;
+			add_to_queue(&HighQ.processes, process, 0);
+
+			delete_current(&IOQ);
 		}
 	}
 }
@@ -183,114 +188,87 @@ void final_report(void){
 }
 
 void execute_highest_priority_process(void){
-	//if we are not blocked for io
-	if(!CurrentBlockingProcess){
-		//represents the current q we are working in
-		ProcessQueue* CurrentQ = NULL;
+	//represents the current q we are working in
+	ProcessQueue* CurrentQ = NULL;
 
-		//setting the current q
-		if(!empty_queue(&HighQ.processes))
+	//setting the current q
+	if(!empty_queue(&HighQ.processes))
 			CurrentQ = &HighQ;
-		else if(!empty_queue(&MedQ.processes))
-			CurrentQ = &MedQ;
-		else if(!empty_queue(&LowQ.processes))
-			CurrentQ = &LowQ;
-		else//no processes to run 
-			IdleProcess.total_clock_time++;
+	else if(!empty_queue(&MedQ.processes))
+		CurrentQ = &MedQ;
+	else if(!empty_queue(&LowQ.processes))
+		CurrentQ = &LowQ;
+	else//no processes to run 
+		IdleProcess.total_clock_time++;
 
-		if(CurrentQ){
-			//getting the process
-			rewind_queue(&CurrentQ->processes);
-			Process* process = (Process*)CurrentQ->processes.current->info;
+	if(CurrentQ){
+		rewind_queue(&CurrentQ->processes);
+		Process* process = (Process*)CurrentQ->processes.current->info;
 
-			//getting its behaviors
-			rewind_queue(&process->behaviors);
-			ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current->info;
+		rewind_queue(&process->behaviors);
+		ProcessBehavior* process_behavior = (ProcessBehavior*)process->behaviors.current->info;
 
-			if(LastProcess != process){
-				LastProcess = process;
-				process->current_q = 0;
-				printf("RUN: Process %d started execution from level %u at time %lu; wants to execute for %lu ticks.\n",
+		if(LastProcess != process){
+			printf("RUN: Process %d started execution from level %u at time %lu; wants to execute for %lu ticks.\n",
 						process->pid, CurrentQ->level, Clock, process_behavior->cpuburst - process_behavior->current_cpuburst);
-			}
+			process->current_q = 0;
+			LastProcess = process;
+		}
 
-			process->current_q++;
-			process->total_clock_time++;
-			process_behavior->current_cpuburst++;
+		process->current_q++;
+		process_behavior->current_cpuburst++;
+		process->total_clock_time++;
 
-			//printf("Process has an id of %d\n", process->pid);
-			//printf("CPU\n");
-
-			//printf("PRocess has a current run of %u\n", process->current_q);
-
-			/*
-			printf("RUN AT TIME %lu.\n", Clock);
-			printf("_______________________________________________\n");
-			printf("Process has an id of %d\n", process->pid);
-			printf("------\n");
-			printf("Process current cpu burst %lu\n", process_behavior->current_cpuburst);
-			printf("Process wanted cpu burst %lu\n", process_behavior->cpuburst);
-			printf("------\n");
-			printf("Process current io burst %lu\n", process_behavior->current_ioburst);
-			printf("Process wanted io burst %lu\n", process_behavior->ioburst);
-			printf("------\n");
-			printf("Process current repeat %d\n", process_behavior->current_repeat);
-			printf("Process wanted repeat %d\n", process_behavior->repeat);
-			*/
-
-			//process has run through all its need cpu cycles
-			if(process_behavior->current_cpuburst == process_behavior->cpuburst){
-				//process has done all the io and cpu it wants to
-				if((process_behavior->current_repeat == process_behavior->repeat && queue_length(&process->behaviors) == 1) 
-					|| ((process_behavior->current_repeat + 1 == process_behavior->repeat && queue_length(&process->behaviors) > 1))){
-					rewind_queue(&process->behaviors);
-					delete_current(&process->behaviors);
-
-					//remove process from process queue if it has no behaviors left to run
-					if(empty_queue(&process->behaviors)){
-						printf("FINISHED:  Process %d finished at time %lu.\n", process->pid, Clock + 1);
-						add_to_queue(&RemovalQ, process, 0);
-						delete_current(&CurrentQ->processes);
-						return;
-					}
-				}else{ //process needs to block for io
-					Clock++;
-					queue_new_arrivals();
-					add_to_queue(&CurrentQ->processes, process, 0);
-					rewind_queue(&CurrentQ->processes);
-					delete_current(&CurrentQ->processes);
-					CurrentBlockingProcess = CurrentQ->processes.tail->info;
-				}
-
-				//if process has run note over quantum time and g is high enough to promote
-				if(CurrentBlockingProcess){
-					if(CurrentQ->g != INFINITY && CurrentBlockingProcess->current_q < CurrentQ->q && ++(CurrentBlockingProcess->current_g) == CurrentQ->g){
-						//printf("QUEUED: Process %d queued at level %u at time %lu.\n", CurrentBlockingProcess->pid, CurrentQ->level - 1, Clock);
-						process->current_g = 0;
-						process->current_b = 0;
-						add_to_queue(CurrentQ->HigherQ, CurrentBlockingProcess, 0);
-						rewind_queue(&CurrentQ->processes);
-						delete_current(&CurrentQ->processes);
-						CurrentBlockingProcess = CurrentQ->HigherQ->tail->info;
-					}
-				}
-			}
-
-			//if process has run over quantum time and b is high enough to demote
-			if(CurrentQ->b != INFINITY && process->current_q == CurrentQ->q && ++(process->current_b) == CurrentQ->b){
-				printf("QUEUED: Process %d queued at level %u at time %lu.\n", process->pid, CurrentQ->level + 1, Clock);
-				process->current_b = 0;
-				process->current_g = 0;
-				add_to_queue(CurrentQ->LowerQ, process, 0);
-				rewind_queue(&CurrentQ->processes);
+		if(process_behavior->current_cpuburst == process_behavior->cpuburst){
+			if(queue_length(&process->behaviors) == 1 && process_behavior->current_repeat == process_behavior->repeat){
+				printf("FINISHED:  Process %d finished at time %lu.\n", process->pid, Clock + 1);
+				add_to_queue(&RemovalQ, process, 0);
+				delete_current(&CurrentQ->processes);
+				return;
+			}else if(queue_length(&process->behaviors) > 1 && process_behavior->current_repeat == process_behavior->repeat - 1)
+				delete_current(&process->behaviors);
+			else{
+				Clock++;
+				IdleProcess.total_clock_time++;
+				queue_new_arrivals();
+				
+				add_to_queue(&IOQ, process, 0);
 				delete_current(&CurrentQ->processes);
 			}
+
+			LastProcess = NULL;
 		}
 	}
 }
 
+void check_b(ProcessQueue* CurrentQ, Process* process, ProcessBehavior* process_behaior){
+	if(CurrentQ->b != INFINITY && process->current_q >= CurrentQ->q && ++(process->current_b) == CurrentQ->b){
+		process->current_b = 0;
+		process->current_g = 0;
+		process->current_q = 0;
+		add_to_queue(&CurrentQ->LowerQ->processes, process, 0);
+		rewind_queue(&CurrentQ->processes);
+		delete_current(&CurrentQ->processes);
+
+		CurrentQ = CurrentQ->LowerQ;
+	}
+}
+
+void check_c(ProcessQueue* CurrentQ, Process* process, ProcessBehavior* process_behaior){
+	if(process->current_q == CurrentQ->q && ->q != INFINITY && process->current_q < CurrentQ->q && ++(process->current_g) == CurrentQ->g){
+		process->current_b = 0;
+		process->current_g = 0;
+		process->current_q = 0;
+		add_to_queue(&CurrentQ->HigherQ->processes, process, 0);
+		rewind_queue(&CurrentQ->processes);
+		delete_current(&CurrentQ->processes);
+
+		CurrentQ = CurrentQ->HigherQ;
+	}
+}
+
 bool processes_exist(void){
-	if(empty_queue(&HighQ.processes) && empty_queue(&MedQ.processes) && empty_queue(&LowQ.processes) && empty_queue(&ArrivalQ))
+	if(empty_queue(&IOQ) && empty_queue(&HighQ.processes) && empty_queue(&MedQ.processes) && empty_queue(&LowQ.processes) && empty_queue(&ArrivalQ))
 		return false;
 	return true;
 }
