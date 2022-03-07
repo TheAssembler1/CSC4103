@@ -254,7 +254,7 @@ void execute_highest_priority_process(void){
 						return;
 					}
 				}else{ //process needs to block for io
-					//Clock++;
+					Clock++;
 					queue_new_arrivals();
 					add_to_queue(&CurrentQ->processes, process, 0);
 					rewind_queue(&CurrentQ->processes);
@@ -263,13 +263,16 @@ void execute_highest_priority_process(void){
 				}
 
 				//if process has run note over quantum time and g is high enough to promote
-				if(CurrentQ->g != INFINITY && process->current_q != CurrentQ->q && ++(process->current_g) == CurrentQ->g){
-					//printf("QUEUED: Process %d queued at level %u at time %lu.\n", process->pid, CurrentQ->level - 1, Clock);
-					process->current_g = 0;
-					process->current_b = 0;
-					add_to_queue(CurrentQ->HigherQ, process, 0);
-					rewind_queue(&CurrentQ->processes);
-					delete_current(&CurrentQ->processes);
+				if(CurrentBlockingProcess){
+					if(CurrentQ->g != INFINITY && CurrentBlockingProcess->current_q < CurrentQ->q && ++(CurrentBlockingProcess->current_g) == CurrentQ->g){
+						//printf("QUEUED: Process %d queued at level %u at time %lu.\n", CurrentBlockingProcess->pid, CurrentQ->level - 1, Clock);
+						process->current_g = 0;
+						process->current_b = 0;
+						add_to_queue(CurrentQ->HigherQ, CurrentBlockingProcess, 0);
+						rewind_queue(&CurrentQ->processes);
+						delete_current(&CurrentQ->processes);
+						CurrentBlockingProcess = CurrentQ->HigherQ->tail->info;
+					}
 				}
 			}
 
