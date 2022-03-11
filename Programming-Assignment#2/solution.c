@@ -165,7 +165,7 @@ void do_IO(void){
 			//decreasing io of process and checking if it is done with io
 			if((process_behavior->current_ioburst)++ == process_behavior->ioburst){
 				//resetting b value of process
-				process_behavior->current_cpuburst = process_behavior->current_ioburst =process->current_b = 0;
+				process_behavior->current_cpuburst = process_behavior->current_ioburst = process->current_b = 0;
 
 				//check if current process behavior is done and it has no more repeats
 				if(!(--(process_behavior->repeat)) && queue_length(&process->behaviors) > 1)
@@ -227,24 +227,37 @@ void execute_highest_priority_process(void){
 
 		process->total_clock_time++;
 
+		bool demoted = false;
 		//increase quantom of the current process in the queue and check if it needs to be demoted
-		if(++(CurrentQ->current_q) == CurrentQ->q && ++(process->current_b) == CurrentQ->b && CurrentQ->LowerQ){
-			printf("QUEUED: Process %d queued at level %u at time %lu.\n", process->pid, CurrentQ->level + 1, Clock + 1);
+		if(++(CurrentQ->current_q) == CurrentQ->q){
+			demoted = true;
+			if(++(process->current_b) == CurrentQ->b && CurrentQ->LowerQ){
+				printf("QUEUED: Process %d queued at level %u at time %lu.\n", process->pid, CurrentQ->level + 1, Clock + 1);
 
-			process->current_b = process->current_g = CurrentQ->current_q = 0;
+				process->current_b = process->current_g = 0;
 
-			process->CurrentQ = CurrentQ->LowerQ;
+				process->CurrentQ = CurrentQ->LowerQ;
 
-			add_to_queue(&CurrentQ->LowerQ->processes, process, 0);
-			delete_current(&CurrentQ->processes);
+				add_to_queue(&CurrentQ->LowerQ->processes, process, 0);
+				delete_current(&CurrentQ->processes);
 
-			CurrentQ = CurrentQ->LowerQ;
-			CurrentQ->processes.current = CurrentQ->processes.tail;
-			process = CurrentQ->processes.current->info;
+				CurrentQ = CurrentQ->LowerQ;
+				CurrentQ->processes.current = CurrentQ->processes.tail;
+				process = CurrentQ->processes.current->info;
+			}else{
+				printf("QUEUED: Process %d queued at level %u at time %lu.\n", process->pid, CurrentQ->level, Clock + 1);
+				add_to_queue(&CurrentQ->processes, process, 0);
+				delete_current(&CurrentQ->processes);
+
+				CurrentQ->processes.current = CurrentQ->processes.tail;
+				process = CurrentQ->processes.current->info;
+			}
+
+			CurrentQ->current_q = 0;
 		}
 
-		if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){\
-			if(CurrentQ->current_q < CurrentQ->q && ++(process->current_g) == CurrentQ->g && process_behavior->repeat && CurrentQ->HigherQ){ //process needs to be promoted
+		if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
+			if(!demoted && CurrentQ->current_q < CurrentQ->q && ++(process->current_g) == CurrentQ->g && process_behavior->repeat && CurrentQ->HigherQ){ //process needs to be promoted
 				process->current_b = process->current_g = 0;
 
 				process->CurrentQ = CurrentQ->HigherQ;
@@ -264,7 +277,6 @@ void execute_highest_priority_process(void){
 				delete_current(&CurrentQ->processes);
 			}else{ //run io on it
 				printf("I/O: Process %d blocked for I/O at time %lu.\n", process->pid, Clock + 1);
-				process->total_clock_time++;
 				add_to_queue(&IOQ, process, 0);
 				delete_current(&CurrentQ->processes);
 				LastProcess = NULL;
@@ -298,7 +310,7 @@ void queue_new_arrivals(void){
 			next_element(&process->behaviors);
 		}
 
-		printf("CREATE: Process %d entered the ready queue at time %lu.\n", process->pid, Clock);
+		printf("CREATE: Process %d entered the ready queue at time %lu\n", process->pid, Clock);
 
 		//adding process to high priority queue
 		add_to_queue(&HighQ.processes, process, 0);
