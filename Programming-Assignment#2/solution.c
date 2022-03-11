@@ -66,6 +66,7 @@ void check_b_and_c(ProcessQueue* CurrentQ, Process* process, ProcessBehavior* pr
 unsigned long Clock;
 
 Process IdleProcess;
+Process* LastProcess;
 
 Queue ArrivalQ;
 Queue RemovalQ;
@@ -129,8 +130,8 @@ void init_process(Process* process){
 	//setting process starting queue to the high queue
 	process->CurrentQ = &HighQ;
 
-	//setting b and g values of process
-	process->current_b = process->current_g = 0;
+	//setting b and g and total runtime values of process
+	process->current_b = process->current_g = process->total_clock_time = 0;
 
 	init_queue(&process->behaviors, sizeof(ProcessBehavior), TRUE, NULL, TRUE);
 }
@@ -162,22 +163,20 @@ void do_IO(void){
 			ProcessBehavior* process_behavior = process->behaviors.current->info;
 
 			//decreasing io of process and checking if it is done with io
-			if(++(process_behavior->current_ioburst) == process_behavior->ioburst){
+			if((process_behavior->current_ioburst)++ == process_behavior->ioburst){
 				//resetting b value of process
-				process->current_b = 0;
+				process_behavior->current_cpuburst = process_behavior->current_ioburst =process->current_b = 0;
 
 				//check if current process behavior is done and it has no more repeats
 				if(!(--(process_behavior->repeat)) && queue_length(&process->behaviors) > 1)
 					delete_current(&process->behaviors);
-				else{ //resetting io and cpu burst if the behavior was not removed for the next repeat
-					process_behavior->current_cpuburst = process_behavior->current_ioburst = 0;
-				}
 
 				//adding process back to its original q
-				add_to_queue(process->CurrentQ, process, 0);
+				add_to_queue(&process->CurrentQ->processes, process, 0);
 
 				//removing element from IOQ
 				delete_current(&IOQ);
+				break;
 			}
 			next_element(&IOQ);
 		}
@@ -187,12 +186,12 @@ void do_IO(void){
 void final_report(void){
 	printf("Scheduler shutdown at time %lu.\n", Clock);
 	printf("Total CPU usage for all processes scheduled:\n");
-	printf("Process <<null>>: %lu time units.\n", IdleProcess.total_clock_time);
+	printf("Process <<null>>:	%lu time units.\n", IdleProcess.total_clock_time);
 
 	rewind_queue(&RemovalQ);
 	while(!end_of_queue(&RemovalQ)){
 		Process* process = (Process*)RemovalQ.current->info;
-		printf("Process %d: %lu time units.\n", process->pid, process->total_clock_time);
+		printf("Process %d:		%lu time units.\n", process->pid, process->total_clock_time);
 
 		next_element(&RemovalQ);
 	}
@@ -204,7 +203,7 @@ void execute_highest_priority_process(void){
 
 	//setting the current q
 	if(!empty_queue(&HighQ.processes))
-			CurrentQ = &HighQ;
+		CurrentQ = &HighQ;
 	else if(!empty_queue(&MedQ.processes))
 		CurrentQ = &MedQ;
 	else if(!empty_queue(&LowQ.processes))
@@ -213,40 +212,68 @@ void execute_highest_priority_process(void){
 		IdleProcess.total_clock_time++;
 
 	//if there is a q with a process in it
-	rewind(&CurrentQ->processes);
 	if(CurrentQ){
+		rewind_queue(&CurrentQ->processes);
+
 		//getting the process and process behavior
 		Process* process = (Process*)CurrentQ->processes.current->info;
 		rewind_queue(&process->behaviors);
 		ProcessBehavior* process_behavior = process->behaviors.current->info;
 
-		//increase quantom of the current process in the queue
-		CurrentQ->current_q++;
+		if(LastProcess != process){
+			printf("RUN: Process %d started execution from level %u at time %lu; wants to execute for %lu ticks.\n",
+						process->pid, CurrentQ->level, Clock, process_behavior->cpuburst - process_behavior->current_cpuburst);
+			
+			LastProcess = process;
+		}
 
-		//checking if it has over run its quantom
+		process->total_clock_time++;
 
-		if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
-			CurrentQ->q = 0;
+		//increase quantom of the current process in the queue and check if it needs to be demoted
+		if(++(CurrentQ->current_q) == CurrentQ->q && ++(process->current_b) == CurrentQ->b && CurrentQ->LowerQ){
+			printf("QUEUED: Process %d queued at level %u at time %lu.\n", process->pid, CurrentQ->level + 1, Clock + 1);
 
-			if(CurrentQ->current_q < CurrentQ->q && ++(process->current_g) == CurrentQ->g && process_behavior->repeat){ //process needs to be promoted
-				if(CurrentQ->HigherQ){ //if it can be promoted, this will be NULL if it is already in the highest queue
-					process->current_b = process->current_g = 0;
+			process->current_b = process->current_g = CurrentQ->current_q = 0;
 
-					add_to_queue(&CurrentQ->HigherQ->processes, process, 0);
-					delete_current(&CurrentQ->processes);
+			process->CurrentQ = CurrentQ->LowerQ;
 
-					CurrentQ = CurrentQ->HigherQ;
-					process->CurrentQ = CurrentQ;
-				}
+			add_to_queue(&CurrentQ->LowerQ->processes, process, 0);
+			delete_current(&CurrentQ->processes);
+
+			CurrentQ = CurrentQ->LowerQ;
+			CurrentQ->processes.current = CurrentQ->processes.tail;
+			process = CurrentQ->processes.current->info;
+		}
+
+		if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){\
+			if(CurrentQ->current_q < CurrentQ->q && ++(process->current_g) == CurrentQ->g && process_behavior->repeat && CurrentQ->HigherQ){ //process needs to be promoted
+				process->current_b = process->current_g = 0;
+
+				process->CurrentQ = CurrentQ->HigherQ;
+
+				add_to_queue(&CurrentQ->HigherQ->processes, process, 0);
+				delete_current(&CurrentQ->processes);
+
+				CurrentQ = CurrentQ->HigherQ;
+				CurrentQ->processes.current = CurrentQ->processes.tail;
+				process = CurrentQ->processes.current->info;
 			}
 
 			//check if process is done running
-			if(!(process_behavior->repeat)) //process is done running remove from queue
+			if(!(process_behavior->repeat)){ //process is done running remove from queue
+				printf("FINISHED:  Process %d finished at time %lu.\n", process->pid, Clock + 1);
+				add_to_queue(&RemovalQ, process, 0);
 				delete_current(&CurrentQ->processes);
-			else{ //run io on it
-				delete_current(&CurrentQ->processes);
+			}else{ //run io on it
+				printf("I/O: Process %d blocked for I/O at time %lu.\n", process->pid, Clock + 1);
+				process->total_clock_time++;
 				add_to_queue(&IOQ, process, 0);
+				delete_current(&CurrentQ->processes);
+				LastProcess = NULL;
 			}
+
+			//need to reset quantum in any case
+			CurrentQ->current_q = 0;
 		}
 	}
 }
