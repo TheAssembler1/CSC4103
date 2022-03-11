@@ -218,7 +218,7 @@ void execute_highest_priority_process(void){
 		rewind_queue(&process->behaviors);
 		ProcessBehavior* process_behavior = process->behaviors.current->info;
 
-		if(LastProcess != process){
+		if(!LastProcess){
 			printf("RUN: Process %d started execution from level %u at time %lu; wants to execute for %lu ticks.\n",
 						process->pid, CurrentQ->level, Clock, process_behavior->cpuburst - process_behavior->current_cpuburst);
 			
@@ -226,10 +226,11 @@ void execute_highest_priority_process(void){
 		}
 
 		process->total_clock_time++;
+		process_behavior->current_cpuburst++;
 		CurrentQ->current_q++;
 
 		//checking for promotion
-		if(CurrentQ->HigherQ && process_behavior->current_cpuburst + 1 == process_behavior->cpuburst && CurrentQ->current_q < CurrentQ->q && ++(process->current_g) == CurrentQ->g){
+		if(CurrentQ->HigherQ && process_behavior->current_cpuburst == process_behavior->cpuburst && CurrentQ->current_q < CurrentQ->q && ++(process->current_g) == CurrentQ->g){
 			CurrentQ->current_q = 0;
 			process->current_b = process->current_g = 0;
 			process->CurrentQ = CurrentQ->HigherQ;
@@ -241,7 +242,7 @@ void execute_highest_priority_process(void){
 			CurrentQ->processes.current = CurrentQ->processes.tail;
 			
 			process = CurrentQ->processes.current->info;
-			CurrentQ->q = 0;
+			LastProcess = NULL;
 		}else if(CurrentQ->current_q >= CurrentQ->q){
 			CurrentQ->current_q = 0;
 
@@ -257,16 +258,16 @@ void execute_highest_priority_process(void){
 				CurrentQ->processes.current = CurrentQ->processes.tail;
 				
 				process = CurrentQ->processes.current->info;
-				CurrentQ->current_q = 0;
 			}else{
 				printf("QUEUED: Process %d queued at level %u at time %lu.\n", process->pid, CurrentQ->level, Clock + 1);
 				add_to_queue(&CurrentQ->processes, process, 0);
 				delete_current(&CurrentQ->processes);
 				process = CurrentQ->processes.tail->info;
 			}
+			LastProcess = NULL;
 		}
 
-		if(++(process_behavior->current_cpuburst) >= process_behavior->cpuburst){
+		if(process_behavior->current_cpuburst == process_behavior->cpuburst){
 			//check if process is done running
 			if(!(process_behavior->repeat)){ //process is done running remove from queue
 				printf("FINISHED:  Process %d finished at time %lu.\n", process->pid, Clock + 1);
@@ -276,7 +277,6 @@ void execute_highest_priority_process(void){
 				printf("I/O: Process %d blocked for I/O at time %lu.\n", process->pid, Clock + 1);
 				add_to_queue(&IOQ, process, 0);
 				delete_current(&CurrentQ->processes);
-				LastProcess = NULL;
 			}
 
 			//need to reset quantum in any case
