@@ -316,6 +316,11 @@ void queue_new_arrivals(void){
 
 		printf("CREATE: Process %d entered the ready queue at time %lu\n", process->pid, Clock);
 
+		if(LastProcess && LastProcess->CurrentQ->level > process->CurrentQ->level){
+			printf("QUEUED: Process %d queued at level %u at time %lu.\n", LastProcess->pid, LastProcess->CurrentQ->level, Clock);
+			LastProcess = NULL;
+		}
+
 		//adding process to high priority queue
 		add_to_queue(&HighQ.processes, process, 0);
 

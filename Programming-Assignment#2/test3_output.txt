@@ -1,0 +1,199 @@
+CREATE: Process 1583 entered the ready queue at time 3
+RUN: Process 1583 started execution from level 1 at time 3; wants to execute for 5 ticks.
+I/O: Process 1583 blocked for I/O at time 8.
+CREATE: Process 1700 entered the ready queue at time 10
+RUN: Process 1700 started execution from level 1 at time 10; wants to execute for 500 ticks.
+QUEUED: Process 1700 queued at level 2 at time 20.
+RUN: Process 1583 started execution from level 1 at time 20; wants to execute for 5 ticks.
+I/O: Process 1583 blocked for I/O at time 25.
+RUN: Process 1700 started execution from level 2 at time 25; wants to execute for 490 ticks.
+QUEUED: Process 1700 queued at level 2 at time 35.
+RUN: Process 1583 started execution from level 1 at time 35; wants to execute for 5 ticks.
+I/O: Process 1583 blocked for I/O at time 40.
+RUN: Process 1700 started execution from level 2 at time 40; wants to execute for 480 ticks.
+QUEUED: Process 1700 queued at level 2 at time 50.
+RUN: Process 1583 started execution from level 1 at time 50; wants to execute for 5 ticks.
+I/O: Process 1583 blocked for I/O at time 55.
+RUN: Process 1700 started execution from level 2 at time 55; wants to execute for 470 ticks.
+QUEUED: Process 1700 queued at level 2 at time 65.
+RUN: Process 1583 started execution from level 1 at time 65; wants to execute for 5 ticks.
+I/O: Process 1583 blocked for I/O at time 70.
+RUN: Process 1700 started execution from level 2 at time 70; wants to execute for 460 ticks.
+QUEUED: Process 1700 queued at level 2 at time 80.
+RUN: Process 1583 started execution from level 1 at time 80; wants to execute for 5 ticks.
+I/O: Process 1583 blocked for I/O at time 85.
+RUN: Process 1700 started execution from level 2 at time 85; wants to execute for 450 ticks.
+QUEUED: Process 1700 queued at level 2 at time 95.
+RUN: Process 1583 started execution from level 1 at time 95; wants to execute for 5 ticks.
+I/O: Process 1583 blocked for I/O at time 100.
+RUN: Process 1700 started execution from level 2 at time 100; wants to execute for 440 ticks.
+QUEUED: Process 1700 queued at level 3 at time 110.
+RUN: Process 1583 started execution from level 1 at time 110; wants to execute for 5 ticks.
+I/O: Process 1583 blocked for I/O at time 115.
+RUN: Process 1700 started execution from level 3 at time 115; wants to execute for 430 ticks.
+QUEUED: Process 1700 queued at level 3 at time 125.
+RUN: Process 1583 started execution from level 1 at time 125; wants to execute for 5 ticks.
+I/O: Process 1583 blocked for I/O at time 130.
+RUN: Process 1700 started execution from level 3 at time 130; wants to execute for 420 ticks.
+QUEUED: Process 1700 queued at level 3 at time 140.
+RUN: Process 1583 started execution from level 1 at time 140; wants to execute for 5 ticks.
+I/O: Process 1583 blocked for I/O at time 145.
+RUN: Process 1700 started execution from level 3 at time 145; wants to execute for 410 ticks.
+QUEUED: Process 1700 queued at level 3 at time 155.
+RUN: Process 1583 started execution from level 1 at time 155; wants to execute for 5 ticks.
+FINISHED: Process 1583 finished at time 160.
+RUN: Process 1700 started execution from level 3 at time 160; wants to execute for 400 ticks.
+QUEUED: Process 1700 queued at level 3 at time 230.
+RUN: Process 1700 started execution from level 3 at time 230; wants to execute for 330 ticks.
+QUEUED: Process 1700 queued at level 3 at time 330.
+RUN: Process 1700 started execution from level 3 at time 330; wants to execute for 230 ticks.
+QUEUED: Process 1700 queued at level 3 at time 430.
+RUN: Process 1700 started execution from level 3 at time 430; wants to execute for 130 ticks.
+QUEUED: Process 1700 queued at level 3 at time 530.
+RUN: Process 1700 started execution from level 3 at time 530; wants to execute for 30 ticks.
+I/O: Process 1700 blocked for I/O at time 560.
+RUN: Process 1700 started execution from level 2 at time 580; wants to execute for 500 ticks.
+QUEUED: Process 1700 queued at level 2 at time 610.
+RUN: Process 1700 started execution from level 2 at time 610; wants to execute for 470 ticks.
+QUEUED: Process 1700 queued at level 3 at time 640.
+RUN: Process 1700 started execution from level 3 at time 640; wants to execute for 440 ticks.
+QUEUED: Process 1700 queued at level 3 at time 740.
+RUN: Process 1700 started execution from level 3 at time 740; wants to execute for 340 ticks.
+QUEUED: Process 1700 queued at level 3 at time 840.
+RUN: Process 1700 started execution from level 3 at time 840; wants to execute for 240 ticks.
+QUEUED: Process 1700 queued at level 3 at time 940.
+RUN: Process 1700 started execution from level 3 at time 940; wants to execute for 140 ticks.
+QUEUED: Process 1700 queued at level 3 at time 1040.
+RUN: Process 1700 started execution from level 3 at time 1040; wants to execute for 40 ticks.
+I/O: Process 1700 blocked for I/O at time 1080.
+RUN: Process 1700 started execution from level 2 at time 1100; wants to execute for 500 ticks.
+QUEUED: Process 1700 queued at level 2 at time 1130.
+RUN: Process 1700 started execution from level 2 at time 1130; wants to execute for 470 ticks.
+QUEUED: Process 1700 queued at level 3 at time 1160.
+RUN: Process 1700 started execution from level 3 at time 1160; wants to execute for 440 ticks.
+QUEUED: Process 1700 queued at level 3 at time 1260.
+RUN: Process 1700 started execution from level 3 at time 1260; wants to execute for 340 ticks.
+QUEUED: Process 1700 queued at level 3 at time 1360.
+RUN: Process 1700 started execution from level 3 at time 1360; wants to execute for 240 ticks.
+QUEUED: Process 1700 queued at level 3 at time 1460.
+RUN: Process 1700 started execution from level 3 at time 1460; wants to execute for 140 ticks.
+QUEUED: Process 1700 queued at level 3 at time 1560.
+RUN: Process 1700 started execution from level 3 at time 1560; wants to execute for 40 ticks.
+I/O: Process 1700 blocked for I/O at time 1600.
+RUN: Process 1700 started execution from level 2 at time 1620; wants to execute for 500 ticks.
+QUEUED: Process 1700 queued at level 2 at time 1650.
+RUN: Process 1700 started execution from level 2 at time 1650; wants to execute for 470 ticks.
+QUEUED: Process 1700 queued at level 3 at time 1680.
+RUN: Process 1700 started execution from level 3 at time 1680; wants to execute for 440 ticks.
+QUEUED: Process 1700 queued at level 3 at time 1780.
+RUN: Process 1700 started execution from level 3 at time 1780; wants to execute for 340 ticks.
+QUEUED: Process 1700 queued at level 3 at time 1880.
+RUN: Process 1700 started execution from level 3 at time 1880; wants to execute for 240 ticks.
+QUEUED: Process 1700 queued at level 3 at time 1980.
+RUN: Process 1700 started execution from level 3 at time 1980; wants to execute for 140 ticks.
+QUEUED: Process 1700 queued at level 3 at time 2080.
+RUN: Process 1700 started execution from level 3 at time 2080; wants to execute for 40 ticks.
+I/O: Process 1700 blocked for I/O at time 2120.
+RUN: Process 1700 started execution from level 2 at time 2140; wants to execute for 500 ticks.
+QUEUED: Process 1700 queued at level 2 at time 2170.
+RUN: Process 1700 started execution from level 2 at time 2170; wants to execute for 470 ticks.
+QUEUED: Process 1700 queued at level 3 at time 2200.
+RUN: Process 1700 started execution from level 3 at time 2200; wants to execute for 440 ticks.
+QUEUED: Process 1700 queued at level 3 at time 2300.
+RUN: Process 1700 started execution from level 3 at time 2300; wants to execute for 340 ticks.
+QUEUED: Process 1700 queued at level 3 at time 2400.
+RUN: Process 1700 started execution from level 3 at time 2400; wants to execute for 240 ticks.
+QUEUED: Process 1700 queued at level 3 at time 2500.
+RUN: Process 1700 started execution from level 3 at time 2500; wants to execute for 140 ticks.
+QUEUED: Process 1700 queued at level 3 at time 2600.
+RUN: Process 1700 started execution from level 3 at time 2600; wants to execute for 40 ticks.
+I/O: Process 1700 blocked for I/O at time 2640.
+RUN: Process 1700 started execution from level 2 at time 2660; wants to execute for 500 ticks.
+QUEUED: Process 1700 queued at level 2 at time 2690.
+RUN: Process 1700 started execution from level 2 at time 2690; wants to execute for 470 ticks.
+QUEUED: Process 1700 queued at level 3 at time 2720.
+RUN: Process 1700 started execution from level 3 at time 2720; wants to execute for 440 ticks.
+QUEUED: Process 1700 queued at level 3 at time 2820.
+RUN: Process 1700 started execution from level 3 at time 2820; wants to execute for 340 ticks.
+QUEUED: Process 1700 queued at level 3 at time 2920.
+RUN: Process 1700 started execution from level 3 at time 2920; wants to execute for 240 ticks.
+QUEUED: Process 1700 queued at level 3 at time 3020.
+RUN: Process 1700 started execution from level 3 at time 3020; wants to execute for 140 ticks.
+QUEUED: Process 1700 queued at level 3 at time 3120.
+RUN: Process 1700 started execution from level 3 at time 3120; wants to execute for 40 ticks.
+I/O: Process 1700 blocked for I/O at time 3160.
+RUN: Process 1700 started execution from level 2 at time 3180; wants to execute for 500 ticks.
+QUEUED: Process 1700 queued at level 2 at time 3210.
+RUN: Process 1700 started execution from level 2 at time 3210; wants to execute for 470 ticks.
+QUEUED: Process 1700 queued at level 3 at time 3240.
+RUN: Process 1700 started execution from level 3 at time 3240; wants to execute for 440 ticks.
+QUEUED: Process 1700 queued at level 3 at time 3340.
+RUN: Process 1700 started execution from level 3 at time 3340; wants to execute for 340 ticks.
+QUEUED: Process 1700 queued at level 3 at time 3440.
+RUN: Process 1700 started execution from level 3 at time 3440; wants to execute for 240 ticks.
+QUEUED: Process 1700 queued at level 3 at time 3540.
+RUN: Process 1700 started execution from level 3 at time 3540; wants to execute for 140 ticks.
+QUEUED: Process 1700 queued at level 3 at time 3640.
+RUN: Process 1700 started execution from level 3 at time 3640; wants to execute for 40 ticks.
+I/O: Process 1700 blocked for I/O at time 3680.
+RUN: Process 1700 started execution from level 2 at time 3700; wants to execute for 500 ticks.
+QUEUED: Process 1700 queued at level 2 at time 3730.
+RUN: Process 1700 started execution from level 2 at time 3730; wants to execute for 470 ticks.
+QUEUED: Process 1700 queued at level 3 at time 3760.
+RUN: Process 1700 started execution from level 3 at time 3760; wants to execute for 440 ticks.
+QUEUED: Process 1700 queued at level 3 at time 3860.
+RUN: Process 1700 started execution from level 3 at time 3860; wants to execute for 340 ticks.
+QUEUED: Process 1700 queued at level 3 at time 3960.
+RUN: Process 1700 started execution from level 3 at time 3960; wants to execute for 240 ticks.
+QUEUED: Process 1700 queued at level 3 at time 4060.
+RUN: Process 1700 started execution from level 3 at time 4060; wants to execute for 140 ticks.
+QUEUED: Process 1700 queued at level 3 at time 4160.
+RUN: Process 1700 started execution from level 3 at time 4160; wants to execute for 40 ticks.
+I/O: Process 1700 blocked for I/O at time 4200.
+RUN: Process 1700 started execution from level 2 at time 4220; wants to execute for 500 ticks.
+QUEUED: Process 1700 queued at level 2 at time 4250.
+RUN: Process 1700 started execution from level 2 at time 4250; wants to execute for 470 ticks.
+QUEUED: Process 1700 queued at level 3 at time 4280.
+RUN: Process 1700 started execution from level 3 at time 4280; wants to execute for 440 ticks.
+QUEUED: Process 1700 queued at level 3 at time 4380.
+RUN: Process 1700 started execution from level 3 at time 4380; wants to execute for 340 ticks.
+QUEUED: Process 1700 queued at level 3 at time 4480.
+RUN: Process 1700 started execution from level 3 at time 4480; wants to execute for 240 ticks.
+QUEUED: Process 1700 queued at level 3 at time 4580.
+RUN: Process 1700 started execution from level 3 at time 4580; wants to execute for 140 ticks.
+QUEUED: Process 1700 queued at level 3 at time 4680.
+RUN: Process 1700 started execution from level 3 at time 4680; wants to execute for 40 ticks.
+I/O: Process 1700 blocked for I/O at time 4720.
+RUN: Process 1700 started execution from level 2 at time 4740; wants to execute for 500 ticks.
+QUEUED: Process 1700 queued at level 2 at time 4770.
+RUN: Process 1700 started execution from level 2 at time 4770; wants to execute for 470 ticks.
+QUEUED: Process 1700 queued at level 3 at time 4800.
+RUN: Process 1700 started execution from level 3 at time 4800; wants to execute for 440 ticks.
+QUEUED: Process 1700 queued at level 3 at time 4900.
+RUN: Process 1700 started execution from level 3 at time 4900; wants to execute for 340 ticks.
+QUEUED: Process 1700 queued at level 3 at time 5000.
+RUN: Process 1700 started execution from level 3 at time 5000; wants to execute for 240 ticks.
+QUEUED: Process 1700 queued at level 3 at time 5100.
+RUN: Process 1700 started execution from level 3 at time 5100; wants to execute for 140 ticks.
+QUEUED: Process 1700 queued at level 3 at time 5200.
+RUN: Process 1700 started execution from level 3 at time 5200; wants to execute for 40 ticks.
+I/O: Process 1700 blocked for I/O at time 5240.
+RUN: Process 1700 started execution from level 2 at time 5260; wants to execute for 500 ticks.
+QUEUED: Process 1700 queued at level 2 at time 5290.
+RUN: Process 1700 started execution from level 2 at time 5290; wants to execute for 470 ticks.
+QUEUED: Process 1700 queued at level 3 at time 5320.
+RUN: Process 1700 started execution from level 3 at time 5320; wants to execute for 440 ticks.
+QUEUED: Process 1700 queued at level 3 at time 5420.
+RUN: Process 1700 started execution from level 3 at time 5420; wants to execute for 340 ticks.
+QUEUED: Process 1700 queued at level 3 at time 5520.
+RUN: Process 1700 started execution from level 3 at time 5520; wants to execute for 240 ticks.
+QUEUED: Process 1700 queued at level 3 at time 5620.
+RUN: Process 1700 started execution from level 3 at time 5620; wants to execute for 140 ticks.
+QUEUED: Process 1700 queued at level 3 at time 5720.
+RUN: Process 1700 started execution from level 3 at time 5720; wants to execute for 40 ticks.
+FINISHED: Process 1700 finished at time 5760.
+Scheduler shutdown at time 5760.
+Total CPU usage for all processes scheduled:
+Process <<null>>:	204 time units.
+Process 1583:		55 time units.
+Process 1700:		5500 time units.

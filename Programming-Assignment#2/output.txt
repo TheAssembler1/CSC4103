@@ -48,6 +48,8 @@ RUN: Process 1583 started execution from level 3 at time 1370; wants to execute 
 QUEUED: Process 1583 queued at level 3 at time 1470.
 RUN: Process 1583 started execution from level 3 at time 1470; wants to execute for 740 ticks.
 CREATE: Process 2120 entered the ready queue at time 1500
+QUEUED: Process 1583 queued at level 3 at time 1500.
+RUN: Process 2120 started execution from level 1 at time 1500; wants to execute for 5 ticks.
 I/O: Process 2120 blocked for I/O at time 1505.
 RUN: Process 1583 started execution from level 3 at time 1505; wants to execute for 710 ticks.
 QUEUED: Process 1583 queued at level 3 at time 1525.
@@ -119,6 +121,8 @@ RUN: Process 1583 started execution from level 3 at time 2380; wants to execute 
 QUEUED: Process 1583 queued at level 3 at time 2480.
 RUN: Process 2120 started execution from level 3 at time 2480; wants to execute for 40 ticks.
 CREATE: Process 2450 entered the ready queue at time 2500
+QUEUED: Process 2120 queued at level 3 at time 2500.
+RUN: Process 2450 started execution from level 1 at time 2500; wants to execute for 200 ticks.
 QUEUED: Process 2450 queued at level 2 at time 2510.
 RUN: Process 2450 started execution from level 2 at time 2510; wants to execute for 190 ticks.
 QUEUED: Process 2450 queued at level 2 at time 2540.
@@ -150,6 +154,8 @@ RUN: Process 2450 started execution from level 2 at time 3150; wants to execute 
 QUEUED: Process 2450 queued at level 3 at time 3180.
 RUN: Process 2450 started execution from level 3 at time 3180; wants to execute for 140 ticks.
 CREATE: Process 1060 entered the ready queue at time 3200
+QUEUED: Process 2450 queued at level 3 at time 3200.
+RUN: Process 1060 started execution from level 1 at time 3200; wants to execute for 7 ticks.
 I/O: Process 1060 blocked for I/O at time 3207.
 RUN: Process 2450 started execution from level 3 at time 3207; wants to execute for 120 ticks.
 QUEUED: Process 2450 queued at level 3 at time 3227.
@@ -193,6 +199,8 @@ RUN: Process 2450 started execution from level 3 at time 3885; wants to execute 
 I/O: Process 2450 blocked for I/O at time 3925.
 RUN: Process 1060 started execution from level 3 at time 3925; wants to execute for 130 ticks.
 CREATE: Process 1201 entered the ready queue at time 4000
+QUEUED: Process 1060 queued at level 3 at time 4000.
+RUN: Process 1201 started execution from level 1 at time 4000; wants to execute for 2000 ticks.
 QUEUED: Process 1201 queued at level 2 at time 4010.
 RUN: Process 1201 started execution from level 2 at time 4010; wants to execute for 1990 ticks.
 QUEUED: Process 1201 queued at level 2 at time 4040.
