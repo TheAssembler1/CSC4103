@@ -10,7 +10,7 @@ I/O: Process 1000 blocked for I/O at time 97.
 RUN: Process 1000 started execution from level 1 at time 117; wants to execute for 8 ticks.
 I/O: Process 1000 blocked for I/O at time 125.
 RUN: Process 1000 started execution from level 1 at time 145; wants to execute for 8 ticks.
-FINISHED:  Process 1000 finished at time 153.
+FINISHED: Process 1000 finished at time 153.
 CREATE: Process 1583 entered the ready queue at time 200
 RUN: Process 1583 started execution from level 1 at time 200; wants to execute for 1000 ticks.
 QUEUED: Process 1583 queued at level 2 at time 210.
@@ -48,40 +48,49 @@ RUN: Process 1583 started execution from level 3 at time 1370; wants to execute 
 QUEUED: Process 1583 queued at level 3 at time 1470.
 RUN: Process 1583 started execution from level 3 at time 1470; wants to execute for 740 ticks.
 CREATE: Process 2120 entered the ready queue at time 1500
-RUN: Process 2120 started execution from level 1 at time 1500; wants to execute for 5 ticks.
 I/O: Process 2120 blocked for I/O at time 1505.
 RUN: Process 1583 started execution from level 3 at time 1505; wants to execute for 710 ticks.
+QUEUED: Process 1583 queued at level 3 at time 1525.
 RUN: Process 2120 started execution from level 1 at time 1525; wants to execute for 5 ticks.
 I/O: Process 2120 blocked for I/O at time 1530.
 RUN: Process 1583 started execution from level 3 at time 1530; wants to execute for 690 ticks.
+QUEUED: Process 1583 queued at level 3 at time 1550.
 RUN: Process 2120 started execution from level 1 at time 1550; wants to execute for 5 ticks.
 I/O: Process 2120 blocked for I/O at time 1555.
 RUN: Process 1583 started execution from level 3 at time 1555; wants to execute for 670 ticks.
+QUEUED: Process 1583 queued at level 3 at time 1575.
 RUN: Process 2120 started execution from level 1 at time 1575; wants to execute for 5 ticks.
 I/O: Process 2120 blocked for I/O at time 1580.
 RUN: Process 1583 started execution from level 3 at time 1580; wants to execute for 650 ticks.
 QUEUED: Process 1583 queued at level 3 at time 1590.
 RUN: Process 1583 started execution from level 3 at time 1590; wants to execute for 640 ticks.
+QUEUED: Process 1583 queued at level 3 at time 1600.
 RUN: Process 2120 started execution from level 1 at time 1600; wants to execute for 5 ticks.
 I/O: Process 2120 blocked for I/O at time 1605.
 RUN: Process 1583 started execution from level 3 at time 1605; wants to execute for 630 ticks.
+QUEUED: Process 1583 queued at level 3 at time 1625.
 RUN: Process 2120 started execution from level 1 at time 1625; wants to execute for 5 ticks.
 I/O: Process 2120 blocked for I/O at time 1630.
 RUN: Process 1583 started execution from level 3 at time 1630; wants to execute for 610 ticks.
+QUEUED: Process 1583 queued at level 3 at time 1650.
 RUN: Process 2120 started execution from level 1 at time 1650; wants to execute for 5 ticks.
 I/O: Process 2120 blocked for I/O at time 1655.
 RUN: Process 1583 started execution from level 3 at time 1655; wants to execute for 590 ticks.
+QUEUED: Process 1583 queued at level 3 at time 1675.
 RUN: Process 2120 started execution from level 1 at time 1675; wants to execute for 5 ticks.
 I/O: Process 2120 blocked for I/O at time 1680.
 RUN: Process 1583 started execution from level 3 at time 1680; wants to execute for 570 ticks.
+QUEUED: Process 1583 queued at level 3 at time 1700.
 RUN: Process 2120 started execution from level 1 at time 1700; wants to execute for 5 ticks.
 I/O: Process 2120 blocked for I/O at time 1705.
 RUN: Process 1583 started execution from level 3 at time 1705; wants to execute for 550 ticks.
 QUEUED: Process 1583 queued at level 3 at time 1715.
 RUN: Process 1583 started execution from level 3 at time 1715; wants to execute for 540 ticks.
+QUEUED: Process 1583 queued at level 3 at time 1725.
 RUN: Process 2120 started execution from level 1 at time 1725; wants to execute for 5 ticks.
 I/O: Process 2120 blocked for I/O at time 1730.
 RUN: Process 1583 started execution from level 3 at time 1730; wants to execute for 530 ticks.
+QUEUED: Process 1583 queued at level 3 at time 1750.
 RUN: Process 2120 started execution from level 1 at time 1750; wants to execute for 200 ticks.
 QUEUED: Process 2120 queued at level 2 at time 1760.
 RUN: Process 2120 started execution from level 2 at time 1760; wants to execute for 190 ticks.
@@ -89,492 +98,552 @@ QUEUED: Process 2120 queued at level 2 at time 1790.
 RUN: Process 2120 started execution from level 2 at time 1790; wants to execute for 160 ticks.
 QUEUED: Process 2120 queued at level 3 at time 1820.
 RUN: Process 1583 started execution from level 3 at time 1820; wants to execute for 510 ticks.
-QUEUED: Process 1583 queued at level 3 at time 1920.
-RUN: Process 2120 started execution from level 3 at time 1920; wants to execute for 130 ticks.
-QUEUED: Process 2120 queued at level 3 at time 2020.
-RUN: Process 1583 started execution from level 3 at time 2020; wants to execute for 410 ticks.
-QUEUED: Process 1583 queued at level 3 at time 2120.
-RUN: Process 2120 started execution from level 3 at time 2120; wants to execute for 30 ticks.
-I/O: Process 2120 blocked for I/O at time 2150.
-RUN: Process 1583 started execution from level 3 at time 2150; wants to execute for 310 ticks.
-RUN: Process 2120 started execution from level 2 at time 2180; wants to execute for 200 ticks.
-QUEUED: Process 2120 queued at level 2 at time 2210.
-RUN: Process 2120 started execution from level 2 at time 2210; wants to execute for 170 ticks.
-QUEUED: Process 2120 queued at level 3 at time 2240.
-RUN: Process 1583 started execution from level 3 at time 2240; wants to execute for 280 ticks.
-QUEUED: Process 1583 queued at level 3 at time 2340.
-RUN: Process 2120 started execution from level 3 at time 2340; wants to execute for 140 ticks.
-QUEUED: Process 2120 queued at level 3 at time 2440.
-RUN: Process 1583 started execution from level 3 at time 2440; wants to execute for 180 ticks.
+QUEUED: Process 1583 queued at level 3 at time 1890.
+RUN: Process 2120 started execution from level 3 at time 1890; wants to execute for 130 ticks.
+QUEUED: Process 2120 queued at level 3 at time 1990.
+RUN: Process 1583 started execution from level 3 at time 1990; wants to execute for 440 ticks.
+QUEUED: Process 1583 queued at level 3 at time 2090.
+RUN: Process 2120 started execution from level 3 at time 2090; wants to execute for 30 ticks.
+I/O: Process 2120 blocked for I/O at time 2120.
+RUN: Process 1583 started execution from level 3 at time 2120; wants to execute for 340 ticks.
+QUEUED: Process 1583 queued at level 3 at time 2150.
+RUN: Process 2120 started execution from level 2 at time 2150; wants to execute for 200 ticks.
+QUEUED: Process 2120 queued at level 2 at time 2180.
+RUN: Process 2120 started execution from level 2 at time 2180; wants to execute for 170 ticks.
+QUEUED: Process 2120 queued at level 3 at time 2210.
+RUN: Process 1583 started execution from level 3 at time 2210; wants to execute for 310 ticks.
+QUEUED: Process 1583 queued at level 3 at time 2280.
+RUN: Process 2120 started execution from level 3 at time 2280; wants to execute for 140 ticks.
+QUEUED: Process 2120 queued at level 3 at time 2380.
+RUN: Process 1583 started execution from level 3 at time 2380; wants to execute for 240 ticks.
+QUEUED: Process 1583 queued at level 3 at time 2480.
+RUN: Process 2120 started execution from level 3 at time 2480; wants to execute for 40 ticks.
 CREATE: Process 2450 entered the ready queue at time 2500
-RUN: Process 2450 started execution from level 1 at time 2500; wants to execute for 200 ticks.
-I/O: Process 2450 blocked for I/O at time 2700.
-RUN: Process 1583 started execution from level 3 at time 2700; wants to execute for 120 ticks.
-QUEUED: Process 1583 queued at level 3 at time 2740.
-RUN: Process 2120 started execution from level 3 at time 2740; wants to execute for 40 ticks.
-I/O: Process 2120 blocked for I/O at time 2780.
-RUN: Process 1583 started execution from level 3 at time 2780; wants to execute for 80 ticks.
-RUN: Process 2450 started execution from level 1 at time 2800; wants to execute for 200 ticks.
-QUEUED: Process 2450 queued at level 2 at time 2810.
-RUN: Process 2450 started execution from level 2 at time 2810; wants to execute for 190 ticks.
-QUEUED: Process 2450 queued at level 2 at time 2840.
-RUN: Process 2120 started execution from level 2 at time 2840; wants to execute for 200 ticks.
-QUEUED: Process 2120 queued at level 2 at time 2870.
-RUN: Process 2450 started execution from level 2 at time 2870; wants to execute for 160 ticks.
-QUEUED: Process 2450 queued at level 3 at time 2900.
-RUN: Process 2120 started execution from level 2 at time 2900; wants to execute for 170 ticks.
-FINISHED:  Process 2120 finished at time 3070.
-RUN: Process 1583 started execution from level 3 at time 3070; wants to execute for 60 ticks.
-FINISHED:  Process 1583 finished at time 3130.
-RUN: Process 2450 started execution from level 3 at time 3130; wants to execute for 130 ticks.
+QUEUED: Process 2450 queued at level 2 at time 2510.
+RUN: Process 2450 started execution from level 2 at time 2510; wants to execute for 190 ticks.
+QUEUED: Process 2450 queued at level 2 at time 2540.
+RUN: Process 2450 started execution from level 2 at time 2540; wants to execute for 160 ticks.
+QUEUED: Process 2450 queued at level 3 at time 2570.
+RUN: Process 2120 started execution from level 3 at time 2570; wants to execute for 20 ticks.
+I/O: Process 2120 blocked for I/O at time 2590.
+RUN: Process 1583 started execution from level 3 at time 2590; wants to execute for 140 ticks.
+QUEUED: Process 1583 queued at level 3 at time 2620.
+RUN: Process 2120 started execution from level 2 at time 2620; wants to execute for 200 ticks.
+QUEUED: Process 2120 queued at level 2 at time 2650.
+RUN: Process 2120 started execution from level 2 at time 2650; wants to execute for 170 ticks.
+QUEUED: Process 2120 queued at level 3 at time 2680.
+RUN: Process 1583 started execution from level 3 at time 2680; wants to execute for 110 ticks.
+QUEUED: Process 1583 queued at level 3 at time 2750.
+RUN: Process 2450 started execution from level 3 at time 2750; wants to execute for 130 ticks.
+QUEUED: Process 2450 queued at level 3 at time 2850.
+RUN: Process 2120 started execution from level 3 at time 2850; wants to execute for 140 ticks.
+QUEUED: Process 2120 queued at level 3 at time 2950.
+RUN: Process 1583 started execution from level 3 at time 2950; wants to execute for 40 ticks.
+FINISHED: Process 1583 finished at time 2990.
+RUN: Process 2450 started execution from level 3 at time 2990; wants to execute for 30 ticks.
+I/O: Process 2450 blocked for I/O at time 3020.
+RUN: Process 2120 started execution from level 3 at time 3020; wants to execute for 40 ticks.
+FINISHED: Process 2120 finished at time 3060.
+RUN: Process 2450 started execution from level 2 at time 3120; wants to execute for 200 ticks.
+QUEUED: Process 2450 queued at level 2 at time 3150.
+RUN: Process 2450 started execution from level 2 at time 3150; wants to execute for 170 ticks.
+QUEUED: Process 2450 queued at level 3 at time 3180.
+RUN: Process 2450 started execution from level 3 at time 3180; wants to execute for 140 ticks.
 CREATE: Process 1060 entered the ready queue at time 3200
-RUN: Process 1060 started execution from level 1 at time 3200; wants to execute for 7 ticks.
 I/O: Process 1060 blocked for I/O at time 3207.
-RUN: Process 2450 started execution from level 3 at time 3207; wants to execute for 60 ticks.
+RUN: Process 2450 started execution from level 3 at time 3207; wants to execute for 120 ticks.
+QUEUED: Process 2450 queued at level 3 at time 3227.
 RUN: Process 1060 started execution from level 1 at time 3227; wants to execute for 7 ticks.
 I/O: Process 1060 blocked for I/O at time 3234.
-RUN: Process 2450 started execution from level 3 at time 3234; wants to execute for 40 ticks.
-QUEUED: Process 2450 queued at level 3 at time 3244.
-RUN: Process 2450 started execution from level 3 at time 3244; wants to execute for 30 ticks.
+RUN: Process 2450 started execution from level 3 at time 3234; wants to execute for 100 ticks.
+QUEUED: Process 2450 queued at level 3 at time 3254.
 RUN: Process 1060 started execution from level 1 at time 3254; wants to execute for 7 ticks.
 I/O: Process 1060 blocked for I/O at time 3261.
-RUN: Process 2450 started execution from level 3 at time 3261; wants to execute for 20 ticks.
-I/O: Process 2450 blocked for I/O at time 3281.
+RUN: Process 2450 started execution from level 3 at time 3261; wants to execute for 80 ticks.
+QUEUED: Process 2450 queued at level 3 at time 3281.
 RUN: Process 1060 started execution from level 1 at time 3281; wants to execute for 7 ticks.
 I/O: Process 1060 blocked for I/O at time 3288.
+RUN: Process 2450 started execution from level 3 at time 3288; wants to execute for 60 ticks.
+QUEUED: Process 2450 queued at level 3 at time 3308.
 RUN: Process 1060 started execution from level 1 at time 3308; wants to execute for 7 ticks.
 I/O: Process 1060 blocked for I/O at time 3315.
+RUN: Process 2450 started execution from level 3 at time 3315; wants to execute for 40 ticks.
+QUEUED: Process 2450 queued at level 3 at time 3335.
 RUN: Process 1060 started execution from level 1 at time 3335; wants to execute for 500 ticks.
 QUEUED: Process 1060 queued at level 2 at time 3345.
 RUN: Process 1060 started execution from level 2 at time 3345; wants to execute for 490 ticks.
 QUEUED: Process 1060 queued at level 2 at time 3375.
 RUN: Process 1060 started execution from level 2 at time 3375; wants to execute for 460 ticks.
 QUEUED: Process 1060 queued at level 3 at time 3405.
-RUN: Process 2450 started execution from level 2 at time 3405; wants to execute for 200 ticks.
-I/O: Process 2450 blocked for I/O at time 3605.
-RUN: Process 1060 started execution from level 3 at time 3605; wants to execute for 430 ticks.
-QUEUED: Process 1060 queued at level 3 at time 3705.
-QUEUED: Process 2450 queued at level 2 at time 3735.
-RUN: Process 2450 started execution from level 2 at time 3735; wants to execute for 170 ticks.
-QUEUED: Process 2450 queued at level 3 at time 3765.
-RUN: Process 1060 started execution from level 3 at time 3765; wants to execute for 330 ticks.
-QUEUED: Process 1060 queued at level 3 at time 3865.
-RUN: Process 2450 started execution from level 3 at time 3865; wants to execute for 140 ticks.
-QUEUED: Process 2450 queued at level 3 at time 3965.
-RUN: Process 1060 started execution from level 3 at time 3965; wants to execute for 230 ticks.
+RUN: Process 2450 started execution from level 3 at time 3405; wants to execute for 20 ticks.
+I/O: Process 2450 blocked for I/O at time 3425.
+RUN: Process 1060 started execution from level 3 at time 3425; wants to execute for 430 ticks.
+QUEUED: Process 1060 queued at level 3 at time 3525.
+RUN: Process 2450 started execution from level 2 at time 3525; wants to execute for 200 ticks.
+QUEUED: Process 2450 queued at level 2 at time 3555.
+RUN: Process 2450 started execution from level 2 at time 3555; wants to execute for 170 ticks.
+QUEUED: Process 2450 queued at level 3 at time 3585.
+RUN: Process 1060 started execution from level 3 at time 3585; wants to execute for 330 ticks.
+QUEUED: Process 1060 queued at level 3 at time 3685.
+RUN: Process 2450 started execution from level 3 at time 3685; wants to execute for 140 ticks.
+QUEUED: Process 2450 queued at level 3 at time 3785.
+RUN: Process 1060 started execution from level 3 at time 3785; wants to execute for 230 ticks.
+QUEUED: Process 1060 queued at level 3 at time 3885.
+RUN: Process 2450 started execution from level 3 at time 3885; wants to execute for 40 ticks.
+I/O: Process 2450 blocked for I/O at time 3925.
+RUN: Process 1060 started execution from level 3 at time 3925; wants to execute for 130 ticks.
 CREATE: Process 1201 entered the ready queue at time 4000
-RUN: Process 1201 started execution from level 1 at time 4000; wants to execute for 2000 ticks.
-QUEUED: Process 1201 queued at level 2 at time 4256.
-RUN: Process 1201 started execution from level 2 at time 4256; wants to execute for 1744 ticks.
-QUEUED: Process 1201 queued at level 2 at time 4286.
-RUN: Process 1201 started execution from level 2 at time 4286; wants to execute for 1714 ticks.
-QUEUED: Process 1201 queued at level 3 at time 4316.
-RUN: Process 1060 started execution from level 3 at time 4316; wants to execute for 195 ticks.
-QUEUED: Process 1060 queued at level 3 at time 4416.
-RUN: Process 2450 started execution from level 3 at time 4416; wants to execute for 40 ticks.
-FINISHED:  Process 2450 finished at time 4456.
-RUN: Process 1201 started execution from level 3 at time 4456; wants to execute for 1684 ticks.
-QUEUED: Process 1201 queued at level 3 at time 4556.
-RUN: Process 1060 started execution from level 3 at time 4556; wants to execute for 95 ticks.
-I/O: Process 1060 blocked for I/O at time 4651.
-RUN: Process 1201 started execution from level 3 at time 4651; wants to execute for 1584 ticks.
-QUEUED: Process 1201 queued at level 3 at time 4657.
-RUN: Process 1201 started execution from level 3 at time 4657; wants to execute for 1578 ticks.
-RUN: Process 1060 started execution from level 2 at time 4701; wants to execute for 500 ticks.
-QUEUED: Process 1060 queued at level 2 at time 4731.
-RUN: Process 1060 started execution from level 2 at time 4731; wants to execute for 470 ticks.
-QUEUED: Process 1060 queued at level 3 at time 4761.
-RUN: Process 1201 started execution from level 3 at time 4761; wants to execute for 1534 ticks.
-QUEUED: Process 1201 queued at level 3 at time 4861.
-RUN: Process 1060 started execution from level 3 at time 4861; wants to execute for 440 ticks.
-QUEUED: Process 1060 queued at level 3 at time 4961.
-RUN: Process 1201 started execution from level 3 at time 4961; wants to execute for 1434 ticks.
-QUEUED: Process 1201 queued at level 3 at time 5061.
-RUN: Process 1060 started execution from level 3 at time 5061; wants to execute for 340 ticks.
-QUEUED: Process 1060 queued at level 3 at time 5161.
-RUN: Process 1201 started execution from level 3 at time 5161; wants to execute for 1334 ticks.
-QUEUED: Process 1201 queued at level 3 at time 5261.
-RUN: Process 1060 started execution from level 3 at time 5261; wants to execute for 240 ticks.
-QUEUED: Process 1060 queued at level 3 at time 5361.
-RUN: Process 1201 started execution from level 3 at time 5361; wants to execute for 1234 ticks.
-QUEUED: Process 1201 queued at level 3 at time 5461.
-RUN: Process 1060 started execution from level 3 at time 5461; wants to execute for 140 ticks.
-QUEUED: Process 1060 queued at level 3 at time 5561.
-RUN: Process 1201 started execution from level 3 at time 5561; wants to execute for 1134 ticks.
-QUEUED: Process 1201 queued at level 3 at time 5661.
-RUN: Process 1060 started execution from level 3 at time 5661; wants to execute for 40 ticks.
-I/O: Process 1060 blocked for I/O at time 5701.
-RUN: Process 1201 started execution from level 3 at time 5701; wants to execute for 1034 ticks.
-RUN: Process 1060 started execution from level 2 at time 5751; wants to execute for 500 ticks.
-QUEUED: Process 1060 queued at level 2 at time 5781.
-RUN: Process 1060 started execution from level 2 at time 5781; wants to execute for 470 ticks.
-QUEUED: Process 1060 queued at level 3 at time 5811.
-RUN: Process 1201 started execution from level 3 at time 5811; wants to execute for 984 ticks.
-QUEUED: Process 1201 queued at level 3 at time 5911.
-RUN: Process 1060 started execution from level 3 at time 5911; wants to execute for 440 ticks.
-QUEUED: Process 1060 queued at level 3 at time 6011.
-RUN: Process 1201 started execution from level 3 at time 6011; wants to execute for 884 ticks.
-QUEUED: Process 1201 queued at level 3 at time 6111.
-RUN: Process 1060 started execution from level 3 at time 6111; wants to execute for 340 ticks.
-QUEUED: Process 1060 queued at level 3 at time 6211.
-RUN: Process 1201 started execution from level 3 at time 6211; wants to execute for 784 ticks.
-QUEUED: Process 1201 queued at level 3 at time 6311.
-RUN: Process 1060 started execution from level 3 at time 6311; wants to execute for 240 ticks.
-QUEUED: Process 1060 queued at level 3 at time 6411.
-RUN: Process 1201 started execution from level 3 at time 6411; wants to execute for 684 ticks.
-QUEUED: Process 1201 queued at level 3 at time 6511.
-RUN: Process 1060 started execution from level 3 at time 6511; wants to execute for 140 ticks.
-QUEUED: Process 1060 queued at level 3 at time 6611.
-RUN: Process 1201 started execution from level 3 at time 6611; wants to execute for 584 ticks.
-QUEUED: Process 1201 queued at level 3 at time 6711.
-RUN: Process 1060 started execution from level 3 at time 6711; wants to execute for 40 ticks.
-I/O: Process 1060 blocked for I/O at time 6751.
-RUN: Process 1201 started execution from level 3 at time 6751; wants to execute for 484 ticks.
-RUN: Process 1060 started execution from level 2 at time 6801; wants to execute for 500 ticks.
-QUEUED: Process 1060 queued at level 2 at time 6831.
-RUN: Process 1060 started execution from level 2 at time 6831; wants to execute for 470 ticks.
-QUEUED: Process 1060 queued at level 3 at time 6861.
-RUN: Process 1201 started execution from level 3 at time 6861; wants to execute for 434 ticks.
-QUEUED: Process 1201 queued at level 3 at time 6961.
-RUN: Process 1060 started execution from level 3 at time 6961; wants to execute for 440 ticks.
-QUEUED: Process 1060 queued at level 3 at time 7061.
-RUN: Process 1201 started execution from level 3 at time 7061; wants to execute for 334 ticks.
-QUEUED: Process 1201 queued at level 3 at time 7161.
-RUN: Process 1060 started execution from level 3 at time 7161; wants to execute for 340 ticks.
-QUEUED: Process 1060 queued at level 3 at time 7261.
-RUN: Process 1201 started execution from level 3 at time 7261; wants to execute for 234 ticks.
-QUEUED: Process 1201 queued at level 3 at time 7361.
-RUN: Process 1060 started execution from level 3 at time 7361; wants to execute for 240 ticks.
-QUEUED: Process 1060 queued at level 3 at time 7461.
-RUN: Process 1201 started execution from level 3 at time 7461; wants to execute for 134 ticks.
-QUEUED: Process 1201 queued at level 3 at time 7561.
-RUN: Process 1060 started execution from level 3 at time 7561; wants to execute for 140 ticks.
-QUEUED: Process 1060 queued at level 3 at time 7661.
-RUN: Process 1201 started execution from level 3 at time 7661; wants to execute for 34 ticks.
-I/O: Process 1201 blocked for I/O at time 7695.
-RUN: Process 1060 started execution from level 3 at time 7695; wants to execute for 40 ticks.
-I/O: Process 1060 blocked for I/O at time 7735.
-RUN: Process 1060 started execution from level 2 at time 7785; wants to execute for 500 ticks.
-QUEUED: Process 1060 queued at level 2 at time 7815.
-RUN: Process 1201 started execution from level 2 at time 7815; wants to execute for 2000 ticks.
-QUEUED: Process 1201 queued at level 2 at time 7845.
-RUN: Process 1060 started execution from level 2 at time 7845; wants to execute for 470 ticks.
-QUEUED: Process 1060 queued at level 3 at time 7875.
-RUN: Process 1201 started execution from level 2 at time 7875; wants to execute for 1970 ticks.
-QUEUED: Process 1201 queued at level 3 at time 8131.
-RUN: Process 1060 started execution from level 3 at time 8131; wants to execute for 440 ticks.
-QUEUED: Process 1060 queued at level 3 at time 8231.
-RUN: Process 1201 started execution from level 3 at time 8231; wants to execute for 1714 ticks.
-QUEUED: Process 1201 queued at level 3 at time 8331.
-RUN: Process 1060 started execution from level 3 at time 8331; wants to execute for 340 ticks.
-QUEUED: Process 1060 queued at level 3 at time 8431.
-RUN: Process 1201 started execution from level 3 at time 8431; wants to execute for 1614 ticks.
-QUEUED: Process 1201 queued at level 3 at time 8531.
-RUN: Process 1060 started execution from level 3 at time 8531; wants to execute for 240 ticks.
-QUEUED: Process 1060 queued at level 3 at time 8631.
-RUN: Process 1201 started execution from level 3 at time 8631; wants to execute for 1514 ticks.
-QUEUED: Process 1201 queued at level 3 at time 8731.
-RUN: Process 1060 started execution from level 3 at time 8731; wants to execute for 140 ticks.
-QUEUED: Process 1060 queued at level 3 at time 8831.
-RUN: Process 1201 started execution from level 3 at time 8831; wants to execute for 1414 ticks.
-QUEUED: Process 1201 queued at level 3 at time 8931.
-RUN: Process 1060 started execution from level 3 at time 8931; wants to execute for 40 ticks.
-I/O: Process 1060 blocked for I/O at time 8971.
-RUN: Process 1201 started execution from level 3 at time 8971; wants to execute for 1314 ticks.
-RUN: Process 1060 started execution from level 2 at time 9021; wants to execute for 500 ticks.
-QUEUED: Process 1060 queued at level 2 at time 9051.
-RUN: Process 1060 started execution from level 2 at time 9051; wants to execute for 470 ticks.
-QUEUED: Process 1060 queued at level 3 at time 9081.
-RUN: Process 1201 started execution from level 3 at time 9081; wants to execute for 1264 ticks.
-QUEUED: Process 1201 queued at level 3 at time 9181.
-RUN: Process 1060 started execution from level 3 at time 9181; wants to execute for 440 ticks.
-QUEUED: Process 1060 queued at level 3 at time 9281.
-RUN: Process 1201 started execution from level 3 at time 9281; wants to execute for 1164 ticks.
-QUEUED: Process 1201 queued at level 3 at time 9381.
-RUN: Process 1060 started execution from level 3 at time 9381; wants to execute for 340 ticks.
-QUEUED: Process 1060 queued at level 3 at time 9481.
-RUN: Process 1201 started execution from level 3 at time 9481; wants to execute for 1064 ticks.
-QUEUED: Process 1201 queued at level 3 at time 9581.
-RUN: Process 1060 started execution from level 3 at time 9581; wants to execute for 240 ticks.
-QUEUED: Process 1060 queued at level 3 at time 9681.
-RUN: Process 1201 started execution from level 3 at time 9681; wants to execute for 964 ticks.
-QUEUED: Process 1201 queued at level 3 at time 9781.
-RUN: Process 1060 started execution from level 3 at time 9781; wants to execute for 140 ticks.
-QUEUED: Process 1060 queued at level 3 at time 9881.
-RUN: Process 1201 started execution from level 3 at time 9881; wants to execute for 864 ticks.
-QUEUED: Process 1201 queued at level 3 at time 9981.
-RUN: Process 1060 started execution from level 3 at time 9981; wants to execute for 40 ticks.
-I/O: Process 1060 blocked for I/O at time 10021.
-RUN: Process 1201 started execution from level 3 at time 10021; wants to execute for 764 ticks.
-RUN: Process 1060 started execution from level 2 at time 10071; wants to execute for 500 ticks.
-QUEUED: Process 1060 queued at level 2 at time 10101.
-RUN: Process 1060 started execution from level 2 at time 10101; wants to execute for 470 ticks.
-QUEUED: Process 1060 queued at level 3 at time 10131.
-RUN: Process 1201 started execution from level 3 at time 10131; wants to execute for 714 ticks.
-QUEUED: Process 1201 queued at level 3 at time 10231.
-RUN: Process 1060 started execution from level 3 at time 10231; wants to execute for 440 ticks.
-QUEUED: Process 1060 queued at level 3 at time 10331.
-RUN: Process 1201 started execution from level 3 at time 10331; wants to execute for 614 ticks.
-QUEUED: Process 1201 queued at level 3 at time 10431.
-RUN: Process 1060 started execution from level 3 at time 10431; wants to execute for 340 ticks.
-QUEUED: Process 1060 queued at level 3 at time 10531.
-RUN: Process 1201 started execution from level 3 at time 10531; wants to execute for 514 ticks.
-QUEUED: Process 1201 queued at level 3 at time 10631.
-RUN: Process 1060 started execution from level 3 at time 10631; wants to execute for 240 ticks.
-QUEUED: Process 1060 queued at level 3 at time 10731.
-RUN: Process 1201 started execution from level 3 at time 10731; wants to execute for 414 ticks.
-QUEUED: Process 1201 queued at level 3 at time 10831.
-RUN: Process 1060 started execution from level 3 at time 10831; wants to execute for 140 ticks.
-QUEUED: Process 1060 queued at level 3 at time 10931.
-RUN: Process 1201 started execution from level 3 at time 10931; wants to execute for 314 ticks.
-QUEUED: Process 1201 queued at level 3 at time 11031.
-RUN: Process 1060 started execution from level 3 at time 11031; wants to execute for 40 ticks.
-I/O: Process 1060 blocked for I/O at time 11071.
-RUN: Process 1201 started execution from level 3 at time 11071; wants to execute for 214 ticks.
-RUN: Process 1060 started execution from level 2 at time 11121; wants to execute for 500 ticks.
-QUEUED: Process 1060 queued at level 2 at time 11151.
-RUN: Process 1060 started execution from level 2 at time 11151; wants to execute for 470 ticks.
-QUEUED: Process 1060 queued at level 3 at time 11181.
-RUN: Process 1201 started execution from level 3 at time 11181; wants to execute for 164 ticks.
-QUEUED: Process 1201 queued at level 3 at time 11281.
-RUN: Process 1060 started execution from level 3 at time 11281; wants to execute for 440 ticks.
-QUEUED: Process 1060 queued at level 3 at time 11381.
-RUN: Process 1201 started execution from level 3 at time 11381; wants to execute for 64 ticks.
-I/O: Process 1201 blocked for I/O at time 11445.
-RUN: Process 1060 started execution from level 3 at time 11445; wants to execute for 340 ticks.
-QUEUED: Process 1060 queued at level 3 at time 11482.
-RUN: Process 1060 started execution from level 3 at time 11482; wants to execute for 303 ticks.
-RUN: Process 1201 started execution from level 2 at time 11545; wants to execute for 2000 ticks.
-QUEUED: Process 1201 queued at level 2 at time 11575.
-RUN: Process 1201 started execution from level 2 at time 11575; wants to execute for 1970 ticks.
-QUEUED: Process 1201 queued at level 3 at time 11605.
-RUN: Process 1060 started execution from level 3 at time 11605; wants to execute for 240 ticks.
-QUEUED: Process 1060 queued at level 3 at time 11705.
-RUN: Process 1201 started execution from level 3 at time 11705; wants to execute for 1940 ticks.
-QUEUED: Process 1201 queued at level 3 at time 11805.
-RUN: Process 1060 started execution from level 3 at time 11805; wants to execute for 140 ticks.
-QUEUED: Process 1060 queued at level 3 at time 11905.
-RUN: Process 1201 started execution from level 3 at time 11905; wants to execute for 1840 ticks.
-QUEUED: Process 1201 queued at level 3 at time 12005.
-RUN: Process 1060 started execution from level 3 at time 12005; wants to execute for 40 ticks.
-I/O: Process 1060 blocked for I/O at time 12045.
-RUN: Process 1201 started execution from level 3 at time 12045; wants to execute for 1740 ticks.
-RUN: Process 1060 started execution from level 2 at time 12095; wants to execute for 500 ticks.
-QUEUED: Process 1060 queued at level 2 at time 12125.
-RUN: Process 1060 started execution from level 2 at time 12125; wants to execute for 470 ticks.
-QUEUED: Process 1060 queued at level 3 at time 12155.
-RUN: Process 1201 started execution from level 3 at time 12155; wants to execute for 1690 ticks.
-QUEUED: Process 1201 queued at level 3 at time 12255.
-RUN: Process 1060 started execution from level 3 at time 12255; wants to execute for 440 ticks.
-QUEUED: Process 1060 queued at level 3 at time 12355.
-RUN: Process 1201 started execution from level 3 at time 12355; wants to execute for 1590 ticks.
-QUEUED: Process 1201 queued at level 3 at time 12455.
-RUN: Process 1060 started execution from level 3 at time 12455; wants to execute for 340 ticks.
-QUEUED: Process 1060 queued at level 3 at time 12555.
-RUN: Process 1201 started execution from level 3 at time 12555; wants to execute for 1490 ticks.
-QUEUED: Process 1201 queued at level 3 at time 12655.
-RUN: Process 1060 started execution from level 3 at time 12655; wants to execute for 240 ticks.
-QUEUED: Process 1060 queued at level 3 at time 12755.
-RUN: Process 1201 started execution from level 3 at time 12755; wants to execute for 1390 ticks.
-QUEUED: Process 1201 queued at level 3 at time 12855.
-RUN: Process 1060 started execution from level 3 at time 12855; wants to execute for 140 ticks.
-QUEUED: Process 1060 queued at level 3 at time 12955.
-RUN: Process 1201 started execution from level 3 at time 12955; wants to execute for 1290 ticks.
-QUEUED: Process 1201 queued at level 3 at time 13055.
-RUN: Process 1060 started execution from level 3 at time 13055; wants to execute for 40 ticks.
-I/O: Process 1060 blocked for I/O at time 13095.
-RUN: Process 1201 started execution from level 3 at time 13095; wants to execute for 1190 ticks.
-RUN: Process 1060 started execution from level 2 at time 13145; wants to execute for 500 ticks.
-QUEUED: Process 1060 queued at level 2 at time 13175.
-RUN: Process 1060 started execution from level 2 at time 13175; wants to execute for 470 ticks.
-QUEUED: Process 1060 queued at level 3 at time 13205.
-RUN: Process 1201 started execution from level 3 at time 13205; wants to execute for 1140 ticks.
-QUEUED: Process 1201 queued at level 3 at time 13305.
-RUN: Process 1060 started execution from level 3 at time 13305; wants to execute for 440 ticks.
-QUEUED: Process 1060 queued at level 3 at time 13405.
-RUN: Process 1201 started execution from level 3 at time 13405; wants to execute for 1040 ticks.
-QUEUED: Process 1201 queued at level 3 at time 13505.
-RUN: Process 1060 started execution from level 3 at time 13505; wants to execute for 340 ticks.
-QUEUED: Process 1060 queued at level 3 at time 13605.
-RUN: Process 1201 started execution from level 3 at time 13605; wants to execute for 940 ticks.
-QUEUED: Process 1201 queued at level 3 at time 13705.
-RUN: Process 1060 started execution from level 3 at time 13705; wants to execute for 240 ticks.
-QUEUED: Process 1060 queued at level 3 at time 13805.
-RUN: Process 1201 started execution from level 3 at time 13805; wants to execute for 840 ticks.
-QUEUED: Process 1201 queued at level 3 at time 13905.
-RUN: Process 1060 started execution from level 3 at time 13905; wants to execute for 140 ticks.
-QUEUED: Process 1060 queued at level 3 at time 14005.
-RUN: Process 1201 started execution from level 3 at time 14005; wants to execute for 740 ticks.
-QUEUED: Process 1201 queued at level 3 at time 14105.
-RUN: Process 1060 started execution from level 3 at time 14105; wants to execute for 40 ticks.
-I/O: Process 1060 blocked for I/O at time 14145.
-RUN: Process 1201 started execution from level 3 at time 14145; wants to execute for 640 ticks.
-RUN: Process 1060 started execution from level 2 at time 14195; wants to execute for 7 ticks.
-I/O: Process 1060 blocked for I/O at time 14202.
-RUN: Process 1201 started execution from level 3 at time 14202; wants to execute for 590 ticks.
-QUEUED: Process 1201 queued at level 3 at time 14213.
-RUN: Process 1201 started execution from level 3 at time 14213; wants to execute for 579 ticks.
-RUN: Process 1060 started execution from level 2 at time 14222; wants to execute for 7 ticks.
-I/O: Process 1060 blocked for I/O at time 14229.
-RUN: Process 1201 started execution from level 3 at time 14229; wants to execute for 570 ticks.
-RUN: Process 1060 started execution from level 1 at time 14249; wants to execute for 7 ticks.
-I/O: Process 1060 blocked for I/O at time 14256.
-RUN: Process 1201 started execution from level 3 at time 14256; wants to execute for 550 ticks.
-RUN: Process 1060 started execution from level 1 at time 14276; wants to execute for 7 ticks.
-I/O: Process 1060 blocked for I/O at time 14283.
-RUN: Process 1201 started execution from level 3 at time 14283; wants to execute for 530 ticks.
-RUN: Process 1060 started execution from level 1 at time 14303; wants to execute for 7 ticks.
-I/O: Process 1060 blocked for I/O at time 14310.
-RUN: Process 1201 started execution from level 3 at time 14310; wants to execute for 510 ticks.
-RUN: Process 1060 started execution from level 1 at time 14330; wants to execute for 7 ticks.
-I/O: Process 1060 blocked for I/O at time 14337.
-RUN: Process 1201 started execution from level 3 at time 14337; wants to execute for 490 ticks.
-QUEUED: Process 1201 queued at level 3 at time 14348.
-RUN: Process 1201 started execution from level 3 at time 14348; wants to execute for 479 ticks.
-RUN: Process 1060 started execution from level 1 at time 14357; wants to execute for 7 ticks.
-I/O: Process 1060 blocked for I/O at time 14364.
-RUN: Process 1201 started execution from level 3 at time 14364; wants to execute for 470 ticks.
-RUN: Process 1060 started execution from level 1 at time 14384; wants to execute for 7 ticks.
-I/O: Process 1060 blocked for I/O at time 14391.
-RUN: Process 1201 started execution from level 3 at time 14391; wants to execute for 450 ticks.
-RUN: Process 1060 started execution from level 1 at time 14411; wants to execute for 7 ticks.
-I/O: Process 1060 blocked for I/O at time 14418.
-RUN: Process 1201 started execution from level 3 at time 14418; wants to execute for 430 ticks.
-RUN: Process 1060 started execution from level 1 at time 14438; wants to execute for 7 ticks.
-I/O: Process 1060 blocked for I/O at time 14445.
-RUN: Process 1201 started execution from level 3 at time 14445; wants to execute for 410 ticks.
-RUN: Process 1060 started execution from level 1 at time 14465; wants to execute for 7 ticks.
-FINISHED:  Process 1060 finished at time 14472.
-RUN: Process 1201 started execution from level 3 at time 14472; wants to execute for 390 ticks.
-QUEUED: Process 1201 queued at level 3 at time 14483.
-RUN: Process 1201 started execution from level 3 at time 14483; wants to execute for 379 ticks.
-QUEUED: Process 1201 queued at level 3 at time 14583.
-RUN: Process 1201 started execution from level 3 at time 14583; wants to execute for 279 ticks.
-QUEUED: Process 1201 queued at level 3 at time 14683.
-RUN: Process 1201 started execution from level 3 at time 14683; wants to execute for 179 ticks.
-QUEUED: Process 1201 queued at level 3 at time 14783.
-RUN: Process 1201 started execution from level 3 at time 14783; wants to execute for 79 ticks.
-I/O: Process 1201 blocked for I/O at time 14862.
-RUN: Process 1201 started execution from level 2 at time 14962; wants to execute for 2000 ticks.
-QUEUED: Process 1201 queued at level 2 at time 14992.
-RUN: Process 1201 started execution from level 2 at time 14992; wants to execute for 1970 ticks.
-QUEUED: Process 1201 queued at level 3 at time 15022.
-RUN: Process 1201 started execution from level 3 at time 15022; wants to execute for 1940 ticks.
-QUEUED: Process 1201 queued at level 3 at time 15122.
-RUN: Process 1201 started execution from level 3 at time 15122; wants to execute for 1840 ticks.
-QUEUED: Process 1201 queued at level 3 at time 15222.
-RUN: Process 1201 started execution from level 3 at time 15222; wants to execute for 1740 ticks.
-QUEUED: Process 1201 queued at level 3 at time 15322.
-RUN: Process 1201 started execution from level 3 at time 15322; wants to execute for 1640 ticks.
-QUEUED: Process 1201 queued at level 3 at time 15422.
-RUN: Process 1201 started execution from level 3 at time 15422; wants to execute for 1540 ticks.
-QUEUED: Process 1201 queued at level 3 at time 15522.
-RUN: Process 1201 started execution from level 3 at time 15522; wants to execute for 1440 ticks.
-QUEUED: Process 1201 queued at level 3 at time 15622.
-RUN: Process 1201 started execution from level 3 at time 15622; wants to execute for 1340 ticks.
-QUEUED: Process 1201 queued at level 3 at time 15722.
-RUN: Process 1201 started execution from level 3 at time 15722; wants to execute for 1240 ticks.
-QUEUED: Process 1201 queued at level 3 at time 15822.
-RUN: Process 1201 started execution from level 3 at time 15822; wants to execute for 1140 ticks.
-QUEUED: Process 1201 queued at level 3 at time 15922.
-RUN: Process 1201 started execution from level 3 at time 15922; wants to execute for 1040 ticks.
-QUEUED: Process 1201 queued at level 3 at time 16022.
-RUN: Process 1201 started execution from level 3 at time 16022; wants to execute for 940 ticks.
-QUEUED: Process 1201 queued at level 3 at time 16122.
-RUN: Process 1201 started execution from level 3 at time 16122; wants to execute for 840 ticks.
-QUEUED: Process 1201 queued at level 3 at time 16222.
-RUN: Process 1201 started execution from level 3 at time 16222; wants to execute for 740 ticks.
-QUEUED: Process 1201 queued at level 3 at time 16322.
-RUN: Process 1201 started execution from level 3 at time 16322; wants to execute for 640 ticks.
-QUEUED: Process 1201 queued at level 3 at time 16422.
-RUN: Process 1201 started execution from level 3 at time 16422; wants to execute for 540 ticks.
-QUEUED: Process 1201 queued at level 3 at time 16522.
-RUN: Process 1201 started execution from level 3 at time 16522; wants to execute for 440 ticks.
-QUEUED: Process 1201 queued at level 3 at time 16622.
-RUN: Process 1201 started execution from level 3 at time 16622; wants to execute for 340 ticks.
-QUEUED: Process 1201 queued at level 3 at time 16722.
-RUN: Process 1201 started execution from level 3 at time 16722; wants to execute for 240 ticks.
-QUEUED: Process 1201 queued at level 3 at time 16822.
-RUN: Process 1201 started execution from level 3 at time 16822; wants to execute for 140 ticks.
-QUEUED: Process 1201 queued at level 3 at time 16922.
-RUN: Process 1201 started execution from level 3 at time 16922; wants to execute for 40 ticks.
-I/O: Process 1201 blocked for I/O at time 16962.
-RUN: Process 1201 started execution from level 2 at time 17062; wants to execute for 2000 ticks.
-QUEUED: Process 1201 queued at level 2 at time 17092.
-RUN: Process 1201 started execution from level 2 at time 17092; wants to execute for 1970 ticks.
-QUEUED: Process 1201 queued at level 3 at time 17122.
-RUN: Process 1201 started execution from level 3 at time 17122; wants to execute for 1940 ticks.
-QUEUED: Process 1201 queued at level 3 at time 17222.
-RUN: Process 1201 started execution from level 3 at time 17222; wants to execute for 1840 ticks.
-QUEUED: Process 1201 queued at level 3 at time 17322.
-RUN: Process 1201 started execution from level 3 at time 17322; wants to execute for 1740 ticks.
-QUEUED: Process 1201 queued at level 3 at time 17422.
-RUN: Process 1201 started execution from level 3 at time 17422; wants to execute for 1640 ticks.
-QUEUED: Process 1201 queued at level 3 at time 17522.
-RUN: Process 1201 started execution from level 3 at time 17522; wants to execute for 1540 ticks.
-QUEUED: Process 1201 queued at level 3 at time 17622.
-RUN: Process 1201 started execution from level 3 at time 17622; wants to execute for 1440 ticks.
-QUEUED: Process 1201 queued at level 3 at time 17722.
-RUN: Process 1201 started execution from level 3 at time 17722; wants to execute for 1340 ticks.
-QUEUED: Process 1201 queued at level 3 at time 17822.
-RUN: Process 1201 started execution from level 3 at time 17822; wants to execute for 1240 ticks.
-QUEUED: Process 1201 queued at level 3 at time 17922.
-RUN: Process 1201 started execution from level 3 at time 17922; wants to execute for 1140 ticks.
-QUEUED: Process 1201 queued at level 3 at time 18022.
-RUN: Process 1201 started execution from level 3 at time 18022; wants to execute for 1040 ticks.
-QUEUED: Process 1201 queued at level 3 at time 18122.
-RUN: Process 1201 started execution from level 3 at time 18122; wants to execute for 940 ticks.
-QUEUED: Process 1201 queued at level 3 at time 18222.
-RUN: Process 1201 started execution from level 3 at time 18222; wants to execute for 840 ticks.
-QUEUED: Process 1201 queued at level 3 at time 18322.
-RUN: Process 1201 started execution from level 3 at time 18322; wants to execute for 740 ticks.
-QUEUED: Process 1201 queued at level 3 at time 18422.
-RUN: Process 1201 started execution from level 3 at time 18422; wants to execute for 640 ticks.
-QUEUED: Process 1201 queued at level 3 at time 18522.
-RUN: Process 1201 started execution from level 3 at time 18522; wants to execute for 540 ticks.
-QUEUED: Process 1201 queued at level 3 at time 18622.
-RUN: Process 1201 started execution from level 3 at time 18622; wants to execute for 440 ticks.
-QUEUED: Process 1201 queued at level 3 at time 18722.
-RUN: Process 1201 started execution from level 3 at time 18722; wants to execute for 340 ticks.
-QUEUED: Process 1201 queued at level 3 at time 18822.
-RUN: Process 1201 started execution from level 3 at time 18822; wants to execute for 240 ticks.
-QUEUED: Process 1201 queued at level 3 at time 18922.
-RUN: Process 1201 started execution from level 3 at time 18922; wants to execute for 140 ticks.
-QUEUED: Process 1201 queued at level 3 at time 19022.
-RUN: Process 1201 started execution from level 3 at time 19022; wants to execute for 40 ticks.
-I/O: Process 1201 blocked for I/O at time 19062.
-RUN: Process 1201 started execution from level 2 at time 19162; wants to execute for 25 ticks.
-I/O: Process 1201 blocked for I/O at time 19187.
-RUN: Process 1201 started execution from level 2 at time 19237; wants to execute for 25 ticks.
-I/O: Process 1201 blocked for I/O at time 19262.
-RUN: Process 1201 started execution from level 1 at time 19312; wants to execute for 25 ticks.
-QUEUED: Process 1201 queued at level 2 at time 19322.
-RUN: Process 1201 started execution from level 2 at time 19322; wants to execute for 15 ticks.
-I/O: Process 1201 blocked for I/O at time 19337.
-RUN: Process 1201 started execution from level 2 at time 19387; wants to execute for 25 ticks.
-I/O: Process 1201 blocked for I/O at time 19412.
-RUN: Process 1201 started execution from level 1 at time 19462; wants to execute for 25 ticks.
-QUEUED: Process 1201 queued at level 2 at time 19472.
-RUN: Process 1201 started execution from level 2 at time 19472; wants to execute for 15 ticks.
-I/O: Process 1201 blocked for I/O at time 19487.
-RUN: Process 1201 started execution from level 2 at time 19537; wants to execute for 5 ticks.
-I/O: Process 1201 blocked for I/O at time 19542.
-RUN: Process 1201 started execution from level 1 at time 19562; wants to execute for 5 ticks.
-I/O: Process 1201 blocked for I/O at time 19567.
-RUN: Process 1201 started execution from level 1 at time 19587; wants to execute for 5 ticks.
-I/O: Process 1201 blocked for I/O at time 19592.
-RUN: Process 1201 started execution from level 1 at time 19612; wants to execute for 5 ticks.
-I/O: Process 1201 blocked for I/O at time 19617.
-RUN: Process 1201 started execution from level 1 at time 19637; wants to execute for 5 ticks.
-I/O: Process 1201 blocked for I/O at time 19642.
-RUN: Process 1201 started execution from level 1 at time 19662; wants to execute for 5 ticks.
-FINISHED:  Process 1201 finished at time 19667.
-Scheduler shutdown at time 19667.
+QUEUED: Process 1201 queued at level 2 at time 4010.
+RUN: Process 1201 started execution from level 2 at time 4010; wants to execute for 1990 ticks.
+QUEUED: Process 1201 queued at level 2 at time 4040.
+RUN: Process 2450 started execution from level 2 at time 4040; wants to execute for 200 ticks.
+QUEUED: Process 2450 queued at level 2 at time 4070.
+RUN: Process 1201 started execution from level 2 at time 4070; wants to execute for 1960 ticks.
+QUEUED: Process 1201 queued at level 3 at time 4100.
+RUN: Process 2450 started execution from level 2 at time 4100; wants to execute for 170 ticks.
+QUEUED: Process 2450 queued at level 3 at time 4130.
+RUN: Process 1060 started execution from level 3 at time 4130; wants to execute for 55 ticks.
+QUEUED: Process 1060 queued at level 3 at time 4155.
+RUN: Process 1201 started execution from level 3 at time 4155; wants to execute for 1930 ticks.
+QUEUED: Process 1201 queued at level 3 at time 4255.
+RUN: Process 2450 started execution from level 3 at time 4255; wants to execute for 140 ticks.
+QUEUED: Process 2450 queued at level 3 at time 4355.
+RUN: Process 1060 started execution from level 3 at time 4355; wants to execute for 30 ticks.
+I/O: Process 1060 blocked for I/O at time 4385.
+RUN: Process 1201 started execution from level 3 at time 4385; wants to execute for 1830 ticks.
+QUEUED: Process 1201 queued at level 3 at time 4435.
+RUN: Process 1060 started execution from level 2 at time 4435; wants to execute for 500 ticks.
+QUEUED: Process 1060 queued at level 2 at time 4465.
+RUN: Process 1060 started execution from level 2 at time 4465; wants to execute for 470 ticks.
+QUEUED: Process 1060 queued at level 3 at time 4495.
+RUN: Process 1201 started execution from level 3 at time 4495; wants to execute for 1780 ticks.
+QUEUED: Process 1201 queued at level 3 at time 4545.
+RUN: Process 2450 started execution from level 3 at time 4545; wants to execute for 40 ticks.
+FINISHED: Process 2450 finished at time 4585.
+RUN: Process 1060 started execution from level 3 at time 4585; wants to execute for 440 ticks.
+QUEUED: Process 1060 queued at level 3 at time 4685.
+RUN: Process 1201 started execution from level 3 at time 4685; wants to execute for 1730 ticks.
+QUEUED: Process 1201 queued at level 3 at time 4785.
+RUN: Process 1060 started execution from level 3 at time 4785; wants to execute for 340 ticks.
+QUEUED: Process 1060 queued at level 3 at time 4885.
+RUN: Process 1201 started execution from level 3 at time 4885; wants to execute for 1630 ticks.
+QUEUED: Process 1201 queued at level 3 at time 4985.
+RUN: Process 1060 started execution from level 3 at time 4985; wants to execute for 240 ticks.
+QUEUED: Process 1060 queued at level 3 at time 5085.
+RUN: Process 1201 started execution from level 3 at time 5085; wants to execute for 1530 ticks.
+QUEUED: Process 1201 queued at level 3 at time 5185.
+RUN: Process 1060 started execution from level 3 at time 5185; wants to execute for 140 ticks.
+QUEUED: Process 1060 queued at level 3 at time 5285.
+RUN: Process 1201 started execution from level 3 at time 5285; wants to execute for 1430 ticks.
+QUEUED: Process 1201 queued at level 3 at time 5385.
+RUN: Process 1060 started execution from level 3 at time 5385; wants to execute for 40 ticks.
+I/O: Process 1060 blocked for I/O at time 5425.
+RUN: Process 1201 started execution from level 3 at time 5425; wants to execute for 1330 ticks.
+QUEUED: Process 1201 queued at level 3 at time 5475.
+RUN: Process 1060 started execution from level 2 at time 5475; wants to execute for 500 ticks.
+QUEUED: Process 1060 queued at level 2 at time 5505.
+RUN: Process 1060 started execution from level 2 at time 5505; wants to execute for 470 ticks.
+QUEUED: Process 1060 queued at level 3 at time 5535.
+RUN: Process 1201 started execution from level 3 at time 5535; wants to execute for 1280 ticks.
+QUEUED: Process 1201 queued at level 3 at time 5585.
+RUN: Process 1060 started execution from level 3 at time 5585; wants to execute for 440 ticks.
+QUEUED: Process 1060 queued at level 3 at time 5685.
+RUN: Process 1201 started execution from level 3 at time 5685; wants to execute for 1230 ticks.
+QUEUED: Process 1201 queued at level 3 at time 5785.
+RUN: Process 1060 started execution from level 3 at time 5785; wants to execute for 340 ticks.
+QUEUED: Process 1060 queued at level 3 at time 5885.
+RUN: Process 1201 started execution from level 3 at time 5885; wants to execute for 1130 ticks.
+QUEUED: Process 1201 queued at level 3 at time 5985.
+RUN: Process 1060 started execution from level 3 at time 5985; wants to execute for 240 ticks.
+QUEUED: Process 1060 queued at level 3 at time 6085.
+RUN: Process 1201 started execution from level 3 at time 6085; wants to execute for 1030 ticks.
+QUEUED: Process 1201 queued at level 3 at time 6185.
+RUN: Process 1060 started execution from level 3 at time 6185; wants to execute for 140 ticks.
+QUEUED: Process 1060 queued at level 3 at time 6285.
+RUN: Process 1201 started execution from level 3 at time 6285; wants to execute for 930 ticks.
+QUEUED: Process 1201 queued at level 3 at time 6385.
+RUN: Process 1060 started execution from level 3 at time 6385; wants to execute for 40 ticks.
+I/O: Process 1060 blocked for I/O at time 6425.
+RUN: Process 1201 started execution from level 3 at time 6425; wants to execute for 830 ticks.
+QUEUED: Process 1201 queued at level 3 at time 6475.
+RUN: Process 1060 started execution from level 2 at time 6475; wants to execute for 500 ticks.
+QUEUED: Process 1060 queued at level 2 at time 6505.
+RUN: Process 1060 started execution from level 2 at time 6505; wants to execute for 470 ticks.
+QUEUED: Process 1060 queued at level 3 at time 6535.
+RUN: Process 1201 started execution from level 3 at time 6535; wants to execute for 780 ticks.
+QUEUED: Process 1201 queued at level 3 at time 6585.
+RUN: Process 1060 started execution from level 3 at time 6585; wants to execute for 440 ticks.
+QUEUED: Process 1060 queued at level 3 at time 6685.
+RUN: Process 1201 started execution from level 3 at time 6685; wants to execute for 730 ticks.
+QUEUED: Process 1201 queued at level 3 at time 6785.
+RUN: Process 1060 started execution from level 3 at time 6785; wants to execute for 340 ticks.
+QUEUED: Process 1060 queued at level 3 at time 6885.
+RUN: Process 1201 started execution from level 3 at time 6885; wants to execute for 630 ticks.
+QUEUED: Process 1201 queued at level 3 at time 6985.
+RUN: Process 1060 started execution from level 3 at time 6985; wants to execute for 240 ticks.
+QUEUED: Process 1060 queued at level 3 at time 7085.
+RUN: Process 1201 started execution from level 3 at time 7085; wants to execute for 530 ticks.
+QUEUED: Process 1201 queued at level 3 at time 7185.
+RUN: Process 1060 started execution from level 3 at time 7185; wants to execute for 140 ticks.
+QUEUED: Process 1060 queued at level 3 at time 7285.
+RUN: Process 1201 started execution from level 3 at time 7285; wants to execute for 430 ticks.
+QUEUED: Process 1201 queued at level 3 at time 7385.
+RUN: Process 1060 started execution from level 3 at time 7385; wants to execute for 40 ticks.
+I/O: Process 1060 blocked for I/O at time 7425.
+RUN: Process 1201 started execution from level 3 at time 7425; wants to execute for 330 ticks.
+QUEUED: Process 1201 queued at level 3 at time 7475.
+RUN: Process 1060 started execution from level 2 at time 7475; wants to execute for 500 ticks.
+QUEUED: Process 1060 queued at level 2 at time 7505.
+RUN: Process 1060 started execution from level 2 at time 7505; wants to execute for 470 ticks.
+QUEUED: Process 1060 queued at level 3 at time 7535.
+RUN: Process 1201 started execution from level 3 at time 7535; wants to execute for 280 ticks.
+QUEUED: Process 1201 queued at level 3 at time 7585.
+RUN: Process 1060 started execution from level 3 at time 7585; wants to execute for 440 ticks.
+QUEUED: Process 1060 queued at level 3 at time 7685.
+RUN: Process 1201 started execution from level 3 at time 7685; wants to execute for 230 ticks.
+QUEUED: Process 1201 queued at level 3 at time 7785.
+RUN: Process 1060 started execution from level 3 at time 7785; wants to execute for 340 ticks.
+QUEUED: Process 1060 queued at level 3 at time 7885.
+RUN: Process 1201 started execution from level 3 at time 7885; wants to execute for 130 ticks.
+QUEUED: Process 1201 queued at level 3 at time 7985.
+RUN: Process 1060 started execution from level 3 at time 7985; wants to execute for 240 ticks.
+QUEUED: Process 1060 queued at level 3 at time 8085.
+RUN: Process 1201 started execution from level 3 at time 8085; wants to execute for 30 ticks.
+I/O: Process 1201 blocked for I/O at time 8115.
+RUN: Process 1060 started execution from level 3 at time 8115; wants to execute for 140 ticks.
+QUEUED: Process 1060 queued at level 3 at time 8215.
+RUN: Process 1201 started execution from level 2 at time 8215; wants to execute for 2000 ticks.
+QUEUED: Process 1201 queued at level 2 at time 8245.
+RUN: Process 1201 started execution from level 2 at time 8245; wants to execute for 1970 ticks.
+QUEUED: Process 1201 queued at level 3 at time 8275.
+RUN: Process 1060 started execution from level 3 at time 8275; wants to execute for 40 ticks.
+I/O: Process 1060 blocked for I/O at time 8315.
+RUN: Process 1201 started execution from level 3 at time 8315; wants to execute for 1940 ticks.
+QUEUED: Process 1201 queued at level 3 at time 8365.
+RUN: Process 1060 started execution from level 2 at time 8365; wants to execute for 500 ticks.
+QUEUED: Process 1060 queued at level 2 at time 8395.
+RUN: Process 1060 started execution from level 2 at time 8395; wants to execute for 470 ticks.
+QUEUED: Process 1060 queued at level 3 at time 8425.
+RUN: Process 1201 started execution from level 3 at time 8425; wants to execute for 1890 ticks.
+QUEUED: Process 1201 queued at level 3 at time 8475.
+RUN: Process 1060 started execution from level 3 at time 8475; wants to execute for 440 ticks.
+QUEUED: Process 1060 queued at level 3 at time 8575.
+RUN: Process 1201 started execution from level 3 at time 8575; wants to execute for 1840 ticks.
+QUEUED: Process 1201 queued at level 3 at time 8675.
+RUN: Process 1060 started execution from level 3 at time 8675; wants to execute for 340 ticks.
+QUEUED: Process 1060 queued at level 3 at time 8775.
+RUN: Process 1201 started execution from level 3 at time 8775; wants to execute for 1740 ticks.
+QUEUED: Process 1201 queued at level 3 at time 8875.
+RUN: Process 1060 started execution from level 3 at time 8875; wants to execute for 240 ticks.
+QUEUED: Process 1060 queued at level 3 at time 8975.
+RUN: Process 1201 started execution from level 3 at time 8975; wants to execute for 1640 ticks.
+QUEUED: Process 1201 queued at level 3 at time 9075.
+RUN: Process 1060 started execution from level 3 at time 9075; wants to execute for 140 ticks.
+QUEUED: Process 1060 queued at level 3 at time 9175.
+RUN: Process 1201 started execution from level 3 at time 9175; wants to execute for 1540 ticks.
+QUEUED: Process 1201 queued at level 3 at time 9275.
+RUN: Process 1060 started execution from level 3 at time 9275; wants to execute for 40 ticks.
+I/O: Process 1060 blocked for I/O at time 9315.
+RUN: Process 1201 started execution from level 3 at time 9315; wants to execute for 1440 ticks.
+QUEUED: Process 1201 queued at level 3 at time 9365.
+RUN: Process 1060 started execution from level 2 at time 9365; wants to execute for 500 ticks.
+QUEUED: Process 1060 queued at level 2 at time 9395.
+RUN: Process 1060 started execution from level 2 at time 9395; wants to execute for 470 ticks.
+QUEUED: Process 1060 queued at level 3 at time 9425.
+RUN: Process 1201 started execution from level 3 at time 9425; wants to execute for 1390 ticks.
+QUEUED: Process 1201 queued at level 3 at time 9475.
+RUN: Process 1060 started execution from level 3 at time 9475; wants to execute for 440 ticks.
+QUEUED: Process 1060 queued at level 3 at time 9575.
+RUN: Process 1201 started execution from level 3 at time 9575; wants to execute for 1340 ticks.
+QUEUED: Process 1201 queued at level 3 at time 9675.
+RUN: Process 1060 started execution from level 3 at time 9675; wants to execute for 340 ticks.
+QUEUED: Process 1060 queued at level 3 at time 9775.
+RUN: Process 1201 started execution from level 3 at time 9775; wants to execute for 1240 ticks.
+QUEUED: Process 1201 queued at level 3 at time 9875.
+RUN: Process 1060 started execution from level 3 at time 9875; wants to execute for 240 ticks.
+QUEUED: Process 1060 queued at level 3 at time 9975.
+RUN: Process 1201 started execution from level 3 at time 9975; wants to execute for 1140 ticks.
+QUEUED: Process 1201 queued at level 3 at time 10075.
+RUN: Process 1060 started execution from level 3 at time 10075; wants to execute for 140 ticks.
+QUEUED: Process 1060 queued at level 3 at time 10175.
+RUN: Process 1201 started execution from level 3 at time 10175; wants to execute for 1040 ticks.
+QUEUED: Process 1201 queued at level 3 at time 10275.
+RUN: Process 1060 started execution from level 3 at time 10275; wants to execute for 40 ticks.
+I/O: Process 1060 blocked for I/O at time 10315.
+RUN: Process 1201 started execution from level 3 at time 10315; wants to execute for 940 ticks.
+QUEUED: Process 1201 queued at level 3 at time 10365.
+RUN: Process 1060 started execution from level 2 at time 10365; wants to execute for 500 ticks.
+QUEUED: Process 1060 queued at level 2 at time 10395.
+RUN: Process 1060 started execution from level 2 at time 10395; wants to execute for 470 ticks.
+QUEUED: Process 1060 queued at level 3 at time 10425.
+RUN: Process 1201 started execution from level 3 at time 10425; wants to execute for 890 ticks.
+QUEUED: Process 1201 queued at level 3 at time 10475.
+RUN: Process 1060 started execution from level 3 at time 10475; wants to execute for 440 ticks.
+QUEUED: Process 1060 queued at level 3 at time 10575.
+RUN: Process 1201 started execution from level 3 at time 10575; wants to execute for 840 ticks.
+QUEUED: Process 1201 queued at level 3 at time 10675.
+RUN: Process 1060 started execution from level 3 at time 10675; wants to execute for 340 ticks.
+QUEUED: Process 1060 queued at level 3 at time 10775.
+RUN: Process 1201 started execution from level 3 at time 10775; wants to execute for 740 ticks.
+QUEUED: Process 1201 queued at level 3 at time 10875.
+RUN: Process 1060 started execution from level 3 at time 10875; wants to execute for 240 ticks.
+QUEUED: Process 1060 queued at level 3 at time 10975.
+RUN: Process 1201 started execution from level 3 at time 10975; wants to execute for 640 ticks.
+QUEUED: Process 1201 queued at level 3 at time 11075.
+RUN: Process 1060 started execution from level 3 at time 11075; wants to execute for 140 ticks.
+QUEUED: Process 1060 queued at level 3 at time 11175.
+RUN: Process 1201 started execution from level 3 at time 11175; wants to execute for 540 ticks.
+QUEUED: Process 1201 queued at level 3 at time 11275.
+RUN: Process 1060 started execution from level 3 at time 11275; wants to execute for 40 ticks.
+I/O: Process 1060 blocked for I/O at time 11315.
+RUN: Process 1201 started execution from level 3 at time 11315; wants to execute for 440 ticks.
+QUEUED: Process 1201 queued at level 3 at time 11365.
+RUN: Process 1060 started execution from level 2 at time 11365; wants to execute for 500 ticks.
+QUEUED: Process 1060 queued at level 2 at time 11395.
+RUN: Process 1060 started execution from level 2 at time 11395; wants to execute for 470 ticks.
+QUEUED: Process 1060 queued at level 3 at time 11425.
+RUN: Process 1201 started execution from level 3 at time 11425; wants to execute for 390 ticks.
+QUEUED: Process 1201 queued at level 3 at time 11475.
+RUN: Process 1060 started execution from level 3 at time 11475; wants to execute for 440 ticks.
+QUEUED: Process 1060 queued at level 3 at time 11575.
+RUN: Process 1201 started execution from level 3 at time 11575; wants to execute for 340 ticks.
+QUEUED: Process 1201 queued at level 3 at time 11675.
+RUN: Process 1060 started execution from level 3 at time 11675; wants to execute for 340 ticks.
+QUEUED: Process 1060 queued at level 3 at time 11775.
+RUN: Process 1201 started execution from level 3 at time 11775; wants to execute for 240 ticks.
+QUEUED: Process 1201 queued at level 3 at time 11875.
+RUN: Process 1060 started execution from level 3 at time 11875; wants to execute for 240 ticks.
+QUEUED: Process 1060 queued at level 3 at time 11975.
+RUN: Process 1201 started execution from level 3 at time 11975; wants to execute for 140 ticks.
+QUEUED: Process 1201 queued at level 3 at time 12075.
+RUN: Process 1060 started execution from level 3 at time 12075; wants to execute for 140 ticks.
+QUEUED: Process 1060 queued at level 3 at time 12175.
+RUN: Process 1201 started execution from level 3 at time 12175; wants to execute for 40 ticks.
+I/O: Process 1201 blocked for I/O at time 12215.
+RUN: Process 1060 started execution from level 3 at time 12215; wants to execute for 40 ticks.
+I/O: Process 1060 blocked for I/O at time 12255.
+RUN: Process 1060 started execution from level 2 at time 12305; wants to execute for 500 ticks.
+QUEUED: Process 1060 queued at level 2 at time 12335.
+RUN: Process 1201 started execution from level 2 at time 12335; wants to execute for 2000 ticks.
+QUEUED: Process 1201 queued at level 2 at time 12365.
+RUN: Process 1060 started execution from level 2 at time 12365; wants to execute for 470 ticks.
+QUEUED: Process 1060 queued at level 3 at time 12395.
+RUN: Process 1201 started execution from level 2 at time 12395; wants to execute for 1970 ticks.
+QUEUED: Process 1201 queued at level 3 at time 12425.
+RUN: Process 1060 started execution from level 3 at time 12425; wants to execute for 440 ticks.
+QUEUED: Process 1060 queued at level 3 at time 12525.
+RUN: Process 1201 started execution from level 3 at time 12525; wants to execute for 1940 ticks.
+QUEUED: Process 1201 queued at level 3 at time 12625.
+RUN: Process 1060 started execution from level 3 at time 12625; wants to execute for 340 ticks.
+QUEUED: Process 1060 queued at level 3 at time 12725.
+RUN: Process 1201 started execution from level 3 at time 12725; wants to execute for 1840 ticks.
+QUEUED: Process 1201 queued at level 3 at time 12825.
+RUN: Process 1060 started execution from level 3 at time 12825; wants to execute for 240 ticks.
+QUEUED: Process 1060 queued at level 3 at time 12925.
+RUN: Process 1201 started execution from level 3 at time 12925; wants to execute for 1740 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13025.
+RUN: Process 1060 started execution from level 3 at time 13025; wants to execute for 140 ticks.
+QUEUED: Process 1060 queued at level 3 at time 13125.
+RUN: Process 1201 started execution from level 3 at time 13125; wants to execute for 1640 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13225.
+RUN: Process 1060 started execution from level 3 at time 13225; wants to execute for 40 ticks.
+I/O: Process 1060 blocked for I/O at time 13265.
+RUN: Process 1201 started execution from level 3 at time 13265; wants to execute for 1540 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13315.
+RUN: Process 1060 started execution from level 2 at time 13315; wants to execute for 7 ticks.
+I/O: Process 1060 blocked for I/O at time 13322.
+RUN: Process 1201 started execution from level 3 at time 13322; wants to execute for 1490 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13342.
+RUN: Process 1060 started execution from level 2 at time 13342; wants to execute for 7 ticks.
+I/O: Process 1060 blocked for I/O at time 13349.
+RUN: Process 1201 started execution from level 3 at time 13349; wants to execute for 1470 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13369.
+RUN: Process 1060 started execution from level 1 at time 13369; wants to execute for 7 ticks.
+I/O: Process 1060 blocked for I/O at time 13376.
+RUN: Process 1201 started execution from level 3 at time 13376; wants to execute for 1450 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13386.
+RUN: Process 1201 started execution from level 3 at time 13386; wants to execute for 1440 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13396.
+RUN: Process 1060 started execution from level 1 at time 13396; wants to execute for 7 ticks.
+I/O: Process 1060 blocked for I/O at time 13403.
+RUN: Process 1201 started execution from level 3 at time 13403; wants to execute for 1430 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13423.
+RUN: Process 1060 started execution from level 1 at time 13423; wants to execute for 7 ticks.
+I/O: Process 1060 blocked for I/O at time 13430.
+RUN: Process 1201 started execution from level 3 at time 13430; wants to execute for 1410 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13450.
+RUN: Process 1060 started execution from level 1 at time 13450; wants to execute for 7 ticks.
+I/O: Process 1060 blocked for I/O at time 13457.
+RUN: Process 1201 started execution from level 3 at time 13457; wants to execute for 1390 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13477.
+RUN: Process 1060 started execution from level 1 at time 13477; wants to execute for 7 ticks.
+I/O: Process 1060 blocked for I/O at time 13484.
+RUN: Process 1201 started execution from level 3 at time 13484; wants to execute for 1370 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13504.
+RUN: Process 1060 started execution from level 1 at time 13504; wants to execute for 7 ticks.
+I/O: Process 1060 blocked for I/O at time 13511.
+RUN: Process 1201 started execution from level 3 at time 13511; wants to execute for 1350 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13521.
+RUN: Process 1201 started execution from level 3 at time 13521; wants to execute for 1340 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13531.
+RUN: Process 1060 started execution from level 1 at time 13531; wants to execute for 7 ticks.
+I/O: Process 1060 blocked for I/O at time 13538.
+RUN: Process 1201 started execution from level 3 at time 13538; wants to execute for 1330 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13558.
+RUN: Process 1060 started execution from level 1 at time 13558; wants to execute for 7 ticks.
+I/O: Process 1060 blocked for I/O at time 13565.
+RUN: Process 1201 started execution from level 3 at time 13565; wants to execute for 1310 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13585.
+RUN: Process 1060 started execution from level 1 at time 13585; wants to execute for 7 ticks.
+FINISHED: Process 1060 finished at time 13592.
+RUN: Process 1201 started execution from level 3 at time 13592; wants to execute for 1290 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13642.
+RUN: Process 1201 started execution from level 3 at time 13642; wants to execute for 1240 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13742.
+RUN: Process 1201 started execution from level 3 at time 13742; wants to execute for 1140 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13842.
+RUN: Process 1201 started execution from level 3 at time 13842; wants to execute for 1040 ticks.
+QUEUED: Process 1201 queued at level 3 at time 13942.
+RUN: Process 1201 started execution from level 3 at time 13942; wants to execute for 940 ticks.
+QUEUED: Process 1201 queued at level 3 at time 14042.
+RUN: Process 1201 started execution from level 3 at time 14042; wants to execute for 840 ticks.
+QUEUED: Process 1201 queued at level 3 at time 14142.
+RUN: Process 1201 started execution from level 3 at time 14142; wants to execute for 740 ticks.
+QUEUED: Process 1201 queued at level 3 at time 14242.
+RUN: Process 1201 started execution from level 3 at time 14242; wants to execute for 640 ticks.
+QUEUED: Process 1201 queued at level 3 at time 14342.
+RUN: Process 1201 started execution from level 3 at time 14342; wants to execute for 540 ticks.
+QUEUED: Process 1201 queued at level 3 at time 14442.
+RUN: Process 1201 started execution from level 3 at time 14442; wants to execute for 440 ticks.
+QUEUED: Process 1201 queued at level 3 at time 14542.
+RUN: Process 1201 started execution from level 3 at time 14542; wants to execute for 340 ticks.
+QUEUED: Process 1201 queued at level 3 at time 14642.
+RUN: Process 1201 started execution from level 3 at time 14642; wants to execute for 240 ticks.
+QUEUED: Process 1201 queued at level 3 at time 14742.
+RUN: Process 1201 started execution from level 3 at time 14742; wants to execute for 140 ticks.
+QUEUED: Process 1201 queued at level 3 at time 14842.
+RUN: Process 1201 started execution from level 3 at time 14842; wants to execute for 40 ticks.
+I/O: Process 1201 blocked for I/O at time 14882.
+RUN: Process 1201 started execution from level 2 at time 14982; wants to execute for 2000 ticks.
+QUEUED: Process 1201 queued at level 2 at time 15012.
+RUN: Process 1201 started execution from level 2 at time 15012; wants to execute for 1970 ticks.
+QUEUED: Process 1201 queued at level 3 at time 15042.
+RUN: Process 1201 started execution from level 3 at time 15042; wants to execute for 1940 ticks.
+QUEUED: Process 1201 queued at level 3 at time 15142.
+RUN: Process 1201 started execution from level 3 at time 15142; wants to execute for 1840 ticks.
+QUEUED: Process 1201 queued at level 3 at time 15242.
+RUN: Process 1201 started execution from level 3 at time 15242; wants to execute for 1740 ticks.
+QUEUED: Process 1201 queued at level 3 at time 15342.
+RUN: Process 1201 started execution from level 3 at time 15342; wants to execute for 1640 ticks.
+QUEUED: Process 1201 queued at level 3 at time 15442.
+RUN: Process 1201 started execution from level 3 at time 15442; wants to execute for 1540 ticks.
+QUEUED: Process 1201 queued at level 3 at time 15542.
+RUN: Process 1201 started execution from level 3 at time 15542; wants to execute for 1440 ticks.
+QUEUED: Process 1201 queued at level 3 at time 15642.
+RUN: Process 1201 started execution from level 3 at time 15642; wants to execute for 1340 ticks.
+QUEUED: Process 1201 queued at level 3 at time 15742.
+RUN: Process 1201 started execution from level 3 at time 15742; wants to execute for 1240 ticks.
+QUEUED: Process 1201 queued at level 3 at time 15842.
+RUN: Process 1201 started execution from level 3 at time 15842; wants to execute for 1140 ticks.
+QUEUED: Process 1201 queued at level 3 at time 15942.
+RUN: Process 1201 started execution from level 3 at time 15942; wants to execute for 1040 ticks.
+QUEUED: Process 1201 queued at level 3 at time 16042.
+RUN: Process 1201 started execution from level 3 at time 16042; wants to execute for 940 ticks.
+QUEUED: Process 1201 queued at level 3 at time 16142.
+RUN: Process 1201 started execution from level 3 at time 16142; wants to execute for 840 ticks.
+QUEUED: Process 1201 queued at level 3 at time 16242.
+RUN: Process 1201 started execution from level 3 at time 16242; wants to execute for 740 ticks.
+QUEUED: Process 1201 queued at level 3 at time 16342.
+RUN: Process 1201 started execution from level 3 at time 16342; wants to execute for 640 ticks.
+QUEUED: Process 1201 queued at level 3 at time 16442.
+RUN: Process 1201 started execution from level 3 at time 16442; wants to execute for 540 ticks.
+QUEUED: Process 1201 queued at level 3 at time 16542.
+RUN: Process 1201 started execution from level 3 at time 16542; wants to execute for 440 ticks.
+QUEUED: Process 1201 queued at level 3 at time 16642.
+RUN: Process 1201 started execution from level 3 at time 16642; wants to execute for 340 ticks.
+QUEUED: Process 1201 queued at level 3 at time 16742.
+RUN: Process 1201 started execution from level 3 at time 16742; wants to execute for 240 ticks.
+QUEUED: Process 1201 queued at level 3 at time 16842.
+RUN: Process 1201 started execution from level 3 at time 16842; wants to execute for 140 ticks.
+QUEUED: Process 1201 queued at level 3 at time 16942.
+RUN: Process 1201 started execution from level 3 at time 16942; wants to execute for 40 ticks.
+I/O: Process 1201 blocked for I/O at time 16982.
+RUN: Process 1201 started execution from level 2 at time 17082; wants to execute for 2000 ticks.
+QUEUED: Process 1201 queued at level 2 at time 17112.
+RUN: Process 1201 started execution from level 2 at time 17112; wants to execute for 1970 ticks.
+QUEUED: Process 1201 queued at level 3 at time 17142.
+RUN: Process 1201 started execution from level 3 at time 17142; wants to execute for 1940 ticks.
+QUEUED: Process 1201 queued at level 3 at time 17242.
+RUN: Process 1201 started execution from level 3 at time 17242; wants to execute for 1840 ticks.
+QUEUED: Process 1201 queued at level 3 at time 17342.
+RUN: Process 1201 started execution from level 3 at time 17342; wants to execute for 1740 ticks.
+QUEUED: Process 1201 queued at level 3 at time 17442.
+RUN: Process 1201 started execution from level 3 at time 17442; wants to execute for 1640 ticks.
+QUEUED: Process 1201 queued at level 3 at time 17542.
+RUN: Process 1201 started execution from level 3 at time 17542; wants to execute for 1540 ticks.
+QUEUED: Process 1201 queued at level 3 at time 17642.
+RUN: Process 1201 started execution from level 3 at time 17642; wants to execute for 1440 ticks.
+QUEUED: Process 1201 queued at level 3 at time 17742.
+RUN: Process 1201 started execution from level 3 at time 17742; wants to execute for 1340 ticks.
+QUEUED: Process 1201 queued at level 3 at time 17842.
+RUN: Process 1201 started execution from level 3 at time 17842; wants to execute for 1240 ticks.
+QUEUED: Process 1201 queued at level 3 at time 17942.
+RUN: Process 1201 started execution from level 3 at time 17942; wants to execute for 1140 ticks.
+QUEUED: Process 1201 queued at level 3 at time 18042.
+RUN: Process 1201 started execution from level 3 at time 18042; wants to execute for 1040 ticks.
+QUEUED: Process 1201 queued at level 3 at time 18142.
+RUN: Process 1201 started execution from level 3 at time 18142; wants to execute for 940 ticks.
+QUEUED: Process 1201 queued at level 3 at time 18242.
+RUN: Process 1201 started execution from level 3 at time 18242; wants to execute for 840 ticks.
+QUEUED: Process 1201 queued at level 3 at time 18342.
+RUN: Process 1201 started execution from level 3 at time 18342; wants to execute for 740 ticks.
+QUEUED: Process 1201 queued at level 3 at time 18442.
+RUN: Process 1201 started execution from level 3 at time 18442; wants to execute for 640 ticks.
+QUEUED: Process 1201 queued at level 3 at time 18542.
+RUN: Process 1201 started execution from level 3 at time 18542; wants to execute for 540 ticks.
+QUEUED: Process 1201 queued at level 3 at time 18642.
+RUN: Process 1201 started execution from level 3 at time 18642; wants to execute for 440 ticks.
+QUEUED: Process 1201 queued at level 3 at time 18742.
+RUN: Process 1201 started execution from level 3 at time 18742; wants to execute for 340 ticks.
+QUEUED: Process 1201 queued at level 3 at time 18842.
+RUN: Process 1201 started execution from level 3 at time 18842; wants to execute for 240 ticks.
+QUEUED: Process 1201 queued at level 3 at time 18942.
+RUN: Process 1201 started execution from level 3 at time 18942; wants to execute for 140 ticks.
+QUEUED: Process 1201 queued at level 3 at time 19042.
+RUN: Process 1201 started execution from level 3 at time 19042; wants to execute for 40 ticks.
+I/O: Process 1201 blocked for I/O at time 19082.
+RUN: Process 1201 started execution from level 2 at time 19182; wants to execute for 25 ticks.
+I/O: Process 1201 blocked for I/O at time 19207.
+RUN: Process 1201 started execution from level 2 at time 19257; wants to execute for 25 ticks.
+I/O: Process 1201 blocked for I/O at time 19282.
+RUN: Process 1201 started execution from level 1 at time 19332; wants to execute for 25 ticks.
+QUEUED: Process 1201 queued at level 2 at time 19342.
+RUN: Process 1201 started execution from level 2 at time 19342; wants to execute for 15 ticks.
+I/O: Process 1201 blocked for I/O at time 19357.
+RUN: Process 1201 started execution from level 2 at time 19407; wants to execute for 25 ticks.
+I/O: Process 1201 blocked for I/O at time 19432.
+RUN: Process 1201 started execution from level 1 at time 19482; wants to execute for 25 ticks.
+QUEUED: Process 1201 queued at level 2 at time 19492.
+RUN: Process 1201 started execution from level 2 at time 19492; wants to execute for 15 ticks.
+I/O: Process 1201 blocked for I/O at time 19507.
+RUN: Process 1201 started execution from level 2 at time 19557; wants to execute for 5 ticks.
+I/O: Process 1201 blocked for I/O at time 19562.
+RUN: Process 1201 started execution from level 1 at time 19582; wants to execute for 5 ticks.
+I/O: Process 1201 blocked for I/O at time 19587.
+RUN: Process 1201 started execution from level 1 at time 19607; wants to execute for 5 ticks.
+I/O: Process 1201 blocked for I/O at time 19612.
+RUN: Process 1201 started execution from level 1 at time 19632; wants to execute for 5 ticks.
+I/O: Process 1201 blocked for I/O at time 19637.
+RUN: Process 1201 started execution from level 1 at time 19657; wants to execute for 5 ticks.
+I/O: Process 1201 blocked for I/O at time 19662.
+RUN: Process 1201 started execution from level 1 at time 19682; wants to execute for 5 ticks.
+FINISHED: Process 1201 finished at time 19687.
+Scheduler shutdown at time 19687.
 Total CPU usage for all processes scheduled:
-Process <<null>>:	901 time units.
+Process <<null>>:	921 time units.
 Process 1000:		48 time units.
-Process 2120:		650 time units.
 Process 1583:		2000 time units.
+Process 2120:		650 time units.
 Process 2450:		800 time units.
 Process 1060:		5112 time units.
 Process 1201:		10155 time units.

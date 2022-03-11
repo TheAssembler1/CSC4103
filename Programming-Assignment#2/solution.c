@@ -176,6 +176,12 @@ void do_IO(void){
 
 				//removing element from IOQ
 				delete_current(&IOQ);
+				
+				if(LastProcess && LastProcess->CurrentQ->level > process->CurrentQ->level){
+					printf("QUEUED: Process %d queued at level %u at time %lu.\n", LastProcess->pid, LastProcess->CurrentQ->level, Clock + 1);
+					LastProcess = NULL;
+				}
+
 				break;
 			}
 			next_element(&IOQ);
@@ -270,7 +276,7 @@ void execute_highest_priority_process(void){
 		if(process_behavior->current_cpuburst == process_behavior->cpuburst){
 			//check if process is done running
 			if(!(process_behavior->repeat)){ //process is done running remove from queue
-				printf("FINISHED:  Process %d finished at time %lu.\n", process->pid, Clock + 1);
+				printf("FINISHED: Process %d finished at time %lu.\n", process->pid, Clock + 1);
 				add_to_queue(&RemovalQ, process, 0);
 				delete_current(&CurrentQ->processes);
 			}else{ //run io on it
