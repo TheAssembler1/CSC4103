@@ -226,16 +226,28 @@ void execute_highest_priority_process(void){
 		}
 
 		process->total_clock_time++;
+		CurrentQ->current_q++;
 
-		bool demoted = false;
-		//increase quantom of the current process in the queue and check if it needs to be demoted
-		if(++(CurrentQ->current_q) == CurrentQ->q){
-			demoted = true;
-			if(++(process->current_b) == CurrentQ->b && CurrentQ->LowerQ){
+		//checking for promotion
+		if(CurrentQ->HigherQ && process_behavior->current_cpuburst + 1 == process_behavior->cpuburst && CurrentQ->current_q < CurrentQ->q && ++(process->current_g) == CurrentQ->g){
+			CurrentQ->current_q = 0;
+			process->current_b = process->current_g = 0;
+			process->CurrentQ = CurrentQ->HigherQ;
+
+			add_to_queue(&CurrentQ->HigherQ->processes, process, 0);
+			delete_current(&CurrentQ->processes);
+
+			CurrentQ = CurrentQ->HigherQ;
+			CurrentQ->processes.current = CurrentQ->processes.tail;
+			
+			process = CurrentQ->processes.current->info;
+			CurrentQ->q = 0;
+		}else if(CurrentQ->current_q >= CurrentQ->q){
+			CurrentQ->current_q = 0;
+
+			if(CurrentQ->LowerQ && ++(process->current_b) == CurrentQ->b){
 				printf("QUEUED: Process %d queued at level %u at time %lu.\n", process->pid, CurrentQ->level + 1, Clock + 1);
-
 				process->current_b = process->current_g = 0;
-
 				process->CurrentQ = CurrentQ->LowerQ;
 
 				add_to_queue(&CurrentQ->LowerQ->processes, process, 0);
@@ -243,33 +255,18 @@ void execute_highest_priority_process(void){
 
 				CurrentQ = CurrentQ->LowerQ;
 				CurrentQ->processes.current = CurrentQ->processes.tail;
+				
 				process = CurrentQ->processes.current->info;
+				CurrentQ->current_q = 0;
 			}else{
 				printf("QUEUED: Process %d queued at level %u at time %lu.\n", process->pid, CurrentQ->level, Clock + 1);
 				add_to_queue(&CurrentQ->processes, process, 0);
 				delete_current(&CurrentQ->processes);
-
-				CurrentQ->processes.current = CurrentQ->processes.tail;
-				process = CurrentQ->processes.current->info;
+				process = CurrentQ->processes.tail->info;
 			}
-
-			CurrentQ->current_q = 0;
 		}
 
-		if(++(process_behavior->current_cpuburst) == process_behavior->cpuburst){
-			if(!demoted && CurrentQ->current_q < CurrentQ->q && ++(process->current_g) == CurrentQ->g && process_behavior->repeat && CurrentQ->HigherQ){ //process needs to be promoted
-				process->current_b = process->current_g = 0;
-
-				process->CurrentQ = CurrentQ->HigherQ;
-
-				add_to_queue(&CurrentQ->HigherQ->processes, process, 0);
-				delete_current(&CurrentQ->processes);
-
-				CurrentQ = CurrentQ->HigherQ;
-				CurrentQ->processes.current = CurrentQ->processes.tail;
-				process = CurrentQ->processes.current->info;
-			}
-
+		if(++(process_behavior->current_cpuburst) >= process_behavior->cpuburst){
 			//check if process is done running
 			if(!(process_behavior->repeat)){ //process is done running remove from queue
 				printf("FINISHED:  Process %d finished at time %lu.\n", process->pid, Clock + 1);
@@ -284,6 +281,7 @@ void execute_highest_priority_process(void){
 
 			//need to reset quantum in any case
 			CurrentQ->current_q = 0;
+			LastProcess = NULL;
 		}
 	}
 }
