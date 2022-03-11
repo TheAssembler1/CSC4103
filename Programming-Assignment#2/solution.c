@@ -214,8 +214,6 @@ void execute_highest_priority_process(void){
 	//if there is a q with a process in it
 	if(CurrentQ){
 		rewind_queue(&CurrentQ->processes);
-
-		//getting the process and process behavior
 		Process* process = (Process*)CurrentQ->processes.current->info;
 		rewind_queue(&process->behaviors);
 		ProcessBehavior* process_behavior = process->behaviors.current->info;
@@ -292,10 +290,13 @@ void queue_new_arrivals(void){
 		//getting process for logging
 		Process* process = (Process*)ArrivalQ.current->info; 
 		rewind_queue(&process->behaviors);
-		ProcessBehavior* process_behavior = process->behaviors.current->info;
 
-		//initializing the current cpu and io burst
-		process_behavior->current_cpuburst = process_behavior->current_ioburst = 0;
+		while(!end_of_queue(&process->behaviors)){
+			ProcessBehavior* process_behavior = process->behaviors.current->info;
+			//initializing the current cpu and io burst
+			process_behavior->current_cpuburst = process_behavior->current_ioburst = 0;
+			next_element(&process->behaviors);
+		}
 
 		printf("CREATE: Process %d entered the ready queue at time %lu.\n", process->pid, Clock);
 
