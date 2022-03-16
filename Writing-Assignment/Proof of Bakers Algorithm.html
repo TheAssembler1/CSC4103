@@ -1,0 +1,349 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<title>cmsc412 note 7</title>
+</head>
+
+<body lang="EN">
+<table cols="3" nosave="" width="100%">
+<tbody><tr nosave="" align="LEFT">
+<td>
+<h3>
+CMSC 412</h3>
+</td>
+
+<td nosave="" align="CENTER">
+<h3>
+NOTE 7</h3>
+</td>
+
+<td nosave="" align="RIGHT">
+<h3>
+Shankar: S99</h3>
+</td>
+</tr>
+</tbody></table>
+
+<center>
+<h2>
+Bakery Algorithm
+</h2>
+</center>
+
+<h2>1. Overview</h2>
+
+The Bakery algorithm is one of the simplest known solutions to
+the mutual exclusion problem for the general case of N process.
+The basic idea is that each non-thinking process has a variable
+that indicates the position of that process in a hypthetical queue
+of all the non-thinking processes.
+Each process in this queue scans the variables of the other processes,
+and enters the critical section only upon determining that it is at
+the head of the queue.
+<p>
+But the resulting algorithm is still not easy to understand.
+So in this note we first look at a simplified version of
+the bakery algorithm,
+based a coarser grain of atomicity than is allowed by
+the mutual exclusion problem.
+Then we look at the original version.
+
+</p><h2>2. Simplified Bakery Algorithm</h2>
+
+The processes are numbered  0, 1, ..., N-1.
+Each process i has an integer variable
+num[i], initially 0,
+that is readable by all processes but writeable by process i only.
+<p>
+When process i is thinking, num[i] equals zero.
+When process i becomes hungry, it sets num[i] to a value
+higher than the num of every other process;
+this operation is assumed to be atomic in this simplified algorithm.
+Then process i scans the other processes in order.
+For each process j,
+process i waits until num[j] is either zero or greater than num[i].
+After going past every process, process i enters the critical section.
+Upon leaving the critical section, process i zeroes num[i].
+</p><p>
+The entry and exit codes for process i are:
+
+</p><pre> entry(i) {   
+    i.1: num[i] := max( num[0], num[1], ... , num[N-1] ) + 1 ;
+          // i.1 is atomic
+         for p := 0 to N-1 do  {      // p is local to process i
+    i.2:   while num[p] != 0 and num[p] &lt; num[i] do no-op ;
+         }
+ }
+
+ exit(i) {
+    i.3: num[i] := 0 ;
+ }</pre>
+
+<p>
+<b>Notation:</b>&nbsp;
+For brevity, we introduce the following notation:
+</p><ul><li>
+For processes i and j,
+``i passes j'' means that i executes the while loop i.2
+with i.p=j and the condition false (i.e., num[j]=0 or num[j]&gt;num[i]).
+
+</li><li>
+For a hungry processe i and any process j,
+``i passed j'' means that in its current execution of the for loop,
+process i has already executed the while loop i.2
+with i.p=j and the condition false (i.e., num[j]=0 or num[j]&gt;num[i]).
+</li></ul>
+<h3>Proof of Safety</h3>
+<p>
+Suppose process i starts eating at
+t<sub>0</sub>.
+Consider any other process j (need to show that j is not eating at
+t<sub>0</sub>).
+At some time
+t<sub>1</sub> (&lt; t<sub>0</sub>),
+i passed j.
+So num[j]=0 or num[j]&gt;num[i] holds at
+t<sub>1</sub>.
+</p><p>
+<b>Case 1:</b>&nbsp;
+Suppose num[j]=0 holds at  t<sub>1</sub> .
+Then j is thinking at  t<sub>1</sub> , i.e., control is at j.1.
+If j becomes hungry at some time
+t<sub>2</sub>,
+it sets num[j] to a value higher than num[i].
+So j cannot pass i during the interval
+(t<sub>2</sub>, t<sub>1</sub>).
+</p><p>
+<b>Case 2:</b>&nbsp;
+Suppose num[j] is not equal to 0
+and num[j]&gt;num[i] holds at  t<sub>1</sub> .
+Then it suffices to show that j has not yet passed i.
+Let j have chosen its num at time
+t<sub>2</sub> .
+Because num[j] is higher than num[i],
+ t<sub>2</sub>  must be in the interval
+(t<sub>1</sub>,&nbsp;t<sub>0</sub>).
+Thus at  t<sub>2</sub> , j has not passed i.
+Thus j has not passed i at  t<sub>0</sub> .
+</p><p>
+<b>end of safety proof</b>
+</p><p>
+</p><h3>Proof of Progress</h3>
+<p>
+Suppose i becomes hungry at time  t<sub>1</sub> .
+We need to show that it eventually eats.
+Because the max operation is atomic,
+no two processes with non-zero nums can have their nums equal.
+Thus all processes with non-zero nums are totally ordered by num.
+</p><p>
+We show that queue is FIFO.
+A process joins the queue when its num becomes non-zero.
+But because this can only happen via the max operation,
+the process would join at the tail of the queue.
+The process at the head of the queue has the smallest non-zero num.
+So it never gets stuck in the while loop test for any process.
+So it eventually eats.
+</p><p>
+<b>end of progress proof</b>
+</p><p>
+</p><h2>2. Original Bakery Algorithm</h2>
+<p>
+We now consider the original bakery algorithm,
+that is, without assuming the max operation to be atomic.
+We will show that it works assuming only read-write atomicity of
+boolean variables and integer variables
+ranging over 0..N.
+Because the max operation is no longer atomic,
+two processes may get non-zero nums with the same value.
+</p><p>
+The processes share two arrays:
+</p><pre>    boolean flag choosing[i] initially false ;
+    integer num[i] initially 0</pre>
+<p>
+Variables choosing[i] and num[i] are writeable by process i only
+and readable by all other processes.
+num[i] is 0 when process i is thinking.
+(num[i],i), when num[i] is not equal to 0,
+is the timestamp of process i's request.
+choosing[i] is true while num[i] is being set to non-zero value.
+</p><p>
+When process i becomes hungry, it sets num[i] to one higher than
+all the nums of the other processes.
+Then for each process j,
+process i first busy waits until process j is not in the middle of
+choosing a num,
+then it busy waits until process j's num is either zero or greater
+(in timestamp order) than num[i].
+After going past every process, process i enters the critical section.
+</p><p>
+Upon leaving the critical section, process i zeroes num[i].
+</p><p>
+The entry and exit codes for process i are:
+
+</p><pre> entry(i) {   
+    i.1: choosing[i] := TRUE ;
+    i.2: num[i] := max( num[0], num[1], ... , num[N-1] ) + 1 ;
+    i.3: choosing[i] := FALSE ;
+         for p := 0 to N-1 do  {       // p is local to process i
+    i.4:   while choosing[p] do skip ;
+    i.5:   while num[p] != 0 and (num[p],p)&lt;(num[i],i) do skip ;
+         }
+ }
+
+ exit(i) {
+    i.6: num[i] := 0 ;
+ }</pre>
+
+<p>
+<b>Notation:</b>&nbsp;
+For brevity, we introduce the following notation:
+</p><ul><li>
+For processes i and j,
+``i passes j'' means that i executes the while loop i.5
+with i.p=j and the condition false (i.e., num[j]=0
+or (num[j],j)&gt;(num[i],i)).</li><li>
+For a hungry processe i and any process j,
+``i passed j'' means that in its current execution of the for loop,
+process i has already executed the while loop i.5
+with i.p=j and the condition false (i.e., num[j]=0 
+or (num[j],j)&gt;(num[i],i)).</li><li>
+Given a statement labeled S,
+``at S'' means that control is at the start of S,
+``in S'' means that control is inside S,
+``after S'' means that control is immediately after S.
+Note that if S is atomic, then ``in S'' never holds.
+<p>
+</p></li></ul>
+<h3>Proof of Safety</h3>
+<p>
+Suppose process i starts eating at time t<sub>0</sub>.
+Consider any other process j.
+We need to show that process j is not eating at t<sub>0</sub>.
+</p><p>
+Prior to entering the critical section,
+process i found 
+choosing[j] to be false at some time
+t<sub>1</sub>(&lt;t<sub>0</sub>),
+and passed j at some time
+t<sub>2</sub>
+where
+t<sub>1</sub>&lt;t<sub>2</sub>&lt;t<sub>0</sub>.
+At t<sub>1</sub>, process j is either
+at j.1 or in j.4..6.
+</p><p>
+<b>Case 1:</b>&nbsp;
+Suppose at j.1 holds at t<sub>1</sub>.
+Then num[j] = 0 at t<sub>1</sub>.
+If num[j] changes during (t<sub>1</sub>,&nbsp;t<sub>0</sub>),
+it would become higher than (num[i],i) and
+process j would not get past process i.
+</p><p>
+<b>Case 2:</b>&nbsp;
+Suppose process j is in j.4..6 at t<sub>1</sub>.
+Then we have two cases:
+</p><p>
+</p><ul>
+<b>Case 2.1:</b>&nbsp;
+Suppose (num[j],j) &lt; (num[i],i) holds at t<sub>1</sub>.
+Then process i would not have gotten past process j
+until num[j] became zero, i.e., process j completes eating,
+at which point this case reduces to case 1.
+
+<p>
+<b>Case 2.2:</b>&nbsp;
+Suppose (num[j],j)&gt;(num[i],i) holds at t<sub>1</sub>.
+We want to show that at time t<sub>1</sub>
+process j has not gotten past process i.
+(This implies that process j does not get past process i
+before time t<sub>0</sub>.)
+</p><p>
+Let t<sub>3</sub> be the time when process j last executed j.3
+prior to t<sub>1</sub>.
+Let t<sub>4</sub> be the time when process i last executed i.3
+prior to t<sub>1</sub>.
+t<sub>4</sub>&lt;t<sub>1</sub> holds obviously.
+t<sub>3</sub>&lt;t<sub>1</sub> holds because process j is in j.4..6 at
+t<sub>1</sub>.
+
+There is no order between t<sub>3</sub> and t<sub>4</sub>,
+but t<sub>3</sub> is after process i last executed i.1
+(otherwise num[j] would be less than num[i]).
+Thus at t<sub>3</sub>,
+process i is either choosing a num or has its num.
+Thus process j gets past j.4 with j.p=i only after
+t<sub>4</sub>,
+Thus at max(t<sub>3</sub>,t<sub>4</sub>),
+which is before t<sub>1</sub>,
+process j has not gotten past process i.
+Thus process j would not get past process i
+before  t<sub>1</sub>.
+</p></ul>
+<p>
+In any case, process process j would not be eating.
+</p><p>
+Note that a proof by contradiction would probably be a bit shorter.
+</p><p>
+<b>end of safety proof</b>
+</p><p>
+</p><h3>Proof of Progress</h3>
+<p>
+Suppose process i becomes hungry at time  t<sub>1</sub> ,
+i.e. executes i.1.
+We need to show that it eventually eats.
+The only places where process i can get stuck indefinitely are
+the while loops i.4 and i.5.
+So it suffices to show that this does not happen.
+</p><p>
+Rather than arguing at the level of the statements,
+it is instructive to take a more abstract view.
+With respect to a hungry process i,
+we can divide the processes into four groups:
+</p><ul><li>
+a process j is in group 1 if in j.3..6
+(i.e. num[j] is nonzero).</li><li>
+a process j is in group 2 if in j.2 and
+started executing j.2 before process i finished executing i.2
+(i.e. num[j] is zero but it may be assigned a value less than or equal
+to num[i]).</li><li>
+a process j is in group 3 if either it is in j.1 or
+it is in j.2 and it
+started executing j.2 after process i finished executing i.2
+(i.e. num[j] is zero and if it is changed it will be assigned
+a value greater than num[i]).
+<p>
+</p></li></ul>
+<p>
+A process j in group 1 with (num[i],i)&lt;(num[j],j) holding
+will not eat before process i eats
+(because j will not get past process i).
+Thus the group 1 processes are queued in their timestamp order.
+</p><p>
+A process j in group 2 eventually joins group 1
+(because the execution of j.2 cannot be blocked by other processes).
+It can join at any place in the ``timestamp queue'' of group 1,
+i.e., it does not have to join at the end.
+</p><p>
+A process j in group 3 may eventually join group 1,
+but it will only do so behind process i.
+</p><p>
+If process j is at the head of group 1's queue,
+then eventually either j will eat or
+another process (from group 2) will get ahead of it.
+</p><p>
+Let F<sub>1</sub> be the number of processes in group 1 ahead of process i.
+Let F<sub>2</sub> be the number of processes in group 2.
+Then  F<sub>1</sub>+F<sub>2</sub> keeps decreasing,
+and so process i eventually eats.
+</p><p>
+A better metric is the lexicographically ordered two-tuple
+(F<sub>2</sub>,&nbsp;F<sub>1</sub>).
+If F<sub>2</sub> is non-zero, then eventually either
+F<sub>2</sub> decreases and F<sub>1</sub> increases
+or F<sub>1</sub> decreases.
+In either case the metric decreases, and it cannot go below (0,0).
+</p><p>
+<b>end of progress proof</b>
+</p><p>
+<br> </p><hr>
+
+
+</body></html>

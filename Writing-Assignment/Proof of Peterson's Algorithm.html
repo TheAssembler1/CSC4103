@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html lang="en-us"><head>
+   <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+   <meta name="GENERATOR" content="Mozilla/4.7 [en] (Win98; I) [Netscape]">
+   <title>Proof of Peterson's Algorithm</title></head>
+
+<body style="direction: ltr;" bgcolor="#ffffff">
+
+<center>
+<h2>
+Proof of a Solution to the Critical Section Problem</h2></center>
+
+<hr>
+<h3>
+Peterson's Algorithm</h3>
+<b>Common data objects:</b>
+<pre><tt>int turn = 0;<br>bool flag[2] = {false};</tt></pre>
+<b>Code:</b>
+<pre><tt>flag[i] = true;<br>turn = j;<br>while (flag[j] &amp;&amp; turn == j)<br>&nbsp;&nbsp;&nbsp; ;<br>&nbsp;//&nbsp; CS<br>flag[i] = false;</tt></pre>
+<b>Idea:</b>
+<ul>
+<li>
+<tt>flag[i]</tt> indicates position of P<sub>i</sub> with respect to mutual
+exclusion</li>
+
+<li>
+<tt>turn</tt> resolves simultaneity conflicts</li>
+
+<li>
+some process sets <tt>turn</tt> last (before entering the <tt>while</tt>
+test)</li>
+</ul>
+
+<h3>
+</h3>
+
+
+
+<h3>
+Proof:</h3>
+<b><u>Mutual Exclusion</u></b>
+<br>Proof by contradiction: assume both P<sub>0</sub> and P<sub>1</sub>
+are in their CS
+<br>- then flag[0] = flag[1] = true
+<br>-&nbsp;the test for entry cannot have been true for both processes at
+the same time (because turn favors one);
+<br>&nbsp;&nbsp; therefore one process must have entered its CS first (without
+loss of generality, say P<sub>0</sub>)
+<br>- but this means that P<sub>1</sub> could not have found turn = 1 and
+therefore could not have entered its CS (i.e. contradiction)
+<p><b><u>Blocking</u></b>
+<br>Consider P<sub>0</sub> blocked at the while loop:
+</p><p><b>Progress</b>
+</p><p><i>Case I: (Stuck)</i>
+<br>P<sub>1</sub> is not interested in entering its CS
+<br>- then flag[1] = false
+<br>- hence the while loop is false for P<sub>0</sub> and it can go
+</p><p><i>Case II: (Deadlock)</i>
+<br>P<sub>1</sub> is also blocked at the while loop
+<br>- impossible, because turn = 0 or 1
+<br>- hence the while loop is false for some process and it can go
+</p><p><b>Bounded-Waiting</b>
+</p><p><i>Case III: (Starvation)</i>
+<br>P<sub>1</sub> is executing its CS repeatedly
+<br>- upon exiting its CS, P<sub>1</sub> sets flag[1] = false
+<br>- hence the while loop is false for P<sub>0</sub> and it can go (sufficient?)
+</p><p>However, P<sub>1</sub> may attempt to re-enter its CS before P<sub>0</sub>
+has a chance to run.
+<br>- but to re-enter, P<sub>1</sub> sets flag[1] to true and sets turn
+to 0
+<br>- hence the while loop is true for P<sub>1</sub> and it waits
+<br>- the while loop is now false for P<sub>0</sub> and it can go
+</p></body></html>
