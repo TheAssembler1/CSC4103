@@ -9,7 +9,7 @@ MY_OUTPUT_FOLDER = ./Tests/MyOutput/
 
 all_tests: test1 test2 test3 test4
 
-.PHONY: test1 test2 test3 test4
+.PHONY: test1 test2 test3 test4 clean
 
 test1:
 	@echo "Running Test 1--------------------------------------------------------------------------"
@@ -50,3 +50,7 @@ test4:
 	@echo "Getting Diff Between My Output And Correct Output..."
 	-diff $(MY_OUTPUT_FOLDER)test4_output.txt $(OUTPUT_FOLDER)test4_output.txt
 	@echo "Finished Running Test 4-----------------------------------------------------------------\n"
+
+clean:
+	-rm $(MY_OUTPUT_FOLDER)*
+	-rm $(OUTPUT_EXE)
