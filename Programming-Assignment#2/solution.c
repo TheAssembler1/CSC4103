@@ -91,7 +91,7 @@ int main(int argc, char* argv[]){
 	Clock++;
 	final_report();
 
-	return 1;
+	return 0;
 }	
 
 //read all processes descriptions from standard input and populate

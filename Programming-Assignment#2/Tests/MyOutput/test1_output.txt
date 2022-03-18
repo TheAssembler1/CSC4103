@@ -1,0 +1,17 @@
+CREATE: Process 1583 entered the ready queue at time 3
+RUN: Process 1583 started execution from level 1 at time 3; wants to execute for 15 ticks.
+QUEUED: Process 1583 queued at level 2 at time 13.
+RUN: Process 1583 started execution from level 2 at time 13; wants to execute for 5 ticks.
+I/O: Process 1583 blocked for I/O at time 18.
+RUN: Process 1583 started execution from level 2 at time 28; wants to execute for 15 ticks.
+I/O: Process 1583 blocked for I/O at time 43.
+RUN: Process 1583 started execution from level 1 at time 53; wants to execute for 15 ticks.
+QUEUED: Process 1583 queued at level 2 at time 63.
+RUN: Process 1583 started execution from level 2 at time 63; wants to execute for 5 ticks.
+I/O: Process 1583 blocked for I/O at time 68.
+RUN: Process 1583 started execution from level 2 at time 78; wants to execute for 15 ticks.
+FINISHED: Process 1583 finished at time 93.
+Scheduler shutdown at time 93.
+Total CPU usage for all processes scheduled:
+Process <<null>>:	32 time units.
+Process 1583:		60 time units.

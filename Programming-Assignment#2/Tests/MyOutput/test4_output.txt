@@ -655,4 +655,3 @@ Process 2120:		650 time units.
 Process 2450:		800 time units.
 Process 1060:		5112 time units.
 Process 1201:		10155 time units.
-deadpool:MLFQS golden$
