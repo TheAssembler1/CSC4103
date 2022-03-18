@@ -177,7 +177,11 @@ void do_IO(void){
 					LastProcess = NULL;
 				}
 
-				break;
+				if(!empty_queue(&IOQ)){
+					rewind_queue(&IOQ);
+					continue;
+				}else //we are done looking through the queue
+					break;
 			}
 			next_element(&IOQ);
 		}
@@ -190,12 +194,17 @@ void final_report(void){
 	printf("Process <<null>>:	%lu time units.\n", IdleProcess.total_clock_time);
 
 	rewind_queue(&RemovalQ);
-	while(!end_of_queue(&RemovalQ)){
+	while(queue_length(&RemovalQ) > 1){
 		Process* process = (Process*)RemovalQ.current->info;
 		printf("Process %d:		%lu time units.\n", process->pid, process->total_clock_time);
 
-		next_element(&RemovalQ);
+		delete_current(&RemovalQ);
+		rewind_queue(&RemovalQ);
 	}
+
+	//printing seperately so we don't get a new line
+	Process* process = (Process*)RemovalQ.current->info;
+	printf("Process %d:		%lu time units.", process->pid, process->total_clock_time);
 }
 
 void execute_highest_priority_process(void){
