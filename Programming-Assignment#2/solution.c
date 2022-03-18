@@ -106,11 +106,7 @@ void read_process_descriptions(void){
 	init_process(&p);
 	arrival = 0;
 	while(scanf("%lu", &arrival) != EOF){
-		scanf("%d %lu %lu %d",
-		       &pid,
-		       &b.cpuburst,
-		       &b.ioburst,
-		       &b.repeat);
+		scanf("%d %lu %lu %d", &pid, &b.cpuburst, &b.ioburst, &b.repeat);
 		
 		if(!first && p.pid != pid){
 			add_to_queue(&ArrivalQ, &p, p.arrival_time);
@@ -164,7 +160,6 @@ void do_IO(void){
 
 			//decreasing io of process and checking if it is done with io
 			if((process_behavior->current_ioburst)++ == process_behavior->ioburst){
-				//resetting b value of process
 				process_behavior->current_cpuburst = process_behavior->current_ioburst = process->current_b = 0;
 
 				//check if current process behavior is done and it has no more repeats
@@ -249,7 +244,7 @@ void execute_highest_priority_process(void){
 			
 			process = CurrentQ->processes.current->info;
 			LastProcess = NULL;
-		}else if(CurrentQ->current_q >= CurrentQ->q){
+		}else if(CurrentQ->current_q >= CurrentQ->q){ //checking for demotion
 			CurrentQ->current_q = 0;
 
 			if(CurrentQ->LowerQ && ++(process->current_b) == CurrentQ->b){
