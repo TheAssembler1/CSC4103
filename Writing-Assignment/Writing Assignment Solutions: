@@ -1,0 +1,91 @@
+Writing Assignment Solutions:
+#1-------------------------------------------
+---------------------------------------------
+
+#2-------------------------------------------
+
+---------------------------------------------
+
+#3-------------------------------------------
+procedure reader():
+    # Stage 1
+    P(reader_mutex)
+    if readers = 0:
+        P(writer_mutex)
+    readers++
+    V(reader_mutex)
+    # Stage 2
+    <read>
+    # Stage 3
+    P(reader_mutex)
+    readers--
+    if readers = 0:
+        V(writer_mutex)
+    V(reader_mutex)
+procedure writer():
+    P(writer_mutex)
+    <write>
+    V(writer_mutex)
+---------------------------------------------
+
+#4-------------------------------------------
+Shared Data:
+blocked: array[0..1] of Boolean;
+turn: 0..1;
+
+blocked[0] = blocked[1] = false; 
+turn = 0;
+
+Local Data:
+ID: 0..1;  /* (identifies the prccess;
+              set to 0 for one process,
+              1 for the other) */ 
+
+ORIGINAL CODE:
+while(1){
+    blocked[ID] = true;
+    while(turn <> ID){
+        while(blocked[1 -ID]);
+        turn = ID;
+    }
+
+    << critical section >>
+
+    blocked[ID] = false;
+
+    << normal work >>
+}
+
+WHAT RUNS ON EACH PROCESS TO ENTER CRIT SECTION:
+P0                                  |P1
+                                    |   while (1) {
+                                    |       blocked[ID] = true;           
+                                    |       while (turn <> ID){
+                                    |           while (blocked[1 — ID]); 
+while (1) {                         |            
+    blocked[ID] = true;             |
+    while (turn <> ID)              |            
+                                    |           turn = ID; 
+                                    |      }
+                                    |      while (turn <> ID)
+
+    ----------------BOTH ARE IN THE CRITICAL SECTION----------------
+    << critical section >>          |       << critical section >> 
+---------------------------------------------
+
+In the begging turn = 0 and blocked[0] = blocked[1] = false.
+
+//P1 running
+P1 starts running and sets blocked[1] = true.
+P1 checks if turn != ID which is true so it enters the while loop.
+P1 then checks if blocked[1-1] which is blocked [0] which is false.
+
+//P2 running
+P2 then starts running and sets blocked[0] = true;
+P2 checks if turn != ID which is false so it continoues to the critical section.
+
+//P1 running
+P1 then sets turn to ID which is setting turn to 1.
+P1 then starts over the while loop and checks if turn != ID which is false
+P1 then enters the critical and section and both processes are in the critical section.
+---------------------------------------------
