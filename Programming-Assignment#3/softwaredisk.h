@@ -38,4 +38,3 @@ void sd_print_error(void);
 
 // software disk  error code set (set by each software disk function).
 extern SDError sderror;
-
