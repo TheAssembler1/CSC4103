@@ -1,31 +1,71 @@
 Writing Assignment Solutions:
 #1-------------------------------------------
+Proof by contradiction:
+    1. Assume P0 and P1 are in their critical sections.
+    2. flag[0] and flag[1] cannot be true at the same time.
+    3. P0 allows P1 access with the turn variable and vice versa
+    4. Assume P0 had enetered the critical section then turn would need to be 1
+    5. At this point P1 would never get access to critical section because in order
+        for turn to be 0 P0 would need to not be in the critical section.
+    6. P0 cannot be inside the critical and outside of the critical section at the same time
 ---------------------------------------------
 
 #2-------------------------------------------
+Proof by contradiciton:
+    NOTE::PN means a random process from P0 to PK
 
+    1. Assume P0 through PK are in the critical section
+    2. PN has the lowest number or the same number with a lower pid
+    3. Every process after will recieve a higher number than PN at least
+    4. Which means in order for another process to get in the critical section
+        it would need to get a lower number than PN which is not possible
+        since number[i] = max(number) + 1
+    5. Basically if process P0 and P1 are in the critical section then
+        P0's number < P1's number and P1's number < P0's number which is not possible
 ---------------------------------------------
 
 #3-------------------------------------------
-procedure reader():
-    # Stage 1
-    P(reader_mutex)
-    if readers = 0:
-        P(writer_mutex)
-    readers++
-    V(reader_mutex)
-    # Stage 2
-    <read>
-    # Stage 3
-    P(reader_mutex)
-    readers--
-    if readers = 0:
-        V(writer_mutex)
-    V(reader_mutex)
-procedure writer():
-    P(writer_mutex)
-    <write>
-    V(writer_mutex)
+//Solving probelm using binary semaphores
+writers_semaphore = 1; 
+readers_semaphore = 1;
+
+//number of readers in critical section
+readers = 0;
+
+//basically just need to check if we can access to resource because readers 
+//do most of the logic for us
+Writers Process:
+    wait(writers_semaphore);
+    << write to critical section >>
+    signal(writers_semaphore);
+
+//this is the most complex process as it allows the writer access or not
+Readers Process:
+    wait(readers_semaphore);
+
+    //check if we need to lock writers out of critical section
+    //if we are the first reader lock writers out of critical section
+    if(readers == 0)
+        signal(writers_semaphore);
+
+    readers++;
+
+    signal(readers_semaphore);
+
+    //we have now locked out all writers
+    << read from critical section >>
+
+    //we are not reading so lock and subtract from readers
+    wait(readers_semaphore);
+
+    readers--;
+
+    //checking if we should allow writers back in critical section
+    //if readers is 0 then writers can have access
+    if(readers == 0)
+        signal(writers_semaphore);
+    
+    signal(readers_semaphore);
 ---------------------------------------------
 
 #4-------------------------------------------
