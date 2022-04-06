@@ -1,7 +1,7 @@
 GCC = gcc
 OUTPUT_EXE = sheduler
 
-C_FILES = solution.c prioque.c
+C_FILES = scheduler.c prioque.c
 
 INPUT_FOLDER = ./Tests/Input/
 OUTPUT_FOLDER = ./Tests/Output/
