@@ -1,9 +1,15 @@
 #include "filesystem.h"
 
-//representation of a file
-struct FileInternals {
+//part of the file stored on disk
+struct FileBlockInternals{
     uint8_t file_name[32];
     uint32_t starting_block;
+};
+
+//representation of a file
+struct FileInternals {
+    FileBlock file_block;
+    int mode;
 };
 
 // open existing file with pathname 'name' and access mode 'mode'.  Current file
@@ -68,4 +74,16 @@ int file_exists(char *name){
 // error.
 void fs_print_error(void){
 
+}
+
+//sets n bits of buffer
+void set_bits_of_buffer(uint8_t* buffer, unsigned int bits){
+  unsigned int bytes_to_set = bits / 8;
+  unsigned int bits_remaining = bits % 8;
+
+  for(unsigned int i = 0; i < bytes_to_set; i++)
+    buffer[i] = 0xFF;
+
+  for(unsigned int i = 0; i < bits_remaining; i++)
+    SET_BIT(buffer[bytes_to_set], i);
 }

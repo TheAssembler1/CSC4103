@@ -1,4 +1,7 @@
 #include <stdint.h>
+#include <string.h>
+#include <stdio.h>
+#include "softwaredisk.h"
 
 #define SET_BIT(byte,nbit)   ((byte) |=  (1 << (nbit)))
 #define CLEAR_BIT(byte,nbit) ((byte) &= ~(1 << (nbit)))
@@ -6,9 +9,11 @@
 
 // main private file type: you implement this in filesystem.c
 struct FileInternals;
+struct FileBlockInternals;
 
 // file type used by user code
 typedef struct FileInternals* File;
+typedef struct FileBlockInternals* FileBlock;
 
 // access mode for open_file() 
 typedef enum {
@@ -77,6 +82,9 @@ int file_exists(char *name);
 // describe current filesystem error code by printing a descriptive message to standard
 // error.
 void fs_print_error(void);
+
+//sets n bits of buffer
+void set_bits_of_buffer(uint8_t* buffer, unsigned int bits);
 
 // filesystem error code set (set by each filesystem function)
 extern FSError fserror;
