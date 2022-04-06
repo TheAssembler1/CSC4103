@@ -1,16 +1,22 @@
 #include "filesystem.h"
 
+//representation of a file
+struct FileInternals {
+    uint8_t file_name[32];
+    uint32_t starting_block;
+};
+
 // open existing file with pathname 'name' and access mode 'mode'.  Current file
 // position is set at byte 0.  Returns NULL on error. Always sets 'fserror' global.
 File open_file(char *name, FileMode mode){
-
+    return 0;
 }
 
 // create and open new file with pathname 'name' and (implied) access
 // mode READ_WRITE. The current file position is set at byte 0.
 // Returns NULL on error. Always sets 'fserror' global.
 File create_file(char *name){
-
+    return 0;
 }
 
 // close 'file'.  Always sets 'fserror' global.
@@ -23,14 +29,14 @@ void close_file(File file){
 // then a return value less than 'numbytes' signals this condition. Always sets
 // 'fserror' global.
 unsigned long read_file(File file, void *buf, unsigned long numbytes){
-
+    return 0;
 }
 
 // write 'numbytes' of data from 'buf' into 'file' at the current file position. 
 // Returns the number of bytes written. On an out of space error, the return value may be
 // less than 'numbytes'.  Always sets 'fserror' global.
 unsigned long write_file(File file, void *buf, unsigned long numbytes){
-
+    return 0;
 }
 
 // sets current position in file to 'bytepos', always relative to the
@@ -38,24 +44,24 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
 // extend the file. Returns 1 on success and 0 on failure.  Always
 // sets 'fserror' global.
 int seek_file(File file, unsigned long bytepos){
-
+    return 0;
 }
 
 // returns the current length of the file in bytes. Always sets 'fserror' global.
 unsigned long file_length(File file){
-
+    return 0;
 }
 
 // deletes the file named 'name', if it exists. Returns 1 on success, 0 on failure. 
 // Always sets 'fserror' global.   
 int delete_file(char *name){
-
+    return 0;
 }
 
 // determines if a file with 'name' exists and returns 1 if it exists, otherwise 0.
 // Always sets 'fserror' global.
 int file_exists(char *name){
-
+    return 0;
 }
 
 // describe current filesystem error code by printing a descriptive message to standard

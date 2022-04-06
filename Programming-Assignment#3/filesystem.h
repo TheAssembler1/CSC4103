@@ -1,3 +1,8 @@
+#include <stdint.h>
+
+#define SET_BIT(byte,nbit)   ((byte) |=  (1 << (nbit)))
+#define CLEAR_BIT(byte,nbit) ((byte) &= ~(1 << (nbit)))
+#define CHECK_BIT(byte,nbit) ((byte) &   (1 << (nbit)))
 
 // main private file type: you implement this in filesystem.c
 struct FileInternals;
