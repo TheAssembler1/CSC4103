@@ -1,19 +1,49 @@
+#ifndef FILE_SYSTEM_H
+#define FILE_SYSTEM_H
+
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "softwaredisk.h"
+
+#define MAX_FILES 64
+#define MAX_FILE_NAME 56
+#define BITMAP_START_BLOCK 0
+
+#define FILE_FOUND 1
+#define FILE_NOT_FOUND 0
 
 #define SET_BIT(byte,nbit)   ((byte) |=  (1 << (nbit)))
 #define CLEAR_BIT(byte,nbit) ((byte) &= ~(1 << (nbit)))
 #define CHECK_BIT(byte,nbit) ((byte) &   (1 << (nbit)))
 
-// main private file type: you implement this in filesystem.c
-struct FileInternals;
-struct FileBlockInternals;
-
-// file type used by user code
+//file type used by user code
 typedef struct FileInternals* File;
-typedef struct FileBlockInternals* FileBlock;
+
+//part of the file stored on disk
+struct FileBlock{
+    uint8_t file_name[MAX_FILE_NAME];
+    uint32_t starting_block;
+    uint32_t file_size;
+};
+
+//representation of a file
+struct FileInternals {
+    struct FileBlock file_block;
+    int mode;
+    int fp;
+};
+
+//representation of the bitmap
+struct BitMap{
+  uint32_t* blocks;
+};
+
+//representation of the fat table
+struct FatTable{
+  uint32_t* blocks;
+};
 
 // access mode for open_file() 
 typedef enum {
@@ -86,5 +116,37 @@ void fs_print_error(void);
 //sets n bits of buffer
 void set_bits_of_buffer(uint8_t* buffer, unsigned int bits);
 
+//print bits of byte
+void print_bits_of_byte(uint8_t value);
+
+//returns blocks used by bitmap
+unsigned int get_bitmap_size_blocks();
+
+//returns blocks used by file descriptors
+unsigned int get_file_descriptors_size_blocks();
+
+//returns blocks used by fat table
+unsigned int get_fat_table_size_blocks();
+
+//returns starting block of bitmap
+unsigned int get_bitmap_start_block();
+
+//returns starting block of file descriptors
+unsigned int get_file_descriptors_start_block();
+
+//returns starting block of fat table
+unsigned int get_fat_table_start_block();
+
+//returns end block of bitmap
+unsigned int get_bitmap_end_block();
+
+//returns end block of file descriptors
+unsigned int get_file_descriptors_end_block();
+
+//returns end block of fat table
+unsigned int get_fat_table_end_block();
+
 // filesystem error code set (set by each filesystem function)
 extern FSError fserror;
+
+#endif //FILE_SYSTEM_H

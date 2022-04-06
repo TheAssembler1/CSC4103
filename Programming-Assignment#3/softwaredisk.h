@@ -36,5 +36,14 @@ int read_sd_block(void *buf, unsigned long blocknum);
 // standard error.
 void sd_print_error(void);
 
+//returns blocks used by bitmap
+unsigned int bitmap_size_blocks();
+
+//returns blocks used by file descriptors
+unsigned int file_descriptors_size_blocks();
+
+//returns blocks used by fat table
+unsigned int fat_table_size_blocks();
+
 // software disk  error code set (set by each software disk function).
 extern SDError sderror;
