@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "softwaredisk.h": "c",
+        "stdint.h": "c"
+    }
+}
