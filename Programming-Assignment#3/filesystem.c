@@ -17,8 +17,12 @@ File create_file(char *name){
 
     memcpy(file->file_block.file_name, name, strlen(name));
 
+    //adding it to the bitmap
     set_next_bits_of_bitmap(1);
     unsigned int start_block = find_first_unused_bit_bitmap();
+
+    //adding it the fat table
+    set_fat_entry(start_block, LAST_BLOCK);
 
     file->file_block.starting_block = start_block;
     file->file_block.file_size = 0;
@@ -78,7 +82,14 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
 // extend the file. Returns 1 on success and 0 on failure.  Always
 // sets 'fserror' global.
 int seek_file(File file, unsigned long bytepos){
-    return 0;
+    unsigned int current_blocks = number_of_blocks_of_file(file->file_block.starting_block);
+    unsigned int needed_blocks = (file->fp + bytepos) / SOFTWARE_DISK_BLOCK_SIZE;
+    if((file->fp + bytepos) % SOFTWARE_DISK_BLOCK_SIZE) { needed_blocks++; }
+
+    if(needed_blocks > current_blocks){
+        printf("adding blocked: %u\n", needed_blocks - current_blocks);
+        add_blocks_to_file(file->file_block.starting_block, needed_blocks - current_blocks);
+    }
 }
 
 // returns the current length of the file in bytes. Always sets 'fserror' global.
@@ -246,4 +257,63 @@ void set_next_bits_of_bitmap(unsigned int bits){
 
     for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE * get_bitmap_size_blocks(); i += SOFTWARE_DISK_BLOCK_SIZE)
         write_sd_block(&buffer[i], i / SOFTWARE_DISK_BLOCK_SIZE);
+}
+
+//set then entry in the fat table to the value
+void set_fat_entry(uint32_t entry, uint32_t value){
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
+
+    //reading fat table into buffer
+    for(unsigned int fat_block = get_fat_table_start_block(); fat_block < get_fat_table_end_block(); fat_block++)
+        read_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
+
+    uint32_t* fat_ptr = (uint32_t*)buffer;
+    fat_ptr[entry] = value;
+
+    for(unsigned int fat_block = get_fat_table_start_block(); fat_block < get_fat_table_end_block(); fat_block++)
+        write_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
+}
+
+//returns that last block used by file in fat table
+uint32_t last_block_in_fat_table(uint32_t start_block){
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
+
+    //reading fat table into buffer
+    for(unsigned int fat_block = get_fat_table_start_block(); fat_block < get_fat_table_end_block(); fat_block++)
+        read_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
+
+    uint32_t* fat_ptr = (uint32_t*)buffer;
+
+    uint32_t end_block = start_block;
+    while(fat_ptr[end_block] != 1)
+        end_block = fat_ptr[end_block];
+
+    return end_block;
+}
+
+//returns the number of blocks used by file
+uint32_t number_of_blocks_of_file(uint32_t start_block){
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
+
+    //reading fat table into buffer
+    for(unsigned int fat_block = get_fat_table_start_block(); fat_block < get_fat_table_end_block(); fat_block++)
+        read_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
+
+    uint32_t* fat_ptr = (uint32_t*)buffer;
+
+    uint32_t blocks = 1;
+    while(fat_ptr[start_block] != 1){
+        start_block = fat_ptr[start_block];
+        blocks++;
+    }
+
+    return blocks;
+}
+
+//adds blocks to file
+void add_blocks_to_file(uint32_t start_block, uint32_t blocks){
+
 }

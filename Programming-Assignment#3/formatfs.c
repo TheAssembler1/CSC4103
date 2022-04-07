@@ -29,22 +29,16 @@ int main(){
     //TEST FILE DRIVER HERE
     //FIXME::Remove this
     char* test_file_name = "test";
-    char* test_file_name1 = "test1";
 
-    File file = create_file(test_file_name);
-    File file_1 = create_file(test_file_name1);
-    close_file(file_1);
-    close_file(file);
+    File fp = create_file(test_file_name);
+    seek_file(fp, 0);
+    close_file(fp);
 
     if(file_exists(test_file_name))
         printf("file %s did exist\n", test_file_name);
     else
         printf("file %s did not exist\n", test_file_name);
 
-    if(file_exists(test_file_name1))
-        printf("file %s did exist\n", test_file_name1);
-    else
-        printf("file %s did not exist\n", test_file_name1);
 
     return 0;
 }

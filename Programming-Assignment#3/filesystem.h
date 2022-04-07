@@ -14,6 +14,8 @@
 #define FILE_FOUND 1
 #define FILE_NOT_FOUND 0
 
+#define LAST_BLOCK 1
+
 #define SET_BIT(byte,nbit)   ((byte) |=  (1 << (nbit)))
 #define CLEAR_BIT(byte,nbit) ((byte) &= ~(1 << (nbit)))
 #define CHECK_BIT(byte,nbit) ((byte) &   (1 << (nbit)))
@@ -151,5 +153,14 @@ extern FSError fserror;
 
 //gets first unused bit in the bitmap
 unsigned int find_first_unused_bit_bitmap();
+
+//set then entry in the fat table to the value
+void set_fat_entry(uint32_t entry, uint32_t value);
+
+//returns the number of blocks used by file
+uint32_t number_of_blocks_of_file(uint32_t start_block);
+
+//adds blocks to file
+void add_blocks_to_file(uint32_t start_block, uint32_t blocks)
 
 #endif //FILE_SYSTEM_H
