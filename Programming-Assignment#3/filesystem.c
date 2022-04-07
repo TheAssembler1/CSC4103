@@ -16,7 +16,11 @@ File create_file(char *name){
     memset(file, 0, sizeof(struct FileInternals));
 
     memcpy(file->file_block.file_name, name, strlen(name));
-    file->file_block.starting_block = 0;
+
+    set_next_bits_of_bitmap(1);
+    unsigned int start_block = find_first_unused_bit_bitmap();
+
+    file->file_block.starting_block = start_block;
     file->file_block.file_size = 0;
 
     file->mode = READ_WRITE;
@@ -38,6 +42,7 @@ File create_file(char *name){
                 printf("Found empty file descriptor\n");
                 printf("Writing file to block: %d\n", file_descriptor_block);
                 printf("Writing file at offset: %d\n", file_block_ptr);
+                printf("starting block in fat is: %x\n", start_block);
 
                 write_sd_block(buffer, file_descriptor_block);
                 return file;
@@ -188,7 +193,8 @@ unsigned int get_fat_table_end_block(){
     return get_bitmap_size_blocks() + get_file_descriptors_size_blocks() + get_fat_table_size_blocks();
 }
 
-static unsigned int find_first_unused_bit_bitmap(){
+//gets first unused bit in the bitmap
+unsigned int find_first_unused_bit_bitmap(){
     //loop through bitmap
     uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_bitmap_size_blocks()];
     memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_bitmap_size_blocks());

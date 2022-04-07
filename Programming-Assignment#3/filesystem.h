@@ -149,4 +149,7 @@ unsigned int get_fat_table_end_block();
 // filesystem error code set (set by each filesystem function)
 extern FSError fserror;
 
+//gets first unused bit in the bitmap
+unsigned int find_first_unused_bit_bitmap();
+
 #endif //FILE_SYSTEM_H
