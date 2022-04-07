@@ -161,6 +161,9 @@ void set_fat_entry(uint32_t entry, uint32_t value);
 uint32_t number_of_blocks_of_file(uint32_t start_block);
 
 //adds blocks to file
-void add_blocks_to_file(uint32_t start_block, uint32_t blocks)
+void add_blocks_to_file(uint32_t start_block, uint32_t blocks);
+
+//gets block correlating to byte, block has to be created already
+uint32_t get_block_of_byte_file(File file, unsigned long byte);
 
 #endif //FILE_SYSTEM_H

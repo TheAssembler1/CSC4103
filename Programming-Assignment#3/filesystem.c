@@ -74,7 +74,30 @@ unsigned long read_file(File file, void *buf, unsigned long numbytes){
 // Returns the number of bytes written. On an out of space error, the return value may be
 // less than 'numbytes'.  Always sets 'fserror' global.
 unsigned long write_file(File file, void *buf, unsigned long numbytes){
-    return 0;
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
+
+    uint8_t* dest_buf = (uint8_t*)buf;
+
+    unsigned int current_block = 0;
+    unsigned long i = 0;
+    for(i = 0; i < numbytes; i++){
+        if(current_block != get_block_of_byte_file(file, file->fp)){
+            if(!current_block)
+                write_sd_block(buffer, current_block);
+            current_block = get_block_of_byte_file(file, file->fp);
+            read_sd_block(buffer, current_block);
+        }
+        printf("CURRENT BLOCK IS: %u\n", current_block);
+        printf("CURRENT BYTE IS: %u\n", file->fp);
+        //updating buffer
+        buffer[i % SOFTWARE_DISK_BLOCK_SIZE] = dest_buf[i];
+
+        //moving file pointer foward
+        seek_file(file, 1);
+        file->fp++;
+    }
+    return i;
 }
 
 // sets current position in file to 'bytepos', always relative to the
@@ -87,9 +110,13 @@ int seek_file(File file, unsigned long bytepos){
     if((file->fp + bytepos) % SOFTWARE_DISK_BLOCK_SIZE) { needed_blocks++; }
 
     if(needed_blocks > current_blocks){
-        printf("adding blocked: %u\n", needed_blocks - current_blocks);
+        printf("adding blocks: %u\n", needed_blocks - current_blocks);
         add_blocks_to_file(file->file_block.starting_block, needed_blocks - current_blocks);
+    }else{
+        printf("not adding blocks to file\n");
     }
+
+    return 1;
 }
 
 // returns the current length of the file in bytes. Always sets 'fserror' global.
@@ -315,5 +342,46 @@ uint32_t number_of_blocks_of_file(uint32_t start_block){
 
 //adds blocks to file
 void add_blocks_to_file(uint32_t start_block, uint32_t blocks){
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
 
+    //reading fat table into buffer
+    for(unsigned int fat_block = get_fat_table_start_block(); fat_block < get_fat_table_end_block(); fat_block++)
+        read_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
+
+    uint32_t* fat_ptr = (uint32_t*)buffer;
+
+    for(int i = 0; i < blocks; i++){
+        //adding it to the bitmap
+        set_next_bits_of_bitmap(1);
+        unsigned int open_block = find_first_unused_bit_bitmap();
+
+         unsigned int last_block = last_block_in_fat_table(start_block);
+         fat_ptr[last_block] = open_block;
+         fat_ptr[open_block] = 1;
+    }
+
+    for(unsigned int fat_block = get_fat_table_start_block(); fat_block < get_fat_table_end_block(); fat_block++)
+        write_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
+}
+
+//gets block correlating to byte, block has to be created already
+uint32_t get_block_of_byte_file(File file, unsigned long byte){
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
+
+    //reading fat table into buffer
+    for(unsigned int fat_block = get_fat_table_start_block(); fat_block < get_fat_table_end_block(); fat_block++)
+        read_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
+
+    uint32_t* fat_ptr = (uint32_t*)buffer;
+
+    unsigned int block_offset = byte / SOFTWARE_DISK_BLOCK_SIZE;
+    if(!(byte % SOFTWARE_DISK_BLOCK_SIZE)) { block_offset++; }
+
+    unsigned int current_block = file->file_block.starting_block;
+    for(int i = 0; i < block_offset; i++)
+        current_block = fat_ptr[current_block];
+
+    return current_block;
 }

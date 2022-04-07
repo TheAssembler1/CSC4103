@@ -31,7 +31,8 @@ int main(){
     char* test_file_name = "test";
 
     File fp = create_file(test_file_name);
-    seek_file(fp, 0);
+
+    write_file(fp, "DSFSDFSDSFSDFM<NSDFLJSDFL:JSDL:FJSL:DFJKL:SDFJKL:SDFJL:SDKFJL:SDKFJL:SDKFJ:SDKLFJ:SDKLFJL:SDFJ:SDLFK:SLDFKJL:SDKJ:SDKLFJL:SDFKJDFDF", 100);
     close_file(fp);
 
     if(file_exists(test_file_name))
