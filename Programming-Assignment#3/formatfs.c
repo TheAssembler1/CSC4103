@@ -23,11 +23,8 @@ int main(){
     printf("Fat table blocks used: %u\n", fat_table_blocks);
     printf("Starting blocks used: %u\n", total_blocks);
 
-    //setting blocks that are taken to 1 in bitmap
-    set_bits_of_buffer(buffer, total_blocks);
-
-    //writing used bits to bitmap and writing that to disk
-    write_sd_block(buffer, 0);
+    //setting blocks that are turned to 1 in bitmap
+    set_next_bits_of_bitmap(total_blocks);
 
     //TEST FILE DRIVER HERE
     //FIXME::Remove this

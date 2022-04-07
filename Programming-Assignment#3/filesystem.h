@@ -113,8 +113,8 @@ int file_exists(char *name);
 // error.
 void fs_print_error(void);
 
-//sets n bits of buffer
-void set_bits_of_buffer(uint8_t* buffer, unsigned int bits);
+//sets next n bits of bitmap
+void set_next_bits_of_bitmap(unsigned int bits);
 
 //print bits of byte
 void print_bits_of_byte(uint8_t value);

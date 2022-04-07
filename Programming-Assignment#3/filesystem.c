@@ -15,7 +15,7 @@ File create_file(char *name){
     File file = malloc(sizeof(struct FileInternals));
     memset(file, 0, sizeof(struct FileInternals));
 
-    memcpy(file->file_block.file_name, name, MAX_FILE_NAME);
+    memcpy(file->file_block.file_name, name, strlen(name));
     file->file_block.starting_block = 0;
     file->file_block.file_size = 0;
 
@@ -29,11 +29,11 @@ File create_file(char *name){
         read_sd_block(buffer, file_descriptor_block);
 
         for(int file_block_ptr = 0; file_block_ptr < SOFTWARE_DISK_BLOCK_SIZE; file_block_ptr += sizeof(struct FileBlock)){
-            struct FileBlock* file_block = (struct FileBlock*)&buffer[file_block_ptr];
+            struct FileBlock* current_file_block = (struct FileBlock*)&buffer[file_block_ptr];
 
             //file descriptor is available
-            if(file_block->file_name[0] == 0){
-                memcpy(&buffer[file_block_ptr], name, strlen(name));
+            if(current_file_block->file_name[0] == 0){
+                memcpy(current_file_block, &(file->file_block), sizeof(struct FileBlock));
 
                 printf("Found empty file descriptor\n");
                 printf("Writing file to block: %d\n", file_descriptor_block);
@@ -114,24 +114,13 @@ void fs_print_error(void){
 
 }
 
-//sets n bits of buffer
-void set_bits_of_buffer(uint8_t* buffer, unsigned int bits){
-  unsigned int bytes_to_set = bits / 8;
-  unsigned int bits_remaining = bits % 8;
-
-  for(unsigned int i = 0; i < bytes_to_set; i++)
-    buffer[i] = 0xFF;
-
-  for(unsigned int i = 0; i < bits_remaining; i++)
-    SET_BIT(buffer[bytes_to_set], i);
-}
-
 //print bits of byte
 void print_bits_of_byte(uint8_t value){
    for(int bit = 0; bit < 8; bit++){
       printf("%i", value & 0x01);
       value = value >> 1;
    }
+   printf("\n");
 }
 
 //returns bytes used by bitmap
@@ -197,4 +186,58 @@ unsigned int get_file_descriptors_end_block(){
 //returns end block of fat table
 unsigned int get_fat_table_end_block(){
     return get_bitmap_size_blocks() + get_file_descriptors_size_blocks() + get_fat_table_size_blocks();
+}
+
+static unsigned int find_first_unused_bit_bitmap(){
+    //loop through bitmap
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_bitmap_size_blocks()];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_bitmap_size_blocks());
+    for(int i = get_bitmap_start_block(); i < get_bitmap_end_block(); i++)
+        read_sd_block(&buffer[i * SOFTWARE_DISK_BLOCK_SIZE], i);
+
+    //loop through bitmap and find first free bit
+    for(int i = 0; i < get_bitmap_size_bytes(); i++)
+        for(int j = 0; j < 8; j++)
+            if(!(CHECK_BIT(buffer[i], j)))
+                return (i * 8) + j;
+
+    //FIXME::remove this
+    printf("ERROR\n");
+    return 0;
+}
+
+//sets next n bits of bitmap
+void set_next_bits_of_bitmap(unsigned int bits){
+    unsigned int next_unset_bit = find_first_unused_bit_bitmap();
+    unsigned int start_byte = next_unset_bit / 8 ;
+
+    printf("------------------------------------\n");
+    printf("next unset bit: %u\n", next_unset_bit);
+    printf("current byte unset: %u\n", start_byte);
+    printf("want to write bits: %u\n", bits);
+
+    //loop through bitmap
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_bitmap_size_blocks()];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_bitmap_size_blocks());
+    for(int i = get_bitmap_start_block(); i < get_bitmap_end_block(); i++)
+        read_sd_block(&buffer[i * SOFTWARE_DISK_BLOCK_SIZE], i);
+
+    printf("before:\n");
+    for(int i = 0; i < 4; i++)
+        print_bits_of_byte(buffer[i]);
+    printf("\n");
+
+    for(int i = next_unset_bit; i < next_unset_bit + bits; i++){
+        SET_BIT(buffer[start_byte], i % 8);
+        if(buffer[start_byte] == 0xFF && i)
+            start_byte++;
+    }
+
+    printf("after:\n");
+    for(int i = 0; i < 4; i++)
+        print_bits_of_byte(buffer[i]);
+    printf("------------------------------------\n");
+
+    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE * get_bitmap_size_blocks(); i += SOFTWARE_DISK_BLOCK_SIZE)
+        write_sd_block(&buffer[i], i / SOFTWARE_DISK_BLOCK_SIZE);
 }
