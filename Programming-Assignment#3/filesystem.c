@@ -151,12 +151,6 @@ int file_exists(char *name){
     return FILE_NOT_FOUND;
 }
 
-// describe current filesystem error code by printing a descriptive message to standard
-// error.
-void fs_print_error(void){
-
-}
-
 //print bits of byte
 void print_bits_of_byte(uint8_t value){
    for(int bit = 0; bit < 8; bit++){
@@ -384,4 +378,21 @@ uint32_t get_block_of_byte_file(File file, unsigned long byte){
         current_block = fat_ptr[current_block];
 
     return current_block;
+}
+
+// describe current filesystem error code by printing a descriptive message to standard
+// error.
+void fs_print_error(void){
+    switch(fserror){
+        case FS_NONE: printf("no error\n");                                     break;
+        case FS_OUT_OF_SPACE: printf("out of space\n");                         break;
+        case FS_FILE_NOT_OPEN: printf("file not open\n");                       break;
+        case FS_FILE_OPEN: printf("file open\n");                               break;
+        case FS_FILE_NOT_FOUND: printf("file not found\n");                     break;
+        case FS_FILE_READ_ONLY: printf("file read only\n");                     break;
+        case FS_FILE_ALREADY_EXISTS: printf("file already exist\n");            break;
+        case FS_EXCEEDS_MAX_FILE_SIZE: printf("file exceeded max file size\n"); break;
+        case FS_ILLEGAL_FILENAME: printf("file has illegal filename\n");        break;
+        case FS_IO_ERROR: printf("io error\n");                                 break;
+    }
 }
