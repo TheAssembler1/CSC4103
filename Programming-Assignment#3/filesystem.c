@@ -1,5 +1,7 @@
 #include "filesystem.h"
 
+FSError fserror = FS_NONE;
+
 // open existing file with pathname 'name' and access mode 'mode'.  Current file
 // position is set at byte 0.  Returns NULL on error. Always sets 'fserror' global.
 File open_file(char *name, FileMode mode){
@@ -74,30 +76,37 @@ unsigned long read_file(File file, void *buf, unsigned long numbytes){
 // Returns the number of bytes written. On an out of space error, the return value may be
 // less than 'numbytes'.  Always sets 'fserror' global.
 unsigned long write_file(File file, void *buf, unsigned long numbytes){
+    //10752
     uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
     memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
+    read_sd_block(buffer, get_block_of_byte_file(file, file->fp));
 
-    uint8_t* dest_buf = (uint8_t*)buf;
+    uint8_t* src_buf = (uint8_t*)buf;
 
-    unsigned int current_block = 0;
-    unsigned long i = 0;
-    for(i = 0; i < numbytes; i++){
-        if(current_block != get_block_of_byte_file(file, file->fp)){
-            if(!current_block)
-                write_sd_block(buffer, current_block);
+    unsigned int current_block = get_block_of_byte_file(file, file->fp);
+    unsigned long current_byte = 0;
+    for(current_byte = 0; current_byte < numbytes; current_byte++){
+        //updating buffer
+        buffer[file->fp % SOFTWARE_DISK_BLOCK_SIZE] = src_buf[current_byte];
+
+        printf("file fp: %u\n", file->fp);
+
+        if(numbytes == 1 || (current_byte && (!(current_byte % SOFTWARE_DISK_BLOCK_SIZE) || current_byte + 1 == numbytes))){
             current_block = get_block_of_byte_file(file, file->fp);
+
+            printf("current byte: %u\n", file->fp);
+            printf("current block: %u\n", current_block);
+
+            write_sd_block(buffer, current_block);
+            current_block = get_block_of_byte_file(file, file->fp + 1);
             read_sd_block(buffer, current_block);
         }
-        printf("CURRENT BLOCK IS: %u\n", current_block);
-        printf("CURRENT BYTE IS: %u\n", file->fp);
-        //updating buffer
-        buffer[i % SOFTWARE_DISK_BLOCK_SIZE] = dest_buf[i];
 
         //moving file pointer foward
         seek_file(file, 1);
-        file->fp++;
     }
-    return i;
+
+    return current_byte;
 }
 
 // sets current position in file to 'bytepos', always relative to the
@@ -115,6 +124,8 @@ int seek_file(File file, unsigned long bytepos){
     }else{
         printf("not adding blocks to file\n");
     }
+
+    file->fp += bytepos;
 
     return 1;
 }
@@ -371,7 +382,9 @@ uint32_t get_block_of_byte_file(File file, unsigned long byte){
     uint32_t* fat_ptr = (uint32_t*)buffer;
 
     unsigned int block_offset = byte / SOFTWARE_DISK_BLOCK_SIZE;
-    if(!(byte % SOFTWARE_DISK_BLOCK_SIZE)) { block_offset++; }
+    if(!(byte % SOFTWARE_DISK_BLOCK_SIZE) && byte) { block_offset++; }
+
+    printf("block offset: %u\n", block_offset);
 
     unsigned int current_block = file->file_block.starting_block;
     for(int i = 0; i < block_offset; i++)

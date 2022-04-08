@@ -29,11 +29,14 @@ int main(){
     //TEST FILE DRIVER HERE
     //FIXME::Remove this
     char* test_file_name = "test";
+    char* message = "TEST";
 
     File fp = create_file(test_file_name);
 
-    write_file(fp, "DSFSDFSDSFSDFM<NSDFLJSDFL:JSDL:FJSL:DFJKL:SDFJKL:SDFJL:SDKFJL:SDKFJL:SDKFJ:SDKLFJ:SDKLFJL:SDFJ:SDLFK:SLDFKJL:SDKJ:SDKLFJL:SDFKJDFDF", 100);
-    close_file(fp);
+    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE; i++)
+        write_file(fp, "A", strlen("A"));
+    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE; i++)
+        write_file(fp, "B", strlen("B"));
 
     if(file_exists(test_file_name))
         printf("file %s did exist\n", test_file_name);
