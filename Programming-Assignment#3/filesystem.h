@@ -166,4 +166,6 @@ void add_blocks_to_file(uint32_t start_block, uint32_t blocks);
 //gets block correlating to byte, block has to be created already
 uint32_t get_block_of_byte_file(File file, unsigned long byte);
 
+void print_fat_table();
+
 #endif //FILE_SYSTEM_H

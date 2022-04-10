@@ -86,26 +86,36 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
     unsigned int current_block = get_block_of_byte_file(file, file->fp);
     unsigned long current_byte = 0;
     for(current_byte = 0; current_byte < numbytes; current_byte++){
+
         //updating buffer
         buffer[file->fp % SOFTWARE_DISK_BLOCK_SIZE] = src_buf[current_byte];
-
-        printf("file fp: %u\n", file->fp);
+        
 
         if(numbytes == 1 || (current_byte && (!(current_byte % SOFTWARE_DISK_BLOCK_SIZE) || current_byte + 1 == numbytes))){
             current_block = get_block_of_byte_file(file, file->fp);
+            write_sd_block(buffer, current_block);
+            seek_file(file, 1);
+            current_block = get_block_of_byte_file(file, file->fp);
+            read_sd_block(buffer, current_block);
 
+
+            printf("------------------------\n");
+            printf("writing block buffer\n");
             printf("current byte: %u\n", file->fp);
             printf("current block: %u\n", current_block);
-
-            write_sd_block(buffer, current_block);
-            current_block = get_block_of_byte_file(file, file->fp + 1);
-            read_sd_block(buffer, current_block);
+            if(current_block == 1){
+                printf("ERROR WITH CURRENT_BLOCK\n");
+                printf("file fp: %u\n", file->fp);
+            }
+            printf("------------------------\n");
+        }else{
+            printf("------------------------\n");
+            printf("file fp: %u\n", file->fp);
+            printf("------------------------\n");
+            seek_file(file, 1);
         }
-
-        //moving file pointer foward
-        seek_file(file, 1);
     }
-
+print_fat_table();
     return current_byte;
 }
 
@@ -116,6 +126,7 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
 int seek_file(File file, unsigned long bytepos){
     unsigned int current_blocks = number_of_blocks_of_file(file->file_block.starting_block);
     unsigned int needed_blocks = (file->fp + bytepos) / SOFTWARE_DISK_BLOCK_SIZE;
+    
     if((file->fp + bytepos) % SOFTWARE_DISK_BLOCK_SIZE) { needed_blocks++; }
 
     if(needed_blocks > current_blocks){
@@ -382,13 +393,18 @@ uint32_t get_block_of_byte_file(File file, unsigned long byte){
     uint32_t* fat_ptr = (uint32_t*)buffer;
 
     unsigned int block_offset = byte / SOFTWARE_DISK_BLOCK_SIZE;
-    if(!(byte % SOFTWARE_DISK_BLOCK_SIZE) && byte) { block_offset++; }
 
     printf("block offset: %u\n", block_offset);
 
     unsigned int current_block = file->file_block.starting_block;
     for(int i = 0; i < block_offset; i++)
         current_block = fat_ptr[current_block];
+
+    if(current_block == 0){
+        printf("ERROR\n");
+
+        printf("file fp: %u\n", file->fp);
+    }
 
     return current_block;
 }
@@ -407,5 +423,20 @@ void fs_print_error(void){
         case FS_EXCEEDS_MAX_FILE_SIZE: printf("file exceeded max file size\n"); break;
         case FS_ILLEGAL_FILENAME: printf("file has illegal filename\n");        break;
         case FS_IO_ERROR: printf("io error\n");                                 break;
+    }
+}
+
+void print_fat_table(){
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
+
+    //reading fat table into buffer
+    for(unsigned int fat_block = get_fat_table_start_block(); fat_block < get_fat_table_end_block(); fat_block++)
+        read_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
+
+    uint32_t* fat_ptr = (uint32_t*)buffer;
+
+    for(int i = 0; i < 32; i++){
+        printf("%u\n", fat_ptr[i]);
     }
 }
