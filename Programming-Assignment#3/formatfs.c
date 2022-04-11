@@ -33,8 +33,16 @@ int main(){
 
     File fp = create_file(test_file_name);
 
+    seek_file(fp, 1);
+    seek_file(fp, -1);
+
+    write_file(fp, "A", 1);
+
+    File fp1 = create_file(test_file_name);
+    write_file(fp1, "A", 1);
+
     for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE * 2; i++)
-        write_file(fp, "A", strlen("A"));
+        write_file(fp, "B", 1);
 
 
     printf("file length is: %d\n", fp->file_block.file_size);
@@ -45,6 +53,7 @@ int main(){
         printf("file %s did not exist\n", test_file_name);
 
     close_file(fp);
+    close_file(fp1);
 
 
     return 0;
