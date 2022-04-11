@@ -75,47 +75,38 @@ unsigned long read_file(File file, void *buf, unsigned long numbytes){
 // write 'numbytes' of data from 'buf' into 'file' at the current file position. 
 // Returns the number of bytes written. On an out of space error, the return value may be
 // less than 'numbytes'.  Always sets 'fserror' global.
+// writes to 10752 for now
 unsigned long write_file(File file, void *buf, unsigned long numbytes){
-    //10752
+    //updating the size of the file
+    if(file->fp + numbytes > file->file_block.file_size)
+        file->file_block.file_size += (file->fp + numbytes) - file->file_block.file_size;
+
     uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
     memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
     read_sd_block(buffer, get_block_of_byte_file(file, file->fp));
 
+    //convert void pointer to 8 byte pointer
     uint8_t* src_buf = (uint8_t*)buf;
 
     unsigned int current_block = get_block_of_byte_file(file, file->fp);
     unsigned long current_byte = 0;
     for(current_byte = 0; current_byte < numbytes; current_byte++){
-
-        //updating buffer
         buffer[file->fp % SOFTWARE_DISK_BLOCK_SIZE] = src_buf[current_byte];
-        
 
-        if(numbytes == 1 || (current_byte && (!(current_byte % SOFTWARE_DISK_BLOCK_SIZE) || current_byte + 1 == numbytes))){
-            current_block = get_block_of_byte_file(file, file->fp);
+        if(current_block == 1){
+            printf("ERROR\n");
+            printf("file fp: %u\n", file->fp);
+            print_fat_table();
+        }
+
+        seek_file(file, 1);
+        if(!(file->fp % SOFTWARE_DISK_BLOCK_SIZE) || current_byte + 1 == numbytes){
             write_sd_block(buffer, current_block);
-            seek_file(file, 1);
             current_block = get_block_of_byte_file(file, file->fp);
             read_sd_block(buffer, current_block);
-
-
-            printf("------------------------\n");
-            printf("writing block buffer\n");
-            printf("current byte: %u\n", file->fp);
-            printf("current block: %u\n", current_block);
-            if(current_block == 1){
-                printf("ERROR WITH CURRENT_BLOCK\n");
-                printf("file fp: %u\n", file->fp);
-            }
-            printf("------------------------\n");
-        }else{
-            printf("------------------------\n");
-            printf("file fp: %u\n", file->fp);
-            printf("------------------------\n");
-            seek_file(file, 1);
         }
     }
-print_fat_table();
+
     return current_byte;
 }
 
@@ -126,8 +117,7 @@ print_fat_table();
 int seek_file(File file, unsigned long bytepos){
     unsigned int current_blocks = number_of_blocks_of_file(file->file_block.starting_block);
     unsigned int needed_blocks = (file->fp + bytepos) / SOFTWARE_DISK_BLOCK_SIZE;
-    
-    if((file->fp + bytepos) % SOFTWARE_DISK_BLOCK_SIZE) { needed_blocks++; }
+    if(!((file->fp + bytepos) % SOFTWARE_DISK_BLOCK_SIZE)) { needed_blocks++; }
 
     if(needed_blocks > current_blocks){
         printf("adding blocks: %u\n", needed_blocks - current_blocks);
@@ -413,16 +403,39 @@ uint32_t get_block_of_byte_file(File file, unsigned long byte){
 // error.
 void fs_print_error(void){
     switch(fserror){
-        case FS_NONE: printf("no error\n");                                     break;
-        case FS_OUT_OF_SPACE: printf("out of space\n");                         break;
-        case FS_FILE_NOT_OPEN: printf("file not open\n");                       break;
-        case FS_FILE_OPEN: printf("file open\n");                               break;
-        case FS_FILE_NOT_FOUND: printf("file not found\n");                     break;
-        case FS_FILE_READ_ONLY: printf("file read only\n");                     break;
-        case FS_FILE_ALREADY_EXISTS: printf("file already exist\n");            break;
-        case FS_EXCEEDS_MAX_FILE_SIZE: printf("file exceeded max file size\n"); break;
-        case FS_ILLEGAL_FILENAME: printf("file has illegal filename\n");        break;
-        case FS_IO_ERROR: printf("io error\n");                                 break;
+        case FS_NONE: 
+            printf("no error\n");                                     
+            break;
+        case FS_OUT_OF_SPACE: 
+            printf("out of space\n");                         
+            break;
+        case FS_FILE_NOT_OPEN: 
+            printf("file not open\n");                       
+            break;
+        case FS_FILE_OPEN: 
+            printf("file open\n");                               
+            break;
+        case FS_FILE_NOT_FOUND: 
+            printf("file not found\n");                     
+            break;
+        case FS_FILE_READ_ONLY: 
+            printf("file read only\n");                     
+            break;
+        case FS_FILE_ALREADY_EXISTS: 
+            printf("file already exist\n");            
+            break;
+        case FS_EXCEEDS_MAX_FILE_SIZE: 
+            printf("file exceeded max file size\n"); 
+            break;
+        case FS_ILLEGAL_FILENAME: 
+            printf("file has illegal filename\n");        
+            break;
+        case FS_IO_ERROR: 
+            printf("io error\n");                                 
+            break;
+        default:
+            printf("error does not exist\n");
+            break;
     }
 }
 
@@ -437,6 +450,6 @@ void print_fat_table(){
     uint32_t* fat_ptr = (uint32_t*)buffer;
 
     for(int i = 0; i < 32; i++){
-        printf("%u\n", fat_ptr[i]);
+        printf("%u", fat_ptr[i]);
     }
 }
