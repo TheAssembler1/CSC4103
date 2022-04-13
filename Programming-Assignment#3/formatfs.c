@@ -29,31 +29,21 @@ int main(){
     //TEST FILE DRIVER HERE
     //FIXME::Remove this
     char* test_file_name = "test";
-    char* message = "TEST";
+    char* message = "testing this message";
 
-    File fp = create_file(test_file_name);
+    File file = create_file(test_file_name);
+    uint8_t buf[SOFTWARE_DISK_BLOCK_SIZE * 2];
+    memset(buf, 0, SOFTWARE_DISK_BLOCK_SIZE * 2);
+    buf[SOFTWARE_DISK_BLOCK_SIZE * 2 - 1] = '\0';
 
-    seek_file(fp, 1);
-    seek_file(fp, -1);
+    write_file(file, message, strlen(message));
 
-    write_file(fp, "A", 1);
+    file->fp = 0;
 
-    File fp1 = create_file(test_file_name);
-    write_file(fp1, "A", 1);
+    read_file(file, buf, strlen(message));
 
-    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE * 2; i++)
-        write_file(fp, "B", 1);
-
-
-    printf("file length is: %d\n", fp->file_block.file_size);
-
-    if(file_exists(test_file_name))
-        printf("file %s did exist\n", test_file_name);
-    else
-        printf("file %s did not exist\n", test_file_name);
-
-    close_file(fp);
-    close_file(fp1);
+    printf("buffer string: %s\n", buf);
+    close_file(file);
 
 
     return 0;

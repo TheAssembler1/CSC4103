@@ -69,7 +69,31 @@ void close_file(File file){
 // then a return value less than 'numbytes' signals this condition. Always sets
 // 'fserror' global.
 unsigned long read_file(File file, void *buf, unsigned long numbytes){
-    return 0;
+    //updating the size of the file
+    if(file->fp + numbytes > file->file_block.file_size)
+        file->file_block.file_size += (file->fp + numbytes) - file->file_block.file_size;
+
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
+    read_sd_block(buffer, get_block_of_byte_file(file, file->fp));
+
+    //convert void pointer to 8 byte pointer
+    uint8_t* dest_buf = (uint8_t*)buf;
+
+    unsigned int current_block = get_block_of_byte_file(file, file->fp);
+    unsigned long current_byte = 0;
+    for(current_byte = 0; current_byte < numbytes; current_byte++){
+        dest_buf[current_byte] = buffer[file->fp % SOFTWARE_DISK_BLOCK_SIZE];
+
+        file->fp++;
+        if(!(file->fp % SOFTWARE_DISK_BLOCK_SIZE) || current_byte + 1 == numbytes){
+            write_sd_block(buffer, current_block);
+            current_block = get_block_of_byte_file(file, file->fp);
+            read_sd_block(buffer, current_block);
+        }
+    }
+
+    return current_byte;
 }
 
 // write 'numbytes' of data from 'buf' into 'file' at the current file position. 
