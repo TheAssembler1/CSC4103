@@ -148,6 +148,7 @@ int file_exists(char *name){
     //loop through file descriptor blocks
     uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
     memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
+    
     for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block < get_file_descriptors_end_block(); file_descriptor_block++){
         read_sd_block(buffer, file_descriptor_block);
 
@@ -389,12 +390,6 @@ uint32_t get_block_of_byte_file(File file, unsigned long byte){
     unsigned int current_block = file->file_block.starting_block;
     for(int i = 0; i < block_offset; i++)
         current_block = fat_ptr[current_block];
-
-    if(current_block == 0){
-        printf("ERROR\n");
-
-        printf("file fp: %u\n", file->fp);
-    }
 
     return current_block;
 }
