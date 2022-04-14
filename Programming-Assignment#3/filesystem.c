@@ -43,6 +43,7 @@ File create_file(char *name){
 
             //file descriptor is available
             if(current_file_block->file_name[0] == 0){
+
                 memcpy(current_file_block, &(file->file_block), sizeof(struct FileBlock));
 
                 printf("Found empty file descriptor\n");
@@ -61,7 +62,32 @@ File create_file(char *name){
 
 // close 'file'.  Always sets 'fserror' global.
 void close_file(File file){
-    free(file);
+    //loop through file descriptor blocks
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
+    
+    for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block < get_file_descriptors_end_block(); file_descriptor_block++){
+        read_sd_block(buffer, file_descriptor_block);
+
+        for(int file_block_ptr = 0; file_block_ptr < SOFTWARE_DISK_BLOCK_SIZE; file_block_ptr += sizeof(struct FileBlock)){
+            struct FileBlock* file_block = (struct FileBlock*)&buffer[file_block_ptr];
+
+            //file descriptor with name exists
+            if(!memcmp(file_block->file_name, file->file_block.file_name, strlen(file->file_block.file_name))){
+                printf("closing file\n");
+                memcpy(file_block, file->file_block.file_name, sizeof(struct FileBlock));
+                free(file);
+
+                //writing file descriptor back to disk
+                for(int fdb = get_file_descriptors_start_block(); fdb < get_file_descriptors_end_block(); fdb++)
+                    write_sd_block(buffer, fdb);
+
+                return;
+            }
+        }
+    }
+
+    printf("CLOSE FILE FAILED\n");
 }
 
 // read at most 'numbytes' of data from 'file' into 'buf', starting at the 

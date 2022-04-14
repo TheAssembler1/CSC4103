@@ -36,13 +36,21 @@ int main(){
     memset(buf, 0, SOFTWARE_DISK_BLOCK_SIZE * 2);
     buf[SOFTWARE_DISK_BLOCK_SIZE * 2 - 1] = '\0';
 
-    write_file(file, message, strlen(message));
+    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE / 8; i++){
+        write_file(file , "ABCDEFG", strlen("ABCDEFG"));
+    }
+
+    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE / 5; i++){
+        write_file(file , "12345", strlen("12345"));
+    }
 
     file->fp = 0;
 
-    read_file(file, buf, strlen(message));
+    read_file(file, buf, SOFTWARE_DISK_BLOCK_SIZE * 2 - 2);
 
     printf("buffer string: %s\n", buf);
+
+    printf("size of file: %x\n", file->file_block.file_size);
     close_file(file);
 
 
