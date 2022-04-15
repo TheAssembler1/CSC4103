@@ -189,7 +189,48 @@ unsigned long file_length(File file){
 // deletes the file named 'name', if it exists. Returns 1 on success, 0 on failure. 
 // Always sets 'fserror' global.   
 int delete_file(char *name){
-    return 0;
+    //loop through file descriptor blocks
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
+    
+    for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block < get_file_descriptors_end_block(); file_descriptor_block++){
+        read_sd_block(buffer, file_descriptor_block);
+
+        for(int file_block_ptr = 0; file_block_ptr < SOFTWARE_DISK_BLOCK_SIZE; file_block_ptr += sizeof(struct FileBlock)){
+            struct FileBlock* file_block = (struct FileBlock*)&buffer[file_block_ptr];
+
+            //file descriptor with name exists
+            if(!memcmp(file_block->file_name, file->file_block.file_name, strlen(file->file_block.file_name))){
+                uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
+                memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
+
+                //reading fat table into buffer
+                for(unsigned int fat_block = get_fat_table_start_block(); fat_block < get_fat_table_end_block(); fat_block++)
+                    read_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
+
+                uint32_t* fat_ptr = (uint32_t*)buffer;
+
+                uint8_t clear_buffer[SOFTWARE_DISK_BLOCK_SIZE];
+                memset(clear_buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
+
+                uint32_t end_block = file->file_block.starting_block;
+                write_sd_block(clear_buffer, end_block);
+                printf("cleared block: %u\n", end_block);
+                while(fat_ptr[end_block] != 1){
+                    end_block = fat_ptr[end_block];
+                    write_sd_block(clear_buffer, end_block);
+                    printf("cleared block: %u\n", end_block);
+                }
+
+                for(unsigned int fat_block = get_fat_table_start_block(); fat_block < get_fat_table_end_block(); fat_block++)
+                    write_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
+
+                return 1;
+            }
+        }
+    }
+
+    printf("ERROR END OF FILE\n");
 }
 
 // determines if a file with 'name' exists and returns 1 if it exists, otherwise 0.

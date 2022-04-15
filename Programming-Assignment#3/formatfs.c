@@ -51,6 +51,9 @@ int main(){
     printf("buffer string: %s\n", buf);
 
     printf("size of file: %x\n", file->file_block.file_size);
+
+    delete_file(test_file_name);
+
     close_file(file);
 
 
