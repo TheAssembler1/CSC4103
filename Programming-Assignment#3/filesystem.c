@@ -200,9 +200,9 @@ int delete_file(char *name){
             struct FileBlock* file_block = (struct FileBlock*)&buffer[file_block_ptr];
 
             //file descriptor with name exists
-            if(!memcmp(file_block->file_name, file->file_block.file_name, strlen(file->file_block.file_name))){
+            if(!memcmp(file_block->file_name, name, strlen(name)){
                 File file = malloc(sizeof(struct FileBlock));
-                memcpy(file->file_block, file_bloc, sizeof(struct FileBlock));
+                memcpy(file->file_block, file_block, sizeof(struct FileBlock));
 
                 uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
                 memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
