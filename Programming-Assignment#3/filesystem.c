@@ -200,7 +200,7 @@ int delete_file(char *name){
             struct FileBlock* file_block = (struct FileBlock*)&buffer[file_block_ptr];
 
             //file descriptor with name exists
-            if(!memcmp(file_block->file_name, name, strlen(name)){
+            if(!memcmp(file_block->file_name, name, strlen(name))){
                 File file = malloc(sizeof(struct FileBlock));
                 memcpy(file->file_block, file_block, sizeof(struct FileBlock));
 
