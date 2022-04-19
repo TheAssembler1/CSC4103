@@ -217,13 +217,29 @@ int delete_file(char *name){
                 memset(clear_buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
 
                 uint32_t end_block = file->file_block.starting_block;
+                file->file_block.starting_block = 0;
                 write_sd_block(clear_buffer, end_block);
+                clear_bit_bitmap(end_block);
+
                 printf("cleared block: %u\n", end_block);
                 while(fat_ptr[end_block] != 1){
-                    end_block = fat_ptr[end_block];
+                    int32_t temp = end_block;
+                    end_block = fat_ptr[temp];
+
+                    //clearing fat table
+                    fat_ptr[temp] = 0;
+                    //clearing block of data
                     write_sd_block(clear_buffer, end_block);
+                    //clearing bitmap table
+                    clear_bit_bitmap(end_block);
+
                     printf("cleared block: %u\n", end_block);
                 }
+                fat_ptr[end_block] = 0;
+
+                //clearing file descriptor
+                memset(file_block, 0, sizeof(struct FileBlock));
+                write_sd_block(buffer, file_descriptor_block);
 
                 for(unsigned int fat_block = get_fat_table_start_block(); fat_block < get_fat_table_end_block(); fat_block++)
                     write_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
@@ -234,6 +250,7 @@ int delete_file(char *name){
     }
 
     printf("ERROR END OF FILE\n");
+    return 0;
 }
 
 // determines if a file with 'name' exists and returns 1 if it exists, otherwise 0.
@@ -541,4 +558,25 @@ void print_fat_table(){
     for(int i = 0; i < 32; i++){
         printf("%u", fat_ptr[i]);
     }
+}
+
+void clear_bit_bitmap(int bit){
+    bit--;
+    //loop through bitmap
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_bitmap_size_blocks()];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_bitmap_size_blocks());
+    for(int i = get_bitmap_start_block(); i < get_bitmap_end_block(); i++)
+        read_sd_block(&buffer[i * SOFTWARE_DISK_BLOCK_SIZE], i);
+
+    int actual_bit = bit / 8;
+    if(bit % 8 && !bit) { actual_bit++; }
+
+    //clearing the bit
+    CLEAR_BIT(buffer[actual_bit], bit % 8);
+
+    //writing bitmap back to disk
+    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE * get_bitmap_size_blocks(); i += SOFTWARE_DISK_BLOCK_SIZE)
+        write_sd_block(&buffer[i], i / SOFTWARE_DISK_BLOCK_SIZE);
+
+    printf("Cleared bit from bitmap: %u\n", bit);
 }

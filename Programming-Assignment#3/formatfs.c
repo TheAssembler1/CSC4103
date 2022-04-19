@@ -30,8 +30,9 @@ int main(){
     //FIXME::Remove this
     char* test_file_name = "test";
     char* message = "testing this message";
-
+    
     File file = create_file(test_file_name);
+
     uint8_t buf[SOFTWARE_DISK_BLOCK_SIZE * 2];
     memset(buf, 0, SOFTWARE_DISK_BLOCK_SIZE * 2);
     buf[SOFTWARE_DISK_BLOCK_SIZE * 2 - 1] = '\0';
@@ -40,22 +41,13 @@ int main(){
         write_file(file , "ABCDEFG", strlen("ABCDEFG"));
     }
 
-    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE / 5; i++){
-        write_file(file , "12345", strlen("12345"));
-    }
-
     file->fp = 0;
 
     read_file(file, buf, SOFTWARE_DISK_BLOCK_SIZE * 2 - 2);
 
     printf("buffer string: %s\n", buf);
 
-    printf("size of file: %x\n", file->file_block.file_size);
-
     delete_file(test_file_name);
-
-    close_file(file);
-
 
     return 0;
 }

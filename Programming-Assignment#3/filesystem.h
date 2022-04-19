@@ -168,4 +168,6 @@ uint32_t get_block_of_byte_file(File file, unsigned long byte);
 
 void print_fat_table();
 
+void clear_bit_bitmap(int bit);
+
 #endif //FILE_SYSTEM_H
