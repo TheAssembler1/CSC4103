@@ -5,7 +5,29 @@ FSError fserror = FS_NONE;
 // open existing file with pathname 'name' and access mode 'mode'.  Current file
 // position is set at byte 0.  Returns NULL on error. Always sets 'fserror' global.
 File open_file(char *name, FileMode mode){
-    return 0;
+    //loop through file descriptor blocks
+    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
+    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
+    
+    for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block < get_file_descriptors_end_block(); file_descriptor_block++){
+        read_sd_block(buffer, file_descriptor_block);
+
+        for(int file_block_ptr = 0; file_block_ptr < SOFTWARE_DISK_BLOCK_SIZE; file_block_ptr += sizeof(struct FileBlock)){
+            struct FileBlock* file_block = (struct FileBlock*)&buffer[file_block_ptr];
+
+            //file descriptor with name exists
+            if(!memcmp(file_block->file_name, name, strlen(name))){
+                File file = malloc(sizeof(struct FileInternals));
+                memcpy(&(file->file_block), file_block, sizeof(struct FileBlock));
+                file->fp = 0;
+                file->mode = mode;
+
+                return file;
+            }
+        }
+    }
+
+    return NULL;
 }
 
 // create and open new file with pathname 'name' and (implied) access

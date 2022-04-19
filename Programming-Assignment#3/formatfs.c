@@ -46,8 +46,15 @@ int main(){
     read_file(file, buf, SOFTWARE_DISK_BLOCK_SIZE * 2 - 2);
 
     printf("buffer string: %s\n", buf);
+    printf("file size: %u\n", file->file_block.file_size);
+
+    close_file(file);
 
     delete_file(test_file_name);
+
+    open_file(test_file_name, READ_WRITE);
+
+    printf("size of file: %u\n", file->file_block.file_size);
 
     return 0;
 }
