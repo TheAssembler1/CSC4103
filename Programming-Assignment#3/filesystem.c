@@ -95,14 +95,13 @@ void close_file(File file){
             struct FileBlock* file_block = (struct FileBlock*)&buffer[file_block_ptr];
 
             //file descriptor with name exists
-            if(!memcmp(file_block->file_name, file->file_block.file_name, strlen(file->file_block.file_name))){
+            if(!memcmp(file_block->file_name, file->file_block.file_name, strlen((const char*)file->file_block.file_name))){
                 printf("closing file\n");
                 memcpy(file_block, file->file_block.file_name, sizeof(struct FileBlock));
                 free(file);
 
                 //writing file descriptor back to disk
-                for(int fdb = get_file_descriptors_start_block(); fdb < get_file_descriptors_end_block(); fdb++)
-                    write_sd_block(buffer, fdb);
+                write_sd_block(buffer, file_descriptor_block);
 
                 return;
             }

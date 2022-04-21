@@ -37,24 +37,10 @@ int main(){
     memset(buf, 0, SOFTWARE_DISK_BLOCK_SIZE * 2);
     buf[SOFTWARE_DISK_BLOCK_SIZE * 2 - 1] = '\0';
 
-    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE / 8; i++){
-        write_file(file , "ABCDEFG", strlen("ABCDEFG"));
-    }
-
-    file->fp = 0;
-
-    read_file(file, buf, SOFTWARE_DISK_BLOCK_SIZE * 2 - 2);
-
     printf("buffer string: %s\n", buf);
     printf("file size: %u\n", file->file_block.file_size);
 
     close_file(file);
-
-    delete_file(test_file_name);
-
-    open_file(test_file_name, READ_WRITE);
-
-    printf("size of file: %u\n", file->file_block.file_size);
-
+    //delete_file(test_file_name);
     return 0;
 }
