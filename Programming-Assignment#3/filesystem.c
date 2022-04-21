@@ -49,10 +49,8 @@ static unsigned int get_fat_table_end_block(){
     return get_bitmap_size_blocks() + get_file_descriptors_size_blocks() + get_fat_table_size_blocks() - 1;
 }
 
-//FIXME::need to find why I have to subtract by one to get the correct bit
 //clears the bit specified starting at 0 from bitmap
 static void clear_bit_bitmap(int bit){
-    bit--;
     //loop through bitmap
     uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_bitmap_size_blocks()];
     memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_bitmap_size_blocks());
@@ -399,6 +397,9 @@ unsigned long read_file(File file, void *buf, unsigned long numbytes){
 // less than 'numbytes'.  Always sets 'fserror' global.
 // writes to 10752 for now
 unsigned long write_file(File file, void *buf, unsigned long numbytes){
+    //seek to current file pointer
+    seek_file(file, file->fp);
+
     //updating the size of the file
     if(file->fp + numbytes > file->file_block.file_size)
         file->file_block.file_size += (file->fp + numbytes) - file->file_block.file_size;
@@ -489,11 +490,13 @@ int delete_file(char *name){
                 file->file_block.starting_block = 0;
                 write_sd_block(clear_buffer, end_block);
                 clear_bit_bitmap(end_block);
+                printf("block %u being deleted\n", end_block);
 
                 while(fat_ptr[end_block] != 1){
                     int32_t temp = end_block;
                     end_block = fat_ptr[temp];
 
+                    printf("block %u being deleted\n", end_block);
                     //clearing fat table
                     fat_ptr[temp] = 0;
                     //clearing block of data
@@ -507,8 +510,8 @@ int delete_file(char *name){
                 memset(file_block, 0, sizeof(struct FileBlock));
                 write_sd_block(buffer, file_descriptor_block);
 
-                for(unsigned int fat_block = get_fat_table_start_block(); fat_block <= get_fat_table_end_block(); fat_block++)
-                    write_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
+                //for(unsigned int fat_block = get_fat_table_start_block(); fat_block <= get_fat_table_end_block(); fat_block++)
+                //    write_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
 
                 return 1;
             }

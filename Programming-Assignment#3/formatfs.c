@@ -30,17 +30,28 @@ int main(){
     //FIXME::there is a bug in the gettign the most recent nonused block think it needs to be plus one or something
 
     //TEST FILE DRIVER HERE
-    char* file1_name = "file_name1";
+    char* file1_name = "file1_name";
     char* file1_message = "file1_message";
 
-    File file = create_file(file1_name);
-    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE; i++)
-        write_file(file, "T", strlen("T"));
-    close_file(file);
+    char* file2_name = "file2_name";
+    char* file2_message = "file2_message";
+
+    char* file3_name = "file3_name";
+    char* file3_message = "file3_message";
+
+    File file1 = create_file(file1_name);
+    write_file(file1, file1_message, strlen(file1_message));
+    close_file(file1);
+
+    File file2 = create_file(file2_name);
+    write_file(file2, file2_message, strlen(file2_message));
+    close_file(file2);
+
+    File file3 = create_file(file3_name);
+    write_file(file3, file3_message, strlen(file3_message));
+    close_file(file3);
 
     print_fat_table();
-    //create_file("file_TESTER");
-    printf("-----------------------------------------------------------------------------------------\n");
     delete_file(file1_name);
     print_fat_table();
 
