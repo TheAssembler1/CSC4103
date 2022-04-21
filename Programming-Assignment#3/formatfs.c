@@ -22,25 +22,27 @@ int main(){
     printf("File descriptors blocks used: %u\n", fd_size_blocks);
     printf("Fat table blocks used: %u\n", fat_table_blocks);
     printf("Starting blocks used: %u\n", total_blocks);
+    printf("----------------------------------\n");
 
     //setting blocks that are turned to 1 in bitmap
     set_next_bits_of_bitmap(total_blocks);
 
+    //FIXME::there is a bug in the gettign the most recent nonused block think it needs to be plus one or something
+
     //TEST FILE DRIVER HERE
-    //FIXME::Remove this
-    char* test_file_name = "test";
-    char* message = "testing this message";
-    
-    File file = create_file(test_file_name);
+    char* file1_name = "file_name1";
+    char* file1_message = "file1_message";
 
-    uint8_t buf[SOFTWARE_DISK_BLOCK_SIZE * 2];
-    memset(buf, 0, SOFTWARE_DISK_BLOCK_SIZE * 2);
-    buf[SOFTWARE_DISK_BLOCK_SIZE * 2 - 1] = '\0';
-
-    printf("buffer string: %s\n", buf);
-    printf("file size: %u\n", file->file_block.file_size);
-
+    File file = create_file(file1_name);
+    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE; i++)
+        write_file(file, "T", strlen("T"));
     close_file(file);
-    //delete_file(test_file_name);
+
+    print_fat_table();
+    //create_file("file_TESTER");
+    printf("-----------------------------------------------------------------------------------------\n");
+    delete_file(file1_name);
+    print_fat_table();
+
     return 0;
 }

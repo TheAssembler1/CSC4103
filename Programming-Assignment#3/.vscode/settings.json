@@ -3,6 +3,7 @@
         "softwaredisk.h": "c",
         "stdint.h": "c",
         "type_traits": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "filesystem.h": "c"
     }
 }

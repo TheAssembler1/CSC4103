@@ -121,6 +121,11 @@ void set_next_bits_of_bitmap(unsigned int bits);
 //print bits of byte
 void print_bits_of_byte(uint8_t value);
 
+// filesystem error code set (set by each filesystem function)
+extern FSError fserror;
+
+//these functions need to be declared here for formatfs.c
+
 //returns blocks used by bitmap
 unsigned int get_bitmap_size_blocks();
 
@@ -130,44 +135,7 @@ unsigned int get_file_descriptors_size_blocks();
 //returns blocks used by fat table
 unsigned int get_fat_table_size_blocks();
 
-//returns starting block of bitmap
-unsigned int get_bitmap_start_block();
-
-//returns starting block of file descriptors
-unsigned int get_file_descriptors_start_block();
-
-//returns starting block of fat table
-unsigned int get_fat_table_start_block();
-
-//returns end block of bitmap
-unsigned int get_bitmap_end_block();
-
-//returns end block of file descriptors
-unsigned int get_file_descriptors_end_block();
-
-//returns end block of fat table
-unsigned int get_fat_table_end_block();
-
-// filesystem error code set (set by each filesystem function)
-extern FSError fserror;
-
-//gets first unused bit in the bitmap
-unsigned int find_first_unused_bit_bitmap();
-
-//set then entry in the fat table to the value
-void set_fat_entry(uint32_t entry, uint32_t value);
-
-//returns the number of blocks used by file
-uint32_t number_of_blocks_of_file(uint32_t start_block);
-
-//adds blocks to file
-void add_blocks_to_file(uint32_t start_block, uint32_t blocks);
-
-//gets block correlating to byte, block has to be created already
-uint32_t get_block_of_byte_file(File file, unsigned long byte);
-
+//prints the contents of the fat table
 void print_fat_table();
-
-void clear_bit_bitmap(int bit);
 
 #endif //FILE_SYSTEM_H
