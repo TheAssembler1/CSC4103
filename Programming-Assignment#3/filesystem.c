@@ -250,8 +250,7 @@ void print_fat_table(){
 // open existing file with pathname 'name' and access mode 'mode'.  Current file
 // position is set at byte 0.  Returns NULL on error. Always sets 'fserror' global.
 File open_file(char *name, FileMode mode){
-
-    printf("delete file with name %s\n", name);
+    printf("open file with name %s\n", name);
 
     //loop through file descriptor blocks
     uint8_t file_descriptor_buffer[SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks()];
@@ -273,31 +272,6 @@ File open_file(char *name, FileMode mode){
             return file;
         }
     }
-
-    return NULL;
-
-    /*
-    //loop through file descriptor blocks
-    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
-    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
-    
-    for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++){
-        read_sd_block(buffer, file_descriptor_block);
-
-        for(int file_block_ptr = 0; file_block_ptr < SOFTWARE_DISK_BLOCK_SIZE; file_block_ptr += sizeof(struct FileBlock)){
-            struct FileBlock* file_block = (struct FileBlock*)&buffer[file_block_ptr];
-
-            //file descriptor with name exists
-            if(!memcmp(file_block->file_name, name, strlen(name))){
-                File file = malloc(sizeof(struct FileInternals));
-                memcpy(&(file->file_block), file_block, sizeof(struct FileBlock));
-                file->fp = 0;
-                file->mode = mode;
-
-                return file;
-            }
-        }
-    }*/
 
     return NULL;
 }
@@ -326,21 +300,25 @@ File create_file(char *name){
     file->fp = 0;
 
     //loop through file descriptor blocks
-    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
-    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
-    for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++){
-        read_sd_block(buffer, file_descriptor_block);
+    uint8_t file_descriptor_buffer[SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks()];
+    memset(file_descriptor_buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks());
+    
+    for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++)
+        read_sd_block(&file_descriptor_buffer[(file_descriptor_block - get_file_descriptors_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], file_descriptor_block);
 
-        for(int file_block_ptr = 0; file_block_ptr < SOFTWARE_DISK_BLOCK_SIZE; file_block_ptr += sizeof(struct FileBlock)){
-            struct FileBlock* current_file_block = (struct FileBlock*)&buffer[file_block_ptr];
+    struct FileBlock* file_block = (struct FileBlock*)file_descriptor_buffer;
 
-            //file descriptor is available
-            if(current_file_block->file_name[0] == 0){
-                memcpy(current_file_block, &(file->file_block), sizeof(struct FileBlock));
-                write_sd_block(buffer, file_descriptor_block);
+    for(int i = 0; i < MAX_FILES; i++){
+        //file descriptor with name exists
+        if(file_block[i].file_name[0] == 0){
+            memcpy(&file_block[i], &(file->file_block), sizeof(struct FileBlock));
 
-                return file;
-            }
+            //updating file descriptors
+            //write back the file descriptor
+            for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++)
+                write_sd_block(&file_descriptor_buffer[(file_descriptor_block - get_file_descriptors_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], file_descriptor_block);
+
+            return file;
         }
     }
 
