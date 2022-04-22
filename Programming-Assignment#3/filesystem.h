@@ -14,6 +14,9 @@
 #define FILE_FOUND 1
 #define FILE_NOT_FOUND 0
 
+#define FILE_EXIST 1
+#define FILE_DOESNT_EXIST 0
+
 #define LAST_BLOCK 1
 
 #define SET_BIT(byte,nbit)   ((byte) |=  (1 << (nbit)))

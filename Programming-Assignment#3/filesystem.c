@@ -57,8 +57,10 @@ static void clear_bit_bitmap(int bit){
     for(int i = get_bitmap_start_block(); i <= get_bitmap_end_block(); i++)
         read_sd_block(&buffer[i * SOFTWARE_DISK_BLOCK_SIZE], i);
 
-    int actual_bit = bit / 8;
-    if(bit % 8 && !bit) { actual_bit++; }
+    //round up division and subtract by one to account for 0 starting index
+    unsigned int actual_bit = 0;
+    if(bit)
+        actual_bit = round_up_division(bit, BYTE_SIZE) - 1;
 
     //clearing the bit
     CLEAR_BIT(buffer[actual_bit], bit % 8);
@@ -395,10 +397,9 @@ unsigned long read_file(File file, void *buf, unsigned long numbytes){
 // write 'numbytes' of data from 'buf' into 'file' at the current file position. 
 // Returns the number of bytes written. On an out of space error, the return value may be
 // less than 'numbytes'.  Always sets 'fserror' global.
-// writes to 10752 for now
 unsigned long write_file(File file, void *buf, unsigned long numbytes){
     //seek to current file pointer
-    seek_file(file, file->fp);
+    seek_file(file, 0);
 
     //updating the size of the file
     if(file->fp + numbytes > file->file_block.file_size)
@@ -415,11 +416,6 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
     unsigned long current_byte = 0;
     for(current_byte = 0; current_byte < numbytes; current_byte++){
         buffer[file->fp % SOFTWARE_DISK_BLOCK_SIZE] = src_buf[current_byte];
-
-        if(current_block == 1){
-            printf("ERROR\n");
-            printf("file fp: %u\n", file->fp);
-        }
 
         seek_file(file, 1);
         if(!(file->fp % SOFTWARE_DISK_BLOCK_SIZE) || current_byte + 1 == numbytes){
@@ -460,83 +456,81 @@ int delete_file(char *name){
     printf("delete file with name %s\n", name);
 
     //loop through file descriptor blocks
-    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
-    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
+    uint8_t file_descriptor_buffer[SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks()];
+    memset(file_descriptor_buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks());
     
-    for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++){
-        read_sd_block(buffer, file_descriptor_block);
+    for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++)
+        read_sd_block(&file_descriptor_buffer[(file_descriptor_block - get_file_descriptors_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], file_descriptor_block);
 
-        for(int file_block_ptr = 0; file_block_ptr < SOFTWARE_DISK_BLOCK_SIZE; file_block_ptr += sizeof(struct FileBlock)){
-            struct FileBlock* file_block = (struct FileBlock*)&buffer[file_block_ptr];
+    struct FileBlock* file_block = (struct FileBlock*)file_descriptor_buffer;
 
-            //file descriptor with name exists
-            if(!memcmp(file_block->file_name, name, strlen(name))){
-                File file = malloc(sizeof(struct FileBlock));
-                memcpy(&(file->file_block), file_block, sizeof(struct FileBlock));
+    for(int i = 0; i < MAX_FILES; i++){
+        //file descriptor with name exists
+        if(!memcmp(file_block[i].file_name, name, strlen(name))){
+            uint8_t fat_table[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
+            memset(fat_table, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
 
-                uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
-                memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
+            //reading fat table into buffer
+            for(unsigned int fat_block = get_fat_table_start_block(); fat_block <= get_fat_table_end_block(); fat_block++)
+                read_sd_block(&fat_table[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
 
-                //reading fat table into buffer
-                for(unsigned int fat_block = get_fat_table_start_block(); fat_block <= get_fat_table_end_block(); fat_block++)
-                    read_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
+            uint32_t* fat_ptr = (uint32_t*)fat_table;
 
-                uint32_t* fat_ptr = (uint32_t*)buffer;
+            uint8_t clear_buffer[SOFTWARE_DISK_BLOCK_SIZE];
+            memset(clear_buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
 
-                uint8_t clear_buffer[SOFTWARE_DISK_BLOCK_SIZE];
-                memset(clear_buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
+            uint32_t end_block = file_block[i].starting_block;
+            file_block[i].starting_block = 0;
+            write_sd_block(clear_buffer, end_block);
+            clear_bit_bitmap(end_block);
 
-                uint32_t end_block = file->file_block.starting_block;
-                file->file_block.starting_block = 0;
+            while(fat_ptr[end_block] != LAST_BLOCK){
+                int32_t temp = end_block;
+                end_block = fat_ptr[temp];
+
+                //clearing fat table
+                fat_ptr[temp] = 0;
+                //clearing block of data
                 write_sd_block(clear_buffer, end_block);
+                //clearing bitmap table
                 clear_bit_bitmap(end_block);
-                printf("block %u being deleted\n", end_block);
-
-                while(fat_ptr[end_block] != 1){
-                    int32_t temp = end_block;
-                    end_block = fat_ptr[temp];
-
-                    printf("block %u being deleted\n", end_block);
-                    //clearing fat table
-                    fat_ptr[temp] = 0;
-                    //clearing block of data
-                    write_sd_block(clear_buffer, end_block);
-                    //clearing bitmap table
-                    clear_bit_bitmap(end_block);
-                }
-                fat_ptr[end_block] = 0;
-
-                //clearing file descriptor
-                memset(file_block, 0, sizeof(struct FileBlock));
-                write_sd_block(buffer, file_descriptor_block);
-
-                //for(unsigned int fat_block = get_fat_table_start_block(); fat_block <= get_fat_table_end_block(); fat_block++)
-                //    write_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
-
-                return 1;
             }
+            fat_ptr[end_block] = 0;
+
+            for(unsigned int fat_block = get_fat_table_start_block(); fat_block <= get_fat_table_end_block(); fat_block++)
+                write_sd_block(&fat_table[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
+
+            memset(&file_block[i], 0, sizeof(struct FileBlock));
+
+            //write back the file descriptor
+            for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++)
+                write_sd_block(&file_descriptor_buffer[(file_descriptor_block - get_file_descriptors_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], file_descriptor_block);
+
+            return FILE_EXIST;
         }
     }
 
-    return 0;
+    return FILE_DOESNT_EXIST;
 }
 
 // determines if a file with 'name' exists and returns 1 if it exists, otherwise 0.
 // Always sets 'fserror' global.
 int file_exists(char *name){
+    printf("find file with name %s\n", name);
+
     //loop through file descriptor blocks
-    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
-    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
+    uint8_t file_descriptor_buffer[SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks()];
+    memset(file_descriptor_buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks());
     
-    for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++){
-        read_sd_block(buffer, file_descriptor_block);
+    for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++)
+        read_sd_block(&file_descriptor_buffer[(file_descriptor_block - get_file_descriptors_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], file_descriptor_block);
 
-        for(int file_block_ptr = 0; file_block_ptr < SOFTWARE_DISK_BLOCK_SIZE; file_block_ptr += sizeof(struct FileBlock)){
-            struct FileBlock* file_block = (struct FileBlock*)&buffer[file_block_ptr];
+    struct FileBlock* file_block = (struct FileBlock*)file_descriptor_buffer;
 
-            //file descriptor with name exists
-            if(!memcmp(file_block->file_name, name, strlen(name)))
-                return FILE_FOUND;
+    for(int i = 0; i < MAX_FILES; i++){
+        //file descriptor with name exists
+        if(!memcmp(file_block[i].file_name, name, strlen(name))){
+            return FILE_FOUND;
         }
     }
 

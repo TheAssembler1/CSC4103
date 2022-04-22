@@ -55,5 +55,41 @@ int main(){
     delete_file(file1_name);
     print_fat_table();
 
+    file1 = create_file(file1_name);
+    print_fat_table();
+    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE; i++)
+        write_file(file1, file1_message, strlen(file1_message));
+    close_file(file1);
+
+    delete_file(file2_name);
+    create_file(file2_name);
+
+    char message[strlen("THIS IS A TEST THAT I CAN READ BACK THIS MESSAGE")];
+    memset(message, 0, strlen("THIS IS A TEST THAT I CAN READ BACK THIS MESSAGE"));
+    file2->fp = 0;
+    write_file(file2, "THIS IS A TEST THAT I CAN READ BACK THIS MESSAGE", strlen("THIS IS A TEST THAT I CAN READ BACK THIS MESSAGE"));
+    file2->fp = 0;
+    read_file(file2, message, strlen("THIS IS A TEST THAT I CAN READ BACK THIS MESSAGE"));
+    close_file(file2);
+
+    printf("%s\n", message);
+
+    print_fat_table();
+
+    if(FILE_EXIST == file_exists(file1_name))
+        printf("%s does exist\n", file1_name);
+    else
+        printf("%s did not exist\n", file1_name);
+
+    if(FILE_EXIST == file_exists(file2_name))
+        printf("%s does exist\n", file2_name);
+    else
+        printf("%s did not exist\n", file2_name);
+
+    if(FILE_EXIST == file_exists(file3_name))
+        printf("%s does exist\n", file3_name);
+    else
+        printf("%s did not exist\n", file3_name);
+
     return 0;
 }
