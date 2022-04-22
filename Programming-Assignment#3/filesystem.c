@@ -160,6 +160,8 @@ static void add_blocks_to_file(uint32_t start_block, uint32_t blocks){
         set_next_bits_of_bitmap(1);
 
         unsigned int last_block = last_block_in_fat_table(start_block);
+        printf("last_block: %u\n", last_block);
+        printf("open_block: %u\n", open_block);
         fat_ptr[last_block] = open_block;
         fat_ptr[open_block] = 1;
     }
@@ -252,7 +254,7 @@ void print_fat_table(){
 
     uint32_t* fat_ptr = (uint32_t*)buffer;
     for(int i = 0; i < get_bitmap_size_bytes(); i++){
-        printf("|%4x|", fat_ptr[i]);
+        printf("|0x%x|", fat_ptr[i]);
 
         if(!((i + 1) % COLUMN_SIZE) && i)
             printf("\n");
@@ -399,7 +401,7 @@ unsigned long read_file(File file, void *buf, unsigned long numbytes){
 // less than 'numbytes'.  Always sets 'fserror' global.
 unsigned long write_file(File file, void *buf, unsigned long numbytes){
     //seek to current file pointer
-    seek_file(file, 0);
+    seek_file(file, file->fp);
 
     //updating the size of the file
     if(file->fp + numbytes > file->file_block.file_size)
@@ -417,7 +419,7 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
     for(current_byte = 0; current_byte < numbytes; current_byte++){
         buffer[file->fp % SOFTWARE_DISK_BLOCK_SIZE] = src_buf[current_byte];
 
-        seek_file(file, 1);
+        seek_file(file, file->fp + 1);
         if(!(file->fp % SOFTWARE_DISK_BLOCK_SIZE) || current_byte + 1 == numbytes){
             write_sd_block(buffer, current_block);
             current_block = get_block_of_byte_file(file, file->fp);
@@ -434,13 +436,19 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
 // sets 'fserror' global.
 int seek_file(File file, unsigned long bytepos){
     unsigned int current_blocks = number_of_blocks_of_file(file->file_block.starting_block);
-    unsigned int needed_blocks = (file->fp + bytepos) / SOFTWARE_DISK_BLOCK_SIZE;
-    if(!((file->fp + bytepos) % SOFTWARE_DISK_BLOCK_SIZE)) { needed_blocks++; }
+    unsigned int needed_blocks = 1;
+    if(bytepos)
+        needed_blocks = round_up_division(bytepos, SOFTWARE_DISK_BLOCK_SIZE);
+
+    printf("---------------------\n");
+    printf("needed blocks%u\n", needed_blocks);
+    printf("current blocks: %u\n", current_blocks);
+    printf("---------------------\n");
 
     if(needed_blocks > current_blocks)
         add_blocks_to_file(file->file_block.starting_block, needed_blocks - current_blocks);
 
-    file->fp += bytepos;
+    file->fp = bytepos;
 
     return 1;
 }
