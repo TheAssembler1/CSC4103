@@ -16,7 +16,7 @@ int main(){
 
     //getting blocks needed to set in bitmap
     unsigned int total_blocks = bitmap_size_blocks + fd_size_blocks + fat_table_blocks;
-
+    
     //FIXME::Remove this
     printf("Bitmap blocks used: %u\n", bitmap_size_blocks);
     printf("File descriptors blocks used: %u\n", fd_size_blocks);

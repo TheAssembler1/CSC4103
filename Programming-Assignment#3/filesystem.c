@@ -89,7 +89,7 @@ static unsigned int find_first_unused_bit_bitmap(){
     return 0;
 }
 
-//set then entry in the fat table to the value
+//set the entry in the fat table to the value
 static void set_fat_entry(uint32_t entry, uint32_t value){
     uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
     memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
@@ -250,6 +250,33 @@ void print_fat_table(){
 // open existing file with pathname 'name' and access mode 'mode'.  Current file
 // position is set at byte 0.  Returns NULL on error. Always sets 'fserror' global.
 File open_file(char *name, FileMode mode){
+
+    printf("delete file with name %s\n", name);
+
+    //loop through file descriptor blocks
+    uint8_t file_descriptor_buffer[SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks()];
+    memset(file_descriptor_buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks());
+    
+    for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++)
+        read_sd_block(&file_descriptor_buffer[(file_descriptor_block - get_file_descriptors_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], file_descriptor_block);
+
+    struct FileBlock* file_block = (struct FileBlock*)file_descriptor_buffer;
+
+    for(int i = 0; i < MAX_FILES; i++){
+        //file descriptor with name exists
+        if(!memcmp(file_block[i].file_name, name, strlen(name))){
+            File file = malloc(sizeof(struct FileInternals));
+            memcpy(&(file->file_block), &file_block[i], sizeof(struct FileBlock));
+            file->fp = 0;
+            file->mode = mode;
+
+            return file;
+        }
+    }
+
+    return NULL;
+
+    /*
     //loop through file descriptor blocks
     uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
     memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
@@ -270,7 +297,7 @@ File open_file(char *name, FileMode mode){
                 return file;
             }
         }
-    }
+    }*/
 
     return NULL;
 }
@@ -503,8 +530,6 @@ int delete_file(char *name){
 // determines if a file with 'name' exists and returns 1 if it exists, otherwise 0.
 // Always sets 'fserror' global.
 int file_exists(char *name){
-    printf("find file with name %s\n", name);
-
     //loop through file descriptor blocks
     uint8_t file_descriptor_buffer[SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks()];
     memset(file_descriptor_buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks());
