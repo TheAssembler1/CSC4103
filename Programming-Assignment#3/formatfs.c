@@ -33,13 +33,6 @@ int main(){
     char* file1_name = "file1_name";
     char* file1_message = "file1_message";
 
-    File file1 = create_file(file1_name);
-    print_fat_table();
-    seek_file(file1, SOFTWARE_DISK_BLOCK_SIZE * 2 + 1);
-    print_fat_table();
-
-    /*
-
     char* file2_name = "file2_name";
     char* file2_message = "file2_message";
 
@@ -58,12 +51,9 @@ int main(){
     write_file(file3, file3_message, strlen(file3_message));
     close_file(file3);
 
-    print_fat_table();
     delete_file(file1_name);
-    print_fat_table();
 
     file1 = create_file(file1_name);
-    print_fat_table();
     for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE; i++)
         write_file(file1, file1_message, strlen(file1_message));
     close_file(file1);
@@ -79,9 +69,7 @@ int main(){
     read_file(file2, message, strlen("THIS IS A TEST THAT I CAN READ BACK THIS MESSAGE"));
     close_file(file2);
 
-    printf("%s\n", message);
-
-    print_fat_table();
+    printf("printing file2 message: %s\n", message);
 
     if(FILE_EXIST == file_exists(file1_name))
         printf("%s does exist\n", file1_name);
@@ -97,7 +85,8 @@ int main(){
         printf("%s does exist\n", file3_name);
     else
         printf("%s did not exist\n", file3_name);
-    */
+
+    print_fat_table();
 
     return 0;
 }

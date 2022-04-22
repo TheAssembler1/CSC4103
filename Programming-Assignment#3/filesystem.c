@@ -105,24 +105,6 @@ static void set_fat_entry(uint32_t entry, uint32_t value){
         write_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
 }
 
-//returns that last block used by file in fat table
-static uint32_t last_block_in_fat_table(uint32_t start_block){
-    uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
-    memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
-
-    //reading fat table into buffer
-    for(unsigned int fat_block = get_fat_table_start_block(); fat_block <= get_fat_table_end_block(); fat_block++)
-        read_sd_block(&buffer[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
-
-    uint32_t* fat_ptr = (uint32_t*)buffer;
-
-    uint32_t end_block = start_block;
-    while(fat_ptr[end_block] != 1)
-        end_block = fat_ptr[end_block];
-
-    return end_block;
-}
-
 //returns the number of blocks used by file
 static uint32_t number_of_blocks_of_file(uint32_t start_block){
     uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
@@ -159,9 +141,10 @@ static void add_blocks_to_file(uint32_t start_block, uint32_t blocks){
         unsigned int open_block = find_first_unused_bit_bitmap();
         set_next_bits_of_bitmap(1);
 
-        unsigned int last_block = last_block_in_fat_table(start_block);
-        printf("last_block: %u\n", last_block);
-        printf("open_block: %u\n", open_block);
+        unsigned int last_block = start_block;
+        while(fat_ptr[last_block] != 1)
+            last_block = fat_ptr[last_block];
+
         fat_ptr[last_block] = open_block;
         fat_ptr[open_block] = 1;
     }
@@ -189,6 +172,7 @@ static uint32_t get_block_of_byte_file(File file, unsigned long byte){
 
     return current_block;
 }
+
 
 //defining all nonstatic functions used in formatfs.c and in filesystem.c
 
@@ -254,7 +238,7 @@ void print_fat_table(){
 
     uint32_t* fat_ptr = (uint32_t*)buffer;
     for(int i = 0; i < get_bitmap_size_bytes(); i++){
-        printf("|0x%x|", fat_ptr[i]);
+        printf("|0x%-4x|", fat_ptr[i]);
 
         if(!((i + 1) % COLUMN_SIZE) && i)
             printf("\n");
@@ -439,11 +423,6 @@ int seek_file(File file, unsigned long bytepos){
     unsigned int needed_blocks = 1;
     if(bytepos)
         needed_blocks = round_up_division(bytepos, SOFTWARE_DISK_BLOCK_SIZE);
-
-    printf("---------------------\n");
-    printf("needed blocks%u\n", needed_blocks);
-    printf("current blocks: %u\n", current_blocks);
-    printf("---------------------\n");
 
     if(needed_blocks > current_blocks)
         add_blocks_to_file(file->file_block.starting_block, needed_blocks - current_blocks);
