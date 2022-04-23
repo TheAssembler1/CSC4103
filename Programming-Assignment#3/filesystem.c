@@ -173,15 +173,6 @@ static uint32_t get_block_of_byte_file(File file, unsigned long byte){
     for(int i = 0; i < block_offset; i++)
         current_block = fat_ptr[current_block];
 
-    if(current_block < 20){
-        printf("ERROR-------------------\n");
-        printf("file->fp: %u\n", file->fp);
-        printf("block_offset: %u\n", block_offset);
-        printf("current_block: %u\n", current_block);
-        print_fat_table();
-        printf("------------------------\n");
-    }
-
     return current_block;
 }
 
@@ -421,7 +412,6 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
         if(!(file->fp % SOFTWARE_DISK_BLOCK_SIZE) || current_byte + 1 == numbytes){
             write_sd_block(buffer, current_block);
             current_block = get_block_of_byte_file(file, file->fp);
-            printf("fp %u | current_block %u\n", file->fp, current_block);
             read_sd_block(buffer, current_block);
         }
     }
