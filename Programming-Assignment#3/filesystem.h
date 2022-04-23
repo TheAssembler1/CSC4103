@@ -37,7 +37,11 @@
 //blocks befored before end of disk
 #define DISK_BLOCK_BUFFER 5
 
+//signals last block of file
 #define LAST_BLOCK 1
+
+//size of a byte
+#define BYTE_SIZE 8
 
 #define SET_BIT(byte,nbit)   ((byte) |=  (1 << (nbit)))
 #define CLEAR_BIT(byte,nbit) ((byte) &= ~(1 << (nbit)))
