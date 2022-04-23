@@ -7,15 +7,24 @@
 #include <stdlib.h>
 #include "softwaredisk.h"
 
+//sets boundaries of the file system
 #define MAX_FILES 64
-#define MAX_FILE_NAME 56
+#define MAX_FILE_NAME 52
 #define BITMAP_START_BLOCK 0
 
-#define FILE_FOUND 1
-#define FILE_NOT_FOUND 0
+//used to set the status on a file
+#define FILE_OPENED 1
+#define FILE_CLOSED 0
 
-#define FILE_EXIST 1
-#define FILE_DOESNT_EXIST 0
+//used to signal read to many bytes from file
+#define FILE_READ_OVER(x) (x - 1)
+
+#define DELETE_FILE_SUCESS 1
+#define DELETE_FILE_FAIL 0
+
+//used to siganl wether file exists or not
+#define FILE_EXISTS_SUCCESS 1
+#define FILE_EXISTS_FAIL 0
 
 #define LAST_BLOCK 1
 
@@ -29,6 +38,7 @@ typedef struct FileInternals* File;
 //part of the file stored on disk
 struct FileBlock{
     uint8_t file_name[MAX_FILE_NAME];
+    uint8_t status;
     uint32_t starting_block;
     uint32_t file_size;
 };

@@ -65,23 +65,26 @@ int main(){
     memset(message, 0, strlen("THIS IS A TEST THAT I CAN READ BACK THIS MESSAGE"));
     file2->fp = 0;
     write_file(file2, "THIS IS A TEST THAT I CAN READ BACK THIS MESSAGE", strlen("THIS IS A TEST THAT I CAN READ BACK THIS MESSAGE"));
-    file2->fp = 0;
-    read_file(file2, message, strlen("THIS IS A TEST THAT I CAN READ BACK THIS MESSAGE"));
+    fs_print_error();
+    printf("%s has a size of %u\n", file2_name, file2->file_block.file_size);
     close_file(file2);
+
+    file2 = open_file(file2_name, READ_WRITE);
+    printf("%s has a size of %u\n", file2_name, file2->file_block.file_size);
 
     printf("printing file2 message: %s\n", message);
 
-    if(FILE_EXIST == file_exists(file1_name))
+    if(FILE_EXISTS_SUCCESS == file_exists(file1_name))
         printf("%s does exist\n", file1_name);
     else
         printf("%s did not exist\n", file1_name);
 
-    if(FILE_EXIST == file_exists(file2_name))
+    if(FILE_EXISTS_SUCCESS == file_exists(file2_name))
         printf("%s does exist\n", file2_name);
     else
         printf("%s did not exist\n", file2_name);
 
-    if(FILE_EXIST == file_exists(file3_name))
+    if(FILE_EXISTS_SUCCESS == file_exists(file3_name))
         printf("%s does exist\n", file3_name);
     else
         printf("%s did not exist\n", file3_name);
