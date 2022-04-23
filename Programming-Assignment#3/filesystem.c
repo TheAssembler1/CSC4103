@@ -435,6 +435,8 @@ unsigned long read_file(File file, void *buf, unsigned long numbytes){
 // Returns the number of bytes written. On an out of space error, the return value may be
 // less than 'numbytes'.  Always sets 'fserror' global.
 unsigned long write_file(File file, void *buf, unsigned long numbytes){
+    printf("write_file(%s, void* buf, %ld)\n", file->file_block.file_name, numbytes);
+
     //updating the size of the file
     if(file->fp + numbytes > file->file_block.file_size)
         file->file_block.file_size += (file->fp + numbytes) - file->file_block.file_size;
@@ -484,6 +486,16 @@ int seek_file(File file, unsigned long bytepos){
 
 // returns the current length of the file in bytes. Always sets 'fserror' global.
 unsigned long file_length(File file){
+    if(file->file_block.file_name[0] == 0){
+        fserror = FS_ILLEGAL_FILENAME;
+        return FILE_LENGTH_FAIL;
+    }
+
+    if(file->file_block.status == FILE_CLOSED){
+        fserror = FS_FILE_NOT_OPEN;
+        return FILE_LENGTH_FAIL;
+    }
+
     return file->file_block.file_size;
 }
 
@@ -509,6 +521,12 @@ int delete_file(char *name){
     for(int i = 0; i < MAX_FILES; i++){
         //file descriptor with name exists
         if(!memcmp(file_block[i].file_name, name, strlen(name))){
+            if(file_block[i].status == FILE_OPENED){
+                fserror = FS_FILE_OPEN;
+                return DELETE_FILE_FAIL;
+            }
+
+            //reading in the fat table
             uint8_t fat_table[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
             memset(fat_table, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
 
@@ -539,6 +557,7 @@ int delete_file(char *name){
             }
             fat_ptr[end_block] = 0;
 
+            //updating fat table
             for(unsigned int fat_block = get_fat_table_start_block(); fat_block <= get_fat_table_end_block(); fat_block++)
                 write_sd_block(&fat_table[(fat_block - get_fat_table_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], fat_block);
 
@@ -547,11 +566,13 @@ int delete_file(char *name){
             //write back the file descriptor
             for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++)
                 write_sd_block(&file_descriptor_buffer[(file_descriptor_block - get_file_descriptors_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], file_descriptor_block);
-
+            
+            fserror = FS_NONE;
             return DELETE_FILE_SUCESS;
         }
     }
 
+    fserror = FS_FILE_NOT_FOUND;
     return DELETE_FILE_FAIL;
 }
 
@@ -622,4 +643,6 @@ void fs_print_error(void){
             printf("error does not exist\n");
             break;
     }
+
+    fflush(stdout);
 }

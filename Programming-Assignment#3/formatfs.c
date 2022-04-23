@@ -40,26 +40,43 @@ int main(){
     char* file3_message = "file3_message";
 
     File file1 = create_file(file1_name);
+    fs_print_error();
     write_file(file1, file1_message, strlen(file1_message));
+    fs_print_error();
     close_file(file1);
+    fs_print_error();
 
     File file2 = create_file(file2_name);
+    fs_print_error();
     write_file(file2, file2_message, strlen(file2_message));
+    fs_print_error();
     close_file(file2);
+    fs_print_error();
 
     File file3 = create_file(file3_name);
+    fs_print_error();
     write_file(file3, file3_message, strlen(file3_message));
+    fs_print_error();
     close_file(file3);
+    fs_print_error();
 
     delete_file(file1_name);
+    printf("ERROR HERER %s\n", file1_name);
+    fs_print_error();
 
     file1 = create_file(file1_name);
-    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE; i++)
+    fs_print_error();
+    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE; i++){
         write_file(file1, file1_message, strlen(file1_message));
+        fs_print_error();
+    }
     close_file(file1);
+    fs_print_error();
 
     delete_file(file2_name);
+    fs_print_error();
     create_file(file2_name);
+    fs_print_error();
 
     char message[strlen("THIS IS A TEST THAT I CAN READ BACK THIS MESSAGE")];
     memset(message, 0, strlen("THIS IS A TEST THAT I CAN READ BACK THIS MESSAGE"));

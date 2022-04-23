@@ -19,12 +19,16 @@
 //used to signal read to many bytes from file
 #define FILE_READ_OVER(x) (x - 1)
 
+//signals wether file deleted successfully
 #define DELETE_FILE_SUCESS 1
 #define DELETE_FILE_FAIL 0
 
 //used to siganl wether file exists or not
 #define FILE_EXISTS_SUCCESS 1
 #define FILE_EXISTS_FAIL 0
+
+//used to signal wether file length succeeded
+#define FILE_LENGTH_FAIL 0
 
 #define LAST_BLOCK 1
 
