@@ -164,11 +164,23 @@ static uint32_t get_block_of_byte_file(File file, unsigned long byte){
 
     uint32_t* fat_ptr = (uint32_t*)buffer;
 
-    unsigned int block_offset = byte / SOFTWARE_DISK_BLOCK_SIZE;
+    unsigned int block_offset = 0;
+    if(byte)
+        block_offset = round_up_division(byte, SOFTWARE_DISK_BLOCK_SIZE) - 1;
+    if(!(byte % SOFTWARE_DISK_BLOCK_SIZE) && byte) { block_offset++; };
 
     unsigned int current_block = file->file_block.starting_block;
     for(int i = 0; i < block_offset; i++)
         current_block = fat_ptr[current_block];
+
+    if(current_block < 20){
+        printf("ERROR-------------------\n");
+        printf("file->fp: %u\n", file->fp);
+        printf("block_offset: %u\n", block_offset);
+        printf("current_block: %u\n", current_block);
+        print_fat_table();
+        printf("------------------------\n");
+    }
 
     return current_block;
 }
@@ -389,9 +401,6 @@ unsigned long read_file(File file, void *buf, unsigned long numbytes){
 // Returns the number of bytes written. On an out of space error, the return value may be
 // less than 'numbytes'.  Always sets 'fserror' global.
 unsigned long write_file(File file, void *buf, unsigned long numbytes){
-    //seek to current file pointer
-    seek_file(file, file->fp);
-
     //updating the size of the file
     if(file->fp + numbytes > file->file_block.file_size)
         file->file_block.file_size += (file->fp + numbytes) - file->file_block.file_size;
@@ -412,6 +421,7 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
         if(!(file->fp % SOFTWARE_DISK_BLOCK_SIZE) || current_byte + 1 == numbytes){
             write_sd_block(buffer, current_block);
             current_block = get_block_of_byte_file(file, file->fp);
+            printf("fp %u | current_block %u\n", file->fp, current_block);
             read_sd_block(buffer, current_block);
         }
     }
@@ -426,8 +436,10 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
 int seek_file(File file, unsigned long bytepos){
     unsigned int current_blocks = number_of_blocks_of_file(file->file_block.starting_block);
     unsigned int needed_blocks = 1;
+
     if(bytepos)
         needed_blocks = round_up_division(bytepos, SOFTWARE_DISK_BLOCK_SIZE);
+    if(!(bytepos % SOFTWARE_DISK_BLOCK_SIZE) && bytepos) { needed_blocks++; };
 
     if(needed_blocks > current_blocks)
         add_blocks_to_file(file->file_block.starting_block, needed_blocks - current_blocks);

@@ -31,7 +31,7 @@ int main(){
 
     //TEST FILE DRIVER HERE
     char* file1_name = "file1_name";
-    char* file1_message = "file1_message";
+    char* file1_message = "0123456789";
 
     char* file2_name = "file2_name";
     char* file2_message = "file2_message";
@@ -40,9 +40,10 @@ int main(){
     char* file3_message = "file3_message";
 
     File file1 = create_file(file1_name);
-    write_file(file1, file1_message, strlen(file1_message));
+    for(int i = 0; i < SOFTWARE_DISK_BLOCK_SIZE; i++)
+        write_file(file1, file1_message, strlen(file1_message));
     close_file(file1);
-
+    /*
     File file2 = create_file(file2_name);
     write_file(file2, file2_message, strlen(file2_message));
     close_file(file2);
@@ -85,6 +86,7 @@ int main(){
         printf("%s does exist\n", file3_name);
     else
         printf("%s did not exist\n", file3_name);
+    */
 
     print_fat_table();
 
