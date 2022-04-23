@@ -17,18 +17,25 @@
 #define FILE_CLOSED 0
 
 //used to signal read to many bytes from file
-#define FILE_READ_OVER(x) (x - 1)
+#define FILE_READ_WRITE_OVER(x) (x - 1)
 
 //signals wether file deleted successfully
 #define DELETE_FILE_SUCESS 1
 #define DELETE_FILE_FAIL 0
 
-//used to siganl wether file exists or not
+//used to signal wether file exists or not
 #define FILE_EXISTS_SUCCESS 1
 #define FILE_EXISTS_FAIL 0
 
 //used to signal wether file length succeeded
 #define FILE_LENGTH_FAIL 0
+
+//used to signal wether seek_file succeeded
+#define SEEK_FILE_SUCCESS 1
+#define SEEK_FILE_FAIL 0
+
+//blocks befored before end of disk
+#define DISK_BLOCK_BUFFER 5
 
 #define LAST_BLOCK 1
 

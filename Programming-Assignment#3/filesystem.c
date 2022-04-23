@@ -336,10 +336,11 @@ File create_file(char *name){
             memcpy(&file_block[i], &(file->file_block), sizeof(struct FileBlock));
 
             //setting status of the file to opened
+            file->file_block.status = FILE_OPENED;
             file_block[i].status = FILE_OPENED;
             for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++)
                 write_sd_block(&file_descriptor_buffer[(file_descriptor_block - get_file_descriptors_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], file_descriptor_block);
-            
+
             fserror = FS_NONE;
             return file;
         }
@@ -396,12 +397,12 @@ unsigned long read_file(File file, void *buf, unsigned long numbytes){
     //check if file is already open
     if(file->file_block.status == FILE_OPENED){
         fserror = FS_FILE_NOT_OPEN;
-        return FILE_READ_OVER(numbytes);
+        return FILE_READ_WRITE_OVER(numbytes);
     }
     
     //nothing to read from the file
     if(file->file_block .file_size == 0)
-        return FILE_READ_OVER(numbytes);
+        return FILE_READ_WRITE_OVER(numbytes);
 
     uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE];
     memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE);
@@ -418,7 +419,7 @@ unsigned long read_file(File file, void *buf, unsigned long numbytes){
         if(file->fp < file->file_block.file_size)
             file->fp++;
         else
-            return FILE_READ_OVER(numbytes);
+            return FILE_READ_WRITE_OVER(numbytes);
 
         if(!(file->fp % SOFTWARE_DISK_BLOCK_SIZE) || current_byte + 1 == numbytes){
             write_sd_block(buffer, current_block);
@@ -437,6 +438,14 @@ unsigned long read_file(File file, void *buf, unsigned long numbytes){
 unsigned long write_file(File file, void *buf, unsigned long numbytes){
     printf("write_file(%s, void* buf, %ld)\n", file->file_block.file_name, numbytes);
 
+    if(file->file_block.file_name[0] == 0){
+        fserror = FS_ILLEGAL_FILENAME;
+        return FILE_READ_WRITE_OVER(numbytes);
+    }else if(file->file_block.status == FILE_CLOSED){
+        fserror = FS_FILE_NOT_OPEN;
+        return FILE_READ_WRITE_OVER(numbytes);
+    }
+
     //updating the size of the file
     if(file->fp + numbytes > file->file_block.file_size)
         file->file_block.file_size += (file->fp + numbytes) - file->file_block.file_size;
@@ -454,6 +463,9 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
         buffer[file->fp % SOFTWARE_DISK_BLOCK_SIZE] = src_buf[current_byte];
 
         seek_file(file, file->fp + 1);
+        if(fserror == FS_OUT_OF_SPACE)
+            return FILE_READ_WRITE_OVER(numbytes);
+
         if(!(file->fp % SOFTWARE_DISK_BLOCK_SIZE) || current_byte + 1 == numbytes){
             write_sd_block(buffer, current_block);
             current_block = get_block_of_byte_file(file, file->fp);
@@ -461,6 +473,7 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
         }
     }
 
+    fserror = FS_NONE;
     return current_byte;
 }
 
@@ -469,6 +482,16 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
 // extend the file. Returns 1 on success and 0 on failure.  Always
 // sets 'fserror' global.
 int seek_file(File file, unsigned long bytepos){
+    printf("seek_file(%s, %ld)\n", file->file_block.file_name, bytepos);
+
+    if(file->file_block.file_name[0] == 0){
+        fserror = FS_ILLEGAL_FILENAME;
+        return SEEK_FILE_FAIL;
+    }else if(file->file_block.status == FILE_CLOSED){
+        fserror = FS_FILE_NOT_OPEN;
+        return SEEK_FILE_FAIL;
+    }
+
     unsigned int current_blocks = number_of_blocks_of_file(file->file_block.starting_block);
     unsigned int needed_blocks = 1;
 
@@ -476,12 +499,19 @@ int seek_file(File file, unsigned long bytepos){
         needed_blocks = round_up_division(bytepos, SOFTWARE_DISK_BLOCK_SIZE);
     if(!(bytepos % SOFTWARE_DISK_BLOCK_SIZE) && bytepos) { needed_blocks++; };
 
+    //chcking if there is enough file for seek_file
+    if(needed_blocks - current_blocks + get_bitmap_end_block() > get_bitmap_size_bytes() - DISK_BLOCK_BUFFER){
+        fserror = FS_OUT_OF_SPACE;
+        return SEEK_FILE_FAIL;
+    }
+
     if(needed_blocks > current_blocks)
         add_blocks_to_file(file->file_block.starting_block, needed_blocks - current_blocks);
 
     file->fp = bytepos;
 
-    return 1;
+    fserror = FS_NONE;
+    return SEEK_FILE_SUCCESS;
 }
 
 // returns the current length of the file in bytes. Always sets 'fserror' global.
@@ -489,9 +519,7 @@ unsigned long file_length(File file){
     if(file->file_block.file_name[0] == 0){
         fserror = FS_ILLEGAL_FILENAME;
         return FILE_LENGTH_FAIL;
-    }
-
-    if(file->file_block.status == FILE_CLOSED){
+    }else if(file->file_block.status == FILE_CLOSED){
         fserror = FS_FILE_NOT_OPEN;
         return FILE_LENGTH_FAIL;
     }
@@ -613,34 +641,34 @@ void fs_print_error(void){
             printf("no error\n");                                     
             break;
         case FS_OUT_OF_SPACE: 
-            printf("out of space\n");                         
+            printf("ERROR: out of space\n");                         
             break;
         case FS_FILE_NOT_OPEN: 
-            printf("file not open\n");                       
+            printf("ERROR: file not open\n");                       
             break;
         case FS_FILE_OPEN: 
-            printf("file open\n");                               
+            printf("ERROR: file open\n");                               
             break;
         case FS_FILE_NOT_FOUND: 
-            printf("file not found\n");                     
+            printf("ERROR: file not found\n");                     
             break;
         case FS_FILE_READ_ONLY: 
-            printf("file read only\n");                     
+            printf("ERROR: file read only\n");                     
             break;
         case FS_FILE_ALREADY_EXISTS: 
-            printf("file already exist\n");            
+            printf("ERROR: file already exist\n");            
             break;
         case FS_EXCEEDS_MAX_FILE_SIZE: 
-            printf("file exceeded max file size\n"); 
+            printf("ERROR: file exceeded max file size\n"); 
             break;
         case FS_ILLEGAL_FILENAME: 
-            printf("file has illegal filename\n");        
+            printf("ERROR: file has illegal filename\n");        
             break;
         case FS_IO_ERROR: 
-            printf("io error\n");                                 
+            printf("ERROR: io error\n");                                 
             break;
         default:
-            printf("error does not exist\n");
+            printf("ERROR: error does not exist\n");
             break;
     }
 
