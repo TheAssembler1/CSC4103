@@ -500,7 +500,7 @@ int seek_file(File file, unsigned long bytepos){
     if(!(bytepos % SOFTWARE_DISK_BLOCK_SIZE) && bytepos) { needed_blocks++; };
 
     //chcking if there is enough file for seek_file
-    if(needed_blocks - current_blocks + get_bitmap_end_block() > get_bitmap_size_bytes() - DISK_BLOCK_BUFFER){
+    if(needed_blocks - current_blocks + find_first_unused_bit_bitmap() >  software_disk_size()){
         fserror = FS_OUT_OF_SPACE;
         return SEEK_FILE_FAIL;
     }
