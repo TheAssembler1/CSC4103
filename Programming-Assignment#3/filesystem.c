@@ -1,7 +1,5 @@
 #include "filesystem.h"
 
-#define BYTE_SIZE 8
-
 FSError fserror = FS_NONE;
 
 //defining all static funcctions
@@ -84,9 +82,8 @@ static unsigned int find_first_unused_bit_bitmap(){
             if(!(CHECK_BIT(buffer[i], j)))
                 return (i * 8) + j;
 
-    //FIXME::remove this
-    printf("ERROR\n");
-    return 0;
+    fserror = FS_IO_ERROR;
+    return FIND_FIRST_UNUSED_BIT_BITMAP_FAIL;
 }
 
 //set the entry in the fat table to the value
@@ -295,12 +292,12 @@ File open_file(char *name, FileMode mode){
 // mode READ_WRITE. The current file position is set at byte 0.
 // Returns NULL on error. Always sets 'fserror' global.
 File create_file(char *name){
+    printf("create_file(%s)\n", name);
+
     if(name[0] == 0){
         fserror = FS_ILLEGAL_FILENAME;
         return NULL;
     }
-
-    printf("create_file(%s)\n", name);
 
     File file = malloc(sizeof(struct FileInternals));
     memset(file, 0, sizeof(struct FileInternals));
@@ -346,6 +343,8 @@ File create_file(char *name){
         }
     }
 
+    //freeing file pointer becaue we failed
+    free(file);
     fserror = FS_EXCEEDS_MAX_FILE_SIZE;
     return NULL;
 }

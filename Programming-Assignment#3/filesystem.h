@@ -43,6 +43,10 @@
 //size of a byte
 #define BYTE_SIZE 8
 
+//signals wether finding a bit succeeded
+#define FIND_FIRST_UNUSED_BIT_BITMAP_FAIL 0
+
+//bitwise operations
 #define SET_BIT(byte,nbit)   ((byte) |=  (1 << (nbit)))
 #define CLEAR_BIT(byte,nbit) ((byte) &= ~(1 << (nbit)))
 #define CHECK_BIT(byte,nbit) ((byte) &   (1 << (nbit)))
