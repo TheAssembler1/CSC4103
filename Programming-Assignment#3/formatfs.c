@@ -89,6 +89,8 @@ int main(){
     file2 = open_file(file2_name, READ_WRITE);
     printf("%s has a size of %u\n", file2_name, file2->file_block.file_size);
 
+    read_file(file2, message, strlen("THIS IS A TEST THAT I CAN READ BACK THIS MESSAGE"));
+
     printf("printing file2 message: %s\n", message);
 
     if(FILE_EXISTS_SUCCESS == file_exists(file1_name))
