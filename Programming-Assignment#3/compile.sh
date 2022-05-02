@@ -36,6 +36,15 @@ gcc -Wall -g testfs2.c filesystem.c softwaredisk.c -o testfs2.exe
 
 echo "------------------------------------------------------------"
 
-#compile testfs2 test case
+#compile testfs3 test case
 gcc -Wall -g testfs3.c filesystem.c softwaredisk.c -o testfs3.exe
 ./testfs3.exe
+./formatfs.exe
+
+echo "------------------------------------------------------------"
+
+#compile testfs4a.c and testfs4b.c test case
+gcc -Wall -g testfs4a.c filesystem.c softwaredisk.c -o testfs4a.exe
+gcc -Wall -g testfs4b.c filesystem.c softwaredisk.c -o testfs4b.exe
+./testfs4a.exe
+./testfs4b.exe
