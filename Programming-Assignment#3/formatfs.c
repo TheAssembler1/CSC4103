@@ -18,17 +18,20 @@ int main(){
     unsigned int total_blocks = bitmap_size_blocks + fd_size_blocks + fat_table_blocks;
     
     //FIXME::Remove this
+    /*
     printf("Bitmap blocks used: %u\n", bitmap_size_blocks);
     printf("File descriptors blocks used: %u\n", fd_size_blocks);
     printf("Fat table blocks used: %u\n", fat_table_blocks);
     printf("Starting blocks used: %u\n", total_blocks);
     printf("----------------------------------\n");
+    */
 
     //setting blocks that are turned to 1 in bitmap
     set_next_bits_of_bitmap(total_blocks);
 
     //FIXME::there is a bug in the gettign the most recent nonused block think it needs to be plus one or something
 
+    /*
     //TEST FILE DRIVER HERE
     char* file1_name = "file1_name";
     char* file1_message = "0123456789";
@@ -109,6 +112,7 @@ int main(){
         printf("%s did not exist\n", file3_name);
 
     print_fat_table();
+    */
 
     return 0;
 }

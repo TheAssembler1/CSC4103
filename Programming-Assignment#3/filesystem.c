@@ -137,7 +137,7 @@ static void add_blocks_to_file(uint32_t start_block, uint32_t blocks){
         //adding it to the bitmap
         unsigned int open_block = find_first_unused_bit_bitmap();
         set_next_bits_of_bitmap(1);
-
+        
         unsigned int last_block = start_block;
         while(fat_ptr[last_block] != 1)
             last_block = fat_ptr[last_block];
@@ -216,7 +216,7 @@ void set_next_bits_of_bitmap(unsigned int bits){
 
 //returns blocks used by fat table
 unsigned int get_fat_table_size_blocks(){
-    unsigned int fat_table_bytes = get_bitmap_size_bytes() * 8;
+    unsigned int fat_table_bytes = (get_bitmap_size_bytes() * 8) * sizeof(uint32_t);
     unsigned int fat_table_blocks = fat_table_bytes / SOFTWARE_DISK_BLOCK_SIZE;
     if(fat_table_bytes % SOFTWARE_DISK_BLOCK_SIZE) { fat_table_blocks++; }
 
@@ -226,8 +226,6 @@ unsigned int get_fat_table_size_blocks(){
 #define COLUMN_SIZE 25
 //prints the contents of the fat table
 void print_fat_table(){
-    printf("print_fat_table\n");
-
     uint8_t buffer[SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks()];
     memset(buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_fat_table_size_blocks());
 
@@ -249,8 +247,6 @@ void print_fat_table(){
 // open existing file with pathname 'name' and access mode 'mode'.  Current file
 // position is set at byte 0.  Returns NULL on error. Always sets 'fserror' global.
 File open_file(char *name, FileMode mode){
-    printf("open_file(%s, %d)\n", name, mode);
-
     //loop through file descriptor blocks
     uint8_t file_descriptor_buffer[SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks()];
     memset(file_descriptor_buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks());
@@ -270,12 +266,12 @@ File open_file(char *name, FileMode mode){
             }
 
             File file = malloc(sizeof(struct FileInternals));
+            file_block[i].status = FILE_OPENED;
             memcpy(&(file->file_block), &file_block[i], sizeof(struct FileBlock));
             file->fp = 0;
             file->mode = mode;
             
             //setting status of the file to opened
-            file_block[i].status = FILE_OPENED;
             for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++)
                 write_sd_block(&file_descriptor_buffer[(file_descriptor_block - get_file_descriptors_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], file_descriptor_block);
             
@@ -292,11 +288,27 @@ File open_file(char *name, FileMode mode){
 // mode READ_WRITE. The current file position is set at byte 0.
 // Returns NULL on error. Always sets 'fserror' global.
 File create_file(char *name){
-    printf("create_file(%s)\n", name);
-
     if(name[0] == 0){
         fserror = FS_ILLEGAL_FILENAME;
         return NULL;
+    }
+
+    //loop through file descriptor blocks
+    uint8_t file_descriptor_buffer[SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks()];
+    memset(file_descriptor_buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks());
+    
+    for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++)
+        read_sd_block(&file_descriptor_buffer[(file_descriptor_block - get_file_descriptors_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], file_descriptor_block);
+
+    struct FileBlock* file_block = (struct FileBlock*)file_descriptor_buffer;
+
+    //check if file already exists
+    for(int i = 0; i < MAX_FILES; i++){
+        if(!memcmp(name, file_block[i].file_name, strlen(name))){
+            printf("FILE ALREADY EXISTS\n");
+            fserror = FS_FILE_ALREADY_EXISTS;
+            return NULL;
+        }
     }
 
     File file = malloc(sizeof(struct FileInternals));
@@ -316,20 +328,8 @@ File create_file(char *name){
     file->mode = READ_WRITE;
     file->fp = 0;
 
-    //loop through file descriptor blocks
-    uint8_t file_descriptor_buffer[SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks()];
-    memset(file_descriptor_buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks());
-    
-    for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++)
-        read_sd_block(&file_descriptor_buffer[(file_descriptor_block - get_file_descriptors_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], file_descriptor_block);
-
-    struct FileBlock* file_block = (struct FileBlock*)file_descriptor_buffer;
-
     for(int i = 0; i < MAX_FILES; i++){
-        if(!memcmp(name, file_block[i].file_name, strlen(name))){
-            fserror = FS_FILE_ALREADY_EXISTS;
-            return NULL;
-        } else if(file_block[i].file_name[0] == 0){ //file descriptor with name exists
+        if(file_block[i].file_name[0] == 0){ //file descriptor with name exists
             memcpy(&file_block[i], &(file->file_block), sizeof(struct FileBlock));
 
             //setting status of the file to opened
@@ -351,22 +351,26 @@ File create_file(char *name){
 
 // close 'file'.  Always sets 'fserror' global.
 void close_file(File file){
-    printf("close_file(%s)\n", file->file_block.file_name);
+    if(file == NULL){
+        fserror = FS_IO_ERROR;
+        return;
+    }
 
     //loop through file descriptor blocks
     uint8_t file_descriptor_buffer[SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks()];
     memset(file_descriptor_buffer, 0, SOFTWARE_DISK_BLOCK_SIZE * get_file_descriptors_size_blocks());
-    
+
     for(int file_descriptor_block = get_file_descriptors_start_block(); file_descriptor_block <= get_file_descriptors_end_block(); file_descriptor_block++)
         read_sd_block(&file_descriptor_buffer[(file_descriptor_block - get_file_descriptors_start_block()) * SOFTWARE_DISK_BLOCK_SIZE], file_descriptor_block);
-    
+
     struct FileBlock* file_block = (struct FileBlock*)file_descriptor_buffer;
 
     for(int i = 0; i < MAX_FILES; i++){
         if(!memcmp(file_block[i].file_name, file->file_block.file_name, strlen((const char*)file->file_block.file_name))){ //file descriptor with name exists
                 //check if file is already closed
-                if(file_block[i].status == FS_FILE_NOT_OPEN){
-                    fserror = FS_FILE_OPEN;
+                if(file_block[i].status == FILE_CLOSED){
+                    printf("GOT HERE\n");
+                    fserror = FS_FILE_NOT_OPEN;
                     return;
                 }
 
@@ -382,7 +386,6 @@ void close_file(File file){
                 return;
         }
     }
-
     fserror = FS_FILE_NOT_FOUND;
 }
 
@@ -391,10 +394,8 @@ void close_file(File file){
 // then a return value less than 'numbytes' signals this condition. Always sets
 // 'fserror' global.
 unsigned long read_file(File file, void *buf, unsigned long numbytes){
-    printf("read_file(%s, void* buf, %lu)\n", file->file_block.file_name, numbytes);
-
     //check if file is already open
-    if(file->file_block.status == FILE_OPENED){
+    if(file->file_block.status == FILE_CLOSED){
         fserror = FS_FILE_NOT_OPEN;
         return FILE_READ_WRITE_OVER(numbytes);
     }
@@ -435,14 +436,15 @@ unsigned long read_file(File file, void *buf, unsigned long numbytes){
 // Returns the number of bytes written. On an out of space error, the return value may be
 // less than 'numbytes'.  Always sets 'fserror' global.
 unsigned long write_file(File file, void *buf, unsigned long numbytes){
-    printf("write_file(%s, void* buf, %ld)\n", file->file_block.file_name, numbytes);
-
     if(file->file_block.file_name[0] == 0){
         fserror = FS_ILLEGAL_FILENAME;
-        return FILE_READ_WRITE_OVER(numbytes);
+        return WRITE_FILE_FAIL;
     }else if(file->file_block.status == FILE_CLOSED){
         fserror = FS_FILE_NOT_OPEN;
-        return FILE_READ_WRITE_OVER(numbytes);
+        return WRITE_FILE_FAIL;
+    }else if(file->mode == READ_ONLY){
+        fserror = FS_FILE_READ_ONLY;
+        return WRITE_FILE_FAIL;
     }
 
     //updating the size of the file
@@ -459,11 +461,21 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
     unsigned int current_block = get_block_of_byte_file(file, file->fp);
     unsigned long current_byte = 0;
     for(current_byte = 0; current_byte < numbytes; current_byte++){
+        //making sure file is less than max length of file
+        if(file->fp > round_up_division(software_disk_size() * SOFTWARE_DISK_BLOCK_SIZE, MAX_FILES)){
+            file->fp = round_up_division(software_disk_size() * SOFTWARE_DISK_BLOCK_SIZE, MAX_FILES) - 1;
+            file->file_block.file_size = round_up_division(software_disk_size() * SOFTWARE_DISK_BLOCK_SIZE, MAX_FILES);
+            return WRITE_FILE_FAIL;
+        }
+
         buffer[file->fp % SOFTWARE_DISK_BLOCK_SIZE] = src_buf[current_byte];
 
+        //making sure adding byte doesnt fill up disk
         seek_file(file, file->fp + 1);
-        if(fserror == FS_OUT_OF_SPACE)
-            return FILE_READ_WRITE_OVER(numbytes);
+        if(fserror == FS_OUT_OF_SPACE){
+            file->file_block.file_size = file->fp;
+            return WRITE_FILE_FAIL;
+        }
 
         if(!(file->fp % SOFTWARE_DISK_BLOCK_SIZE) || current_byte + 1 == numbytes){
             write_sd_block(buffer, current_block);
@@ -481,8 +493,6 @@ unsigned long write_file(File file, void *buf, unsigned long numbytes){
 // extend the file. Returns 1 on success and 0 on failure.  Always
 // sets 'fserror' global.
 int seek_file(File file, unsigned long bytepos){
-    printf("seek_file(%s, %ld)\n", file->file_block.file_name, bytepos);
-
     if(file->file_block.file_name[0] == 0){
         fserror = FS_ILLEGAL_FILENAME;
         return SEEK_FILE_FAIL;
@@ -498,7 +508,6 @@ int seek_file(File file, unsigned long bytepos){
         needed_blocks = round_up_division(bytepos, SOFTWARE_DISK_BLOCK_SIZE);
     if(!(bytepos % SOFTWARE_DISK_BLOCK_SIZE) && bytepos) { needed_blocks++; };
 
-    //chcking if there is enough file for seek_file
     if(needed_blocks - current_blocks + find_first_unused_bit_bitmap() + 1 >  software_disk_size() - DISK_BLOCK_BUFFER){
         fserror = FS_OUT_OF_SPACE;
         return SEEK_FILE_FAIL;
@@ -529,8 +538,6 @@ unsigned long file_length(File file){
 // deletes the file named 'name', if it exists. Returns 1 on success, 0 on failure. 
 // Always sets 'fserror' global.   
 int delete_file(char *name){
-    printf("delete_file(%s)\n", name);
-
     if(name[0] == 0){
         fserror = FS_ILLEGAL_FILENAME;
         return FILE_EXISTS_FAIL;
@@ -606,8 +613,6 @@ int delete_file(char *name){
 // determines if a file with 'name' exists and returns 1 if it exists, otherwise 0.
 // Always sets 'fserror' global.
 int file_exists(char *name){
-    printf("file_exists(%s)\n", name);
-
     if(name[0] == 0){
         fserror = FS_ILLEGAL_FILENAME;
         return FILE_EXISTS_FAIL;
