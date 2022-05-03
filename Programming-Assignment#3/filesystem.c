@@ -305,7 +305,6 @@ File create_file(char *name){
     //check if file already exists
     for(int i = 0; i < MAX_FILES; i++){
         if(!memcmp(name, file_block[i].file_name, strlen(name))){
-            printf("FILE ALREADY EXISTS\n");
             fserror = FS_FILE_ALREADY_EXISTS;
             return NULL;
         }
@@ -352,7 +351,7 @@ File create_file(char *name){
 // close 'file'.  Always sets 'fserror' global.
 void close_file(File file){
     if(file == NULL){
-        fserror = FS_IO_ERROR;
+        fserror = FS_FILE_NOT_OPEN;
         return;
     }
 
@@ -663,7 +662,7 @@ void fs_print_error(void){
             printf("ERROR: file already exist\n");            
             break;
         case FS_EXCEEDS_MAX_FILE_SIZE: 
-            printf("ERROR: file exceeded max file size\n"); 
+            printf("ERROR: file exceeded max file size or too many files created\n"); 
             break;
         case FS_ILLEGAL_FILENAME: 
             printf("ERROR: file has illegal filename\n");        

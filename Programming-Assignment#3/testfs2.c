@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     num_supported++;
     
     sprintf(buf, "hello, %1d", i);
-    ret=write_file(f, buf, strlen(buf));
+    ret=write_file(f, buf, strlen(buf)+1);
     printf("ret from write_file(f, \"%s\", strlen(\"%s\") = %d\n",
 	   buf, buf, ret);
     fs_print_error();
