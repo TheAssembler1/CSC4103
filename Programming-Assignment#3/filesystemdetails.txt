@@ -1,0 +1,13 @@
+Noah Lewis
+
+This file describes the details filesystem implemented:
+	- Max files is 64
+	- Max size of a file = disk_space / 64
+	- The filesystem uses a fat table
+	- All filesystem structures are dynamically sized (with 
+	  exception to number of files/file descriptors) when 
+          running formatfs.c based on the max disk space
+	- The bitmap is stored at address 0
+	- The file descriptors are stored at the end of the bitmap
+	- The fat table is stored at the end of the file descriptors
+	- The max length of a file name is 52 characters 
