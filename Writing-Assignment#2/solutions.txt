@@ -120,14 +120,19 @@ Question 4 --------------------------------
         - Block size = 4096 bytes
         - Block number size = 8 bytes
 
-    a.  direct blocks total bytes         = 12 
-        indirect block total bytes        = 12 * 12 = 144 
-        double indirect block total bytes = 12 * 12 * 12 = 1728 
-        triple indirect block total bytes = 12 * 12 * 12 * 12 = 20736
-        total blocks = 12 + 144 + 1728 + 20736 = 22620 blocks
-    b.  log2(4096) = x
+    a.  block numbers per page = 4096 / 8 = 512
+
+        direct blocks total bytes         = 12 
+        indirect block total bytes        = 512 = 512 
+        double indirect block total bytes = 512 * 512 = 262144 
+        triple indirect block total bytes = 512 * 512 * 512 = 134217728
+        total blocks = 12 + 512 + 262144 + 134217728 = 134480396 blocks
+    b.  bits needed for max offset
+        log2(4096) = x
         x = 12
-        total bits = 12
+        bits needed for max page
+        y = log2(134480396) = 28 | rounded up
+        total bits = y + x = 40
 
 Question 5 --------------------------------
     NOTE::This is a strong writers solution
@@ -146,12 +151,15 @@ Question 5 --------------------------------
             if(readers == 0)
                 writeable.signal();
         }
-
+        
+        //writing in monitor because only one writer allowed at a time anyway
         start_write(){
             if(readers > 0)
                 writable.wait();
 
             << write here >>
+            
+            writeable.signal();
         }
     }
 
